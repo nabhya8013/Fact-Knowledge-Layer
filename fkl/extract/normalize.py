@@ -288,6 +288,56 @@ def fact_type_name(payload: dict) -> str:
     return slugify(str(attribute)) or "unspecified"
 
 
+def _year4(y: str) -> int:
+    n = int(y)
+    return n + 2000 if n < 100 else n
+
+
+def normalise_period(raw: str | None) -> str:
+    """Canonicalise a time-scope string so equivalent periods compare equal.
+
+    Indian filings write the same fiscal year many ways: "FY25", "FY2024-25",
+    "2024-25", "2024/25", "FY2024/25" are all the year ending March 2025. Left as
+    raw strings, the relationship classifier reads them as *different periods* and
+    wrongly reconciles a genuine value discrepancy. This maps them all to
+    "fy2025". A bare calendar year ("2024", no FY marker) stays distinct as
+    "cy2024". Anything else (a full date, a half-year) is just lowercased and
+    space-stripped.
+    """
+    if not raw:
+        return ""
+    original = str(raw).strip().lower()
+    t = re.sub(r"[\s.]", "", original)
+    t = t.replace("financialyear", "fy").replace("fiscalyear", "fy")
+
+    quarter = ""
+    mq = re.match(r"(q[1-4]|h[12])[-/]?(.*)$", t)
+    if mq:
+        quarter, t = mq.group(1) + "-", mq.group(2)
+
+    fy_marked = t.startswith("fy") or bool(quarter)
+    if t.startswith("fy"):
+        t = t[2:]
+
+    m = re.match(r"^(\d{2,4})[-/](\d{2,4})$", t)
+    if m:
+        a, b = m.group(1), m.group(2)
+        if len(b) <= 2:
+            end = (_year4(a) // 100) * 100 + int(b)
+            if end <= _year4(a):
+                end += 100
+        else:
+            end = int(b)
+        return f"{quarter}fy{end}"
+
+    m = re.match(r"^(\d{2,4})$", t)
+    if m:
+        yr = _year4(m.group(1))
+        return f"{quarter}fy{yr}" if fy_marked else f"cy{yr}"
+
+    return quarter + t
+
+
 def values_agree(a: float | None, b: float | None, tolerance: float = 0.01) -> bool | None:
     """Whether two magnitudes agree within a relative tolerance.
 

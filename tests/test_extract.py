@@ -21,6 +21,7 @@ from fkl.extract.normalize import (  # noqa: E402
     canonical_key,
     canonical_text,
     fact_type_name,
+    normalise_period,
     normalize_value,
     parse_number,
     values_agree,
@@ -275,3 +276,19 @@ def test_fact_type_name_drives_the_dynamic_registry():
     assert fact_type_name({"attribute": "Real GDP growth"}) == "real_gdp_growth"
     assert fact_type_name({"predicate": "revenue"}) == "revenue"
     assert fact_type_name({}) == "unspecified"
+
+
+@pytest.mark.parametrize("raw", ["FY25", "FY2025", "FY2024-25", "2024-25", "2024/25",
+                                 "FY2024/25", "FY 2024-25", "financial year 2024-25"])
+def test_the_indian_fiscal_year_normalises_to_one_form(raw):
+    """The corpus writes FY2024-25 six different ways; they must compare equal."""
+    assert normalise_period(raw) == "fy2025"
+
+
+def test_normalise_period_keeps_genuinely_different_periods_apart():
+    assert normalise_period("FY25") != normalise_period("FY26")
+    assert normalise_period("2024-25") != normalise_period("2025-26")
+    # A calendar year is not the fiscal year that ends in it.
+    assert normalise_period("2024") == "cy2024"
+    assert normalise_period("2024") != normalise_period("FY24")
+    assert normalise_period("Q4 FY24") != normalise_period("FY24")

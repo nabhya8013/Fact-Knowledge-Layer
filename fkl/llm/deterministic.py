@@ -21,6 +21,7 @@ from ..extract.normalize import (
     CURRENCIES,
     SCALES,
     canonical_key,
+    normalise_period,
     normalize_value,
     values_agree,
 )
@@ -161,8 +162,8 @@ def deterministic_relation(fact_a: dict, fact_b: dict) -> dict:
     value_a, unit_a = normalize_value(fact_a.get("value"), fact_a.get("unit"))
     value_b, unit_b = normalize_value(fact_b.get("value"), fact_b.get("unit"))
 
-    scope_a = (fact_a.get("time_scope") or "").strip().lower()
-    scope_b = (fact_b.get("time_scope") or "").strip().lower()
+    scope_a = normalise_period(fact_a.get("time_scope"))
+    scope_b = normalise_period(fact_b.get("time_scope"))
     qual_a = (fact_a.get("qualifier") or "").strip().lower()
     qual_b = (fact_b.get("qualifier") or "").strip().lower()
 

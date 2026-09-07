@@ -21,6 +21,7 @@ from fkl.config import CONFIG  # noqa: E402
 from fkl.db import connect  # noqa: E402
 from fkl.link.relate import (  # noqa: E402
     _contradiction_blocker,
+    _corroboration_signal,
     classify_pair,
     link_facts,
     load_fact_view,
@@ -110,6 +111,16 @@ def test_contradiction_blocker_allows_a_genuine_conflict():
     assert _contradiction_blocker(REV_FY24, REV_FY24_B) is None
 
 
+def test_contradiction_blocker_sees_through_fiscal_year_spelling():
+    """"FY25" and "2024-25" are the same period - a real discrepancy between them
+    must not be excused as different_period."""
+    a = {"subject": "India", "attribute": "real GDP growth", "value": "6.4",
+         "unit": "%", "time_scope": "FY25"}
+    b = {"subject": "India", "attribute": "real GDP growth", "value": "6.5",
+         "unit": "%", "time_scope": "2024-25"}
+    assert _contradiction_blocker(a, b) is None
+
+
 _CONTRADICTS = json.dumps([{
     "relation_type": "CONTRADICTS", "reason_tag": "different_value",
     "explanation": "Revenue values differ.", "confidence": 0.9,
@@ -126,6 +137,30 @@ def test_classify_pair_downgrades_contradiction_on_period_mismatch():
 def test_classify_pair_keeps_a_genuine_contradiction():
     verdict, _ = classify_pair(REV_FY24, REV_FY24_B, ScriptedClient([_CONTRADICTS]), CONFIG)
     assert verdict["relation_type"] == "CONTRADICTS"
+
+
+_RECONCILED = json.dumps([{
+    "relation_type": "CONTEXT_RECONCILED", "reason_tag": "different_scope",
+    "explanation": "Different wording.", "confidence": 0.7,
+}])
+GDP_A = {"subject": "India", "attribute": "real GDP growth", "value": "6.5",
+         "unit": "%", "time_scope": "2024-25"}
+GDP_B = {"subject": "India", "attribute": "real gross domestic product growth",
+         "value": "6.5", "unit": "percent", "time_scope": "FY2024/25"}
+
+
+def test_corroboration_signal_confirms_same_period_same_value():
+    assert _corroboration_signal(GDP_A, GDP_B) is not None
+    # Different value -> no positive signal.
+    assert _corroboration_signal(GDP_A, {**GDP_B, "value": "6.4"}) is None
+    # Different period -> no positive signal.
+    assert _corroboration_signal(GDP_A, {**GDP_B, "time_scope": "FY2025/26"}) is None
+
+
+def test_classify_pair_lifts_a_missed_corroboration():
+    verdict, _ = classify_pair(GDP_A, GDP_B, ScriptedClient([_RECONCILED]), CONFIG)
+    assert verdict["relation_type"] == "CORROBORATES"
+    assert verdict["reason_tag"] == "same_value"
 
 
 def test_classify_pair_falls_back_to_rules_without_a_model():

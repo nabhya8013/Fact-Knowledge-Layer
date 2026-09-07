@@ -30,7 +30,7 @@ from datetime import datetime, timezone
 
 from ..config import Config
 from ..db import json_load, transaction
-from ..extract.normalize import normalize_value, values_agree
+from ..extract.normalize import normalise_period, normalize_value, values_agree
 from ..extract.prompts import RELATION_SYSTEM, build_relation_prompt
 from ..llm.base import LLMClient
 from ..llm.deterministic import deterministic_relation
@@ -127,8 +127,8 @@ def _contradiction_blocker(a: dict, b: dict) -> tuple[str, str] | None:
     contradiction however the model phrases it. Returns (reason_tag, explanation)
     when a CONTRADICTS verdict should be downgraded, else None.
     """
-    scope_a = (a.get("time_scope") or "").strip().lower()
-    scope_b = (b.get("time_scope") or "").strip().lower()
+    scope_a = normalise_period(a.get("time_scope"))
+    scope_b = normalise_period(b.get("time_scope"))
     if scope_a and scope_b and scope_a != scope_b:
         return (
             "different_period",
@@ -147,6 +147,32 @@ def _contradiction_blocker(a: dict, b: dict) -> tuple[str, str] | None:
             "a contradiction.",
         )
     return None
+
+
+def _corroboration_signal(a: dict, b: dict) -> str | None:
+    """Arithmetic that positively confirms a corroboration.
+
+    Same period, comparable units, and magnitudes that agree within tolerance:
+    the two facts state the same quantity, no matter how differently they are
+    worded. Returns an explanation when the model's weaker verdict should be
+    lifted to CORROBORATES, else None.
+    """
+    scope_a = normalise_period(a.get("time_scope"))
+    scope_b = normalise_period(b.get("time_scope"))
+    if not scope_a or not scope_b or scope_a != scope_b:
+        return None
+
+    va, unit_a = normalize_value(a.get("value"), a.get("unit"))
+    vb, unit_b = normalize_value(b.get("value"), b.get("unit"))
+    if va is None or vb is None or (unit_a and unit_b and unit_a != unit_b):
+        return None
+    if values_agree(va, vb) is not True:
+        return None
+    return (
+        f"Both facts state the same value ({va:g}{(' ' + unit_a) if unit_a else ''}) "
+        f"for the same period ('{a.get('time_scope')}' / '{b.get('time_scope')}'), "
+        "so they corroborate each other despite the different wording."
+    )
 
 
 def classify_pair(
@@ -187,6 +213,7 @@ def classify_pair(
 
     reason_tag = str(verdict.get("reason_tag") or "unspecified")[:60]
     explanation = str(verdict.get("explanation") or "").strip()[:1000]
+    model_said = relation
 
     # The model reasonably but wrongly calls a period or unit mismatch a
     # contradiction. The deterministic check can prove it is not one, so it wins.
@@ -196,7 +223,19 @@ def classify_pair(
             reason_tag, blocker_note = blocked
             relation = "CONTEXT_RECONCILED"
             explanation = (
-                f"{blocker_note} (Model called this CONTRADICTS: "
+                f"{blocker_note} (Model called this {model_said}: "
+                f"{explanation or 'no explanation given'})"
+            )[:1000]
+
+    # Symmetrically: same period, same magnitude is a corroboration the model
+    # sometimes misses when the two facts are worded very differently.
+    elif relation in ("CONTEXT_RECONCILED", "UNRELATED"):
+        confirmed = _corroboration_signal(a, b)
+        if confirmed is not None:
+            relation = "CORROBORATES"
+            reason_tag = "same_value"
+            explanation = (
+                f"{confirmed} (Model called this {model_said}: "
                 f"{explanation or 'no explanation given'})"
             )[:1000]
 

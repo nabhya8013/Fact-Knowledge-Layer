@@ -79,34 +79,52 @@ def _fact_detail(conn: sqlite3.Connection, fact_id: str) -> dict[str, Any] | Non
     }
 
 
+def _example_quality(a: dict[str, Any], b: dict[str, Any]) -> tuple:
+    """Rank key: a showcase example is only convincing if a reviewer can read
+    both quotes and see the claim in them. Prefer two substantial verbatim
+    quotes; penalise the reconstructed-span tier and bare fragments."""
+    qa, qb = a["evidence"]["quote"] or "", b["evidence"]["quote"] or ""
+    both_substantial = 1 if min(len(qa), len(qb)) >= 30 else 0
+    reconstructed = sum(
+        1 for f in (a, b) if f["evidence"]["match_mode"] == "reconstructed_span"
+    )
+    labelled_pages = sum(1 for f in (a, b) if f["evidence"]["printed_page_label"])
+    return (both_substantial, -reconstructed, labelled_pages, min(len(qa), len(qb)))
+
+
 def _relationship_example(
     conn: sqlite3.Connection, relation_type: str, *, limit: int = 3
 ) -> list[dict[str, Any]]:
-    """Best examples of one relation type, strongest evidence first."""
+    """Best examples of one relation type, most legible evidence first."""
     rows = conn.execute(
         _BASE_SQL + " ORDER BY r.confidence DESC, r.similarity_score DESC LIMIT ?",
-        (relation_type, limit),
+        (relation_type, max(limit * 5, 15)),
     ).fetchall()
 
-    out: list[dict[str, Any]] = []
+    scored: list[tuple[tuple, dict[str, Any]]] = []
     for row in rows:
         a = _fact_detail(conn, row["fact_a_id"])
         b = _fact_detail(conn, row["fact_b_id"])
         if not a or not b or not a["evidence"]["quote"] or not b["evidence"]["quote"]:
             continue
-        out.append(
-            {
-                "relation_type": row["relation_type"],
-                "reason_tag": row["reason_tag"],
-                "explanation": row["explanation"],
-                "confidence": row["confidence"],
-                "similarity_score": row["similarity_score"],
-                "model": row["model"],
-                "fact_a": a,
-                "fact_b": b,
-            }
+        scored.append(
+            (
+                (*_example_quality(a, b), row["confidence"], row["similarity_score"]),
+                {
+                    "relation_type": row["relation_type"],
+                    "reason_tag": row["reason_tag"],
+                    "explanation": row["explanation"],
+                    "confidence": row["confidence"],
+                    "similarity_score": row["similarity_score"],
+                    "model": row["model"],
+                    "fact_a": a,
+                    "fact_b": b,
+                },
+            )
         )
-    return out
+
+    scored.sort(key=lambda s: s[0], reverse=True)
+    return [example for _, example in scored[:limit]]
 
 
 def failure_report(conn: sqlite3.Connection, *, sample_size: int = 5) -> dict[str, Any]:
