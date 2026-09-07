@@ -1,12 +1,16 @@
 # Fact Knowledge Layer
 
 Extracts grounded facts from PDFs, links every fact to its exact evidence
-(page number + verbatim quoted span), and identifies corroborations,
-contradictions and context-reconciled relationships across documents.
+(page number + verbatim quoted span), and identifies where facts **corroborate**,
+**contradict**, or can be **reconciled through context** across documents.
 
 Every stored fact carries a quote that is verified character-exact against the
 page text the model actually saw. A fact whose quote cannot be located is
 discarded rather than kept, so an invented number never reaches the store.
+
+Upload new PDFs through the web UI or the API — nothing in the pipeline is
+specific to the starter files. No hard-coded facts, filenames, or schemas: the
+fact shape emerges from the documents into a dynamic registry.
 
 | Stage | Scope | Status |
 |---|---|---|
@@ -17,10 +21,13 @@ discarded rather than kept, so an invented number never reaches the store.
 Measured on the six starter PDFs: 511 pages, 3,139 chunks, ingested in ~1.7 s.
 **140 tests passing.**
 
-## Setup and run
+---
+
+## Setup and run instructions
 
 No accounts, no API keys and no background services are required. The default
-local model is downloaded automatically on first run.
+local model (`Qwen2.5-1.5B-Instruct` GGUF, ~1 GB) downloads automatically on the
+first run.
 
 ```bash
 pip install -r requirements.txt
@@ -28,22 +35,39 @@ pip install -r requirements.txt
 python run.py          # ingest -> extract -> link -> serve the web UI
 ```
 
-Then open <http://localhost:8000/> for the UI (showcase, fact browser,
-relationship browser, schema registry, upload) and <http://localhost:8000/docs>
-for the API.
+Then open:
 
-Every stage is resumable and skips work that is already done, so re-running is
-cheap and interrupting with Ctrl-C is safe. A full-corpus extraction on CPU is
-roughly an hour; use `python run.py --limit N` for a quick demo run, or
-`python run.py --no-extract` to ingest and serve immediately.
+- <http://localhost:8000/> — the web UI: **Showcase** (the four required cases),
+  fact browser with confidence filter, relationship browser, the dynamic schema
+  registry, and PDF upload with live job progress.
+- <http://localhost:8000/docs> — the API (OpenAPI docs).
+
+Every stage is resumable and skips work already done, so re-running is cheap and
+Ctrl-C is safe. Extraction is the slow part — roughly an hour on CPU for the full
+corpus, ~2 hours on one GPU at higher quality. For a fast look:
+
+```bash
+python run.py --limit 60        # ingest, extract ~60 chunks, link, serve (~15 min CPU)
+python run.py --no-extract      # ingest and serve immediately, extract later
+```
 
 Requires Python 3.10+ (tested through 3.13; 3.14 also works).
+
+### Uploading your own PDFs
+
+- **UI:** Documents tab → *Add a PDF* → upload. Ingest runs synchronously; then
+  extraction and linking run in the background with a progress bar.
+- **API:** `curl -F file=@yourfile.pdf http://localhost:8000/api/upload`
+- **CLI:** `python run.py ingest path/to/yourfile.pdf && python run.py extract && python run.py link`
+
+Re-uploading identical bytes is a no-op. A new document is linked against
+everything already in the store — existing facts are not re-processed.
 
 ### Individual commands
 
 ```bash
 python run.py ingest --dataset all     # parse every starter PDF
-python run.py extract [--limit N]      # grounded fact extraction (resumable)
+python run.py extract [--limit N]      # grounded fact extraction (resumable; --redo to restart)
 python run.py link                     # embed facts + classify relationships
 python run.py facts | relations | schema
 python run.py status                   # what's in the store
@@ -52,63 +76,158 @@ python run.py serve                    # web UI + API only
 python -m pytest tests -q
 ```
 
+### Where to see the four required cases
+
+Open the **Showcase** tab, or `GET /api/showcase`. It selects, by ranked query
+over whatever is in the store (nothing hand-picked):
+
+1. a fact **corroborated** across documents, however differently worded;
+2. a genuine or likely **contradiction**;
+3. an apparent contradiction **explained by context** (period / scope / units);
+4. a **documented extraction/reasoning failure** — measured counters plus
+   concrete failing chunks, with the narrative and the fixes in
+   [DECISIONS.md](DECISIONS.md).
+
+Cases 1–3 show the source quote from *each* document and the system's reasoning,
+with a "verify in page context" link that re-checks the stored offsets against
+the real page text.
+
+---
+
+## Video demo
+
+**▶ [Demo video (≤3 min)](REPLACE_WITH_LINK)**
+
+Shows a PDF being uploaded and processed, then walks the four required cases in
+the Showcase tab — the evidence quotes from each document, the system's
+explanation, and the offset verification.
+
+---
+
 ## Approach
 
-**Grounding is the load-bearing invariant.** `pages.text` stores exactly what
-PyMuPDF returned, and every chunk and every quote records character offsets into
-that string. Matching a model's quote back to the source runs in tiers — exact,
-whitespace-normalised, typography/case-folded, then a length-bounded
-reconstructed span for column-major table text — and every tier returns offsets
-into the original text. A quote that matches no tier means the fact is dropped.
+### Architecture
 
-**Extraction** processes one page-sized chunk at a time across worker processes,
-each holding its own model; inference happens in the workers, while grounding and
-every database write stay in the parent so SQLite remains single-writer. Output
-is decoded under a grammar that constrains only the JSON envelope, so fact keys
-stay free to emerge from the documents into a dynamic `fact_types` registry.
-Malformed JSON goes through parse → corrective re-prompt → `json-repair` → give
-up, with every outcome logged so the repair rate is reported from data.
+```
+PDF ──ingest──> pages (verbatim text + char offsets) ──chunk──> extraction / retrieval chunks
+                                                                      │
+                                              per chunk: LLM ──> candidate facts (JSON)
+                                                                      │
+                                        grounding: quote located char-exact, or fact discarded
+                                                                      │
+                                    facts + evidence + dynamic fact_types  (SQLite, one file)
+                                                                      │
+                              embed normalised fact ──> brute-force vector search (cross-document only)
+                                                                      │
+                        two-step classify (deterministic arithmetic hint + LLM) ──> relationships
+                                                                      │
+                                      FastAPI  +  single-page web UI  +  /api/showcase
+```
 
-**Backends** sit behind one interface: local `llama.cpp` + GGUF (default),
-Groq (optional, only when `GROQ_API_KEY` is set), and a deterministic
-pattern-based extractor that is the floor the system never falls through when no
-model can load.
+One SQLite file holds everything — documents, pages, chunks, facts, evidence,
+the `fact_types` registry, vectors, relationships, job state, and the repair log.
+No second store to fall out of sync; deleting a document cascades everything
+derived from it.
 
-**Linking** embeds the *normalised* fact rather than the source sentence, does
-brute-force exact nearest-neighbour search over vectors stored in the same SQLite
-file, and only pairs facts from different documents. Classification is two-step:
-a deterministic pass settles what arithmetic can decide (units, magnitudes,
-periods) and hands that to the model as a hint. Relationships are stored as
-first-class queryable rows — `CORROBORATES`, `CONTRADICTS`, `CONTEXT_RECONCILED`,
-`UNRELATED` — each with both fact ids, a reason tag, an explanation, confidence
-and similarity.
+### Important decisions and trade-offs
+
+- **Grounding is the load-bearing invariant.** `pages.text` is exactly what
+  PyMuPDF returned; every chunk and quote records offsets into it. Quote matching
+  runs in tiers — exact, whitespace-normalised, typography/case-folded, then a
+  bounded *reconstructed span* for column-major table text — and every tier
+  returns offsets into the original. A quote matching no tier means the fact is
+  **dropped**. Trade-off: recall is lower, but a stored fact is always checkable.
+
+- **The schema emerges from the documents.** The local model decodes under a GBNF
+  grammar that constrains only the JSON *envelope* — an array of objects with
+  arbitrary keys. New attributes become new `fact_types` rows; new payload keys
+  are absorbed into a running union. No migrations, no fixed enum.
+
+- **Three interchangeable backends** behind one interface: local `llama.cpp` +
+  GGUF (default, offline after first run), Groq (optional, only when
+  `GROQ_API_KEY` is set), and a deterministic pattern extractor that is the floor
+  the system never falls through. Facts are tagged with which produced them.
+
+- **Malformed JSON is expected, not exceptional.** Parse → corrective re-prompt →
+  `json-repair` → give up, with every outcome written to `repair_log` so the
+  repair rate is reported from data, not estimated.
+
+- **Linking embeds the *normalised fact*, not the sentence** — two documents
+  stating the same thing rarely share wording. A brute-force numpy dot product
+  over vectors in SQLite beats an ANN index at this scale (exact, ~5 MB matrix)
+  and avoids a second store. Only cross-document pairs are considered.
+
+- **Classification is two-step by design.** A deterministic pass settles what
+  arithmetic can decide (units match? magnitudes agree? periods differ?) and
+  hands that to the LLM as a hint. The rule cannot tell that two differently
+  named attributes mean the same thing; the model cannot reliably tell that
+  8,142 crore equals 81.42 billion. Each covers the other's blind spot, and the
+  rule is the fallback with no model. A `CONTRADICTS` verdict is vetoed to
+  `CONTEXT_RECONCILED` when the rule proves the periods or units differ.
+
+- **Table detection is off by default** — measured ~500× slower on dense
+  financial reports while producing *worse* output than PyMuPDF's linearised page
+  text. Enable with `--tables`.
+
+- **Round-robin chunk ordering.** A partial extraction run interleaves documents,
+  so any prefix covers all of them and still demonstrates cross-document links —
+  the whole point of the system.
+
+### AI tools used
+
+- **Extraction / relationship classification:** `Qwen2.5-1.5B-Instruct` (Q4_K_M
+  GGUF) run locally via `llama-cpp-python`, decoding under a GBNF JSON grammar.
+  `Qwen2.5-0.5B` is the low-RAM fallback. Optional Groq
+  (`llama-3.3-70b-versatile`) as a higher-quality drop-in.
+- **Embeddings:** `BAAI/bge-small-en-v1.5` via `fastembed` (ONNX runtime, no
+  `torch`).
+- **JSON recovery:** `json-repair`.
+- **Development:** this codebase was built with **Claude Code** (Anthropic) as a
+  pair-programming assistant — design discussion, implementation, and the test
+  suite. Every measurement and benchmark in [DECISIONS.md](DECISIONS.md) was run
+  on the real corpus.
 
 See **[DECISIONS.md](DECISIONS.md)** for the full build diary — the measurements,
 the dead ends, and the bugs the real corpus exposed.
 
+---
+
 ## Limitations and next steps
 
-- Incremental ingest diffs at **document** granularity: a 100-page PDF with one
-  changed page is reprocessed in full. Page-level hashing would fix it.
-- All six starter PDFs are text-bearing; scanned documents are detected and
-  reported but not OCR'd.
-- Cross-currency conversion is deliberately not attempted — inventing an FX rate
-  would manufacture false corroborations.
-- Table detection is off by default (see Notes); financial-statement structure is
-  read from the linearised page text instead.
-- A full CPU extraction of the corpus is ~an hour; the practical demo path is
-  `--limit` or the optional Groq backend.
+- **Extraction quality is bounded by a 1.5B local model.** It still emits some
+  non-facts and mis-reads figures on dense chart pages; the grounding check
+  catches hallucinated *quotes* but not a plausible wrong number lifted from a
+  messy table. Next: ground table facts against `--tables` structured cells, and
+  add a numeric-plausibility check against sibling facts of the same key.
+- **Incremental ingest diffs at document granularity.** A 100-page PDF changed on
+  one page is reprocessed in full. Page-level hashing would fix it.
+- **No OCR.** Scanned PDFs are detected and reported (`probably_scanned`) but not
+  read.
+- **No cross-currency conversion** — deliberately. Inventing an FX rate would
+  manufacture false corroborations. Facts in different currencies stay
+  numerically incomparable and are left to the LLM to reason about.
+- **Candidate generation is O(facts²) per link run.** Fine at this scale
+  (thousands of facts); a real ANN index would be needed at 10⁵+.
+- **Relationship classification has no human-in-the-loop review** — every
+  classified pair is stored with its confidence, but nothing surfaces the
+  low-confidence ones for checking.
 
-## Notes
+---
 
-- `requirements.txt` opens with an `--extra-index-url` line that serves
-  **prebuilt** CPU wheels for `llama-cpp-python`. Without it, pip compiles
-  llama.cpp from source and needs `cmake` plus a C++ toolchain. With it, install
-  is a plain wheel download.
-- Embeddings use `fastembed` (ONNX) rather than `sentence-transformers`, to avoid
-  a 1–2 GB `torch` dependency. Same models.
-- Table detection is **off by default** — it costs ~500× plain text extraction on
-  dense financial reports while producing worse output than the plain page text.
-  Enable with `--tables`. Full reasoning and measurements in DECISIONS.md.
-- GPU offload is automatic when a CUDA build of `llama-cpp-python` is installed;
-  a normal clone installs the CPU wheel and nothing changes.
+## Additional notes
+
+- **Credentials:** none are required or committed. `.env` is git-ignored; the
+  Groq key is read only from the environment. The default path is fully local and
+  offline after the model download.
+- **Evaluating without a paid service:** the local backend is the default, so no
+  account is needed. `python run.py --limit N` produces a full showcase quickly;
+  `sample-output/` contains a captured `/api/showcase` response and
+  `/api/failures` response from a full run for reference.
+- `requirements.txt` opens with an `--extra-index-url` line serving **prebuilt**
+  CPU wheels for `llama-cpp-python`. Without it, pip compiles llama.cpp from
+  source (needs `cmake` + a C++ toolchain). With it, install is a plain wheel
+  download.
+- GPU offload is automatic when a CUDA/Metal build of `llama-cpp-python` is
+  installed; a normal clone gets the CPU wheel and nothing changes.
+- `DECISIONS.md` is a running build diary written as the work happened —
+  measurements, wrong turns, and the corpus-found bugs — not a reconstruction.
