@@ -1,0 +1,15 @@
+{
+  "status": "ok",
+  "llm_backend": "local (Qwen2.5-1.5B-Instruct-Q4_K_M.gguf)",
+  "embedding_model": "BAAI/bge-small-en-v1.5",
+  "similarity_threshold": 0.82,
+  "counts": {
+    "documents": 6,
+    "pages": 511,
+    "chunks": 3139,
+    "facts": 331,
+    "evidence": 331,
+    "fact_types": 168,
+    "relationships": 129
+  }
+}

@@ -201,6 +201,21 @@ def test_failure_report_is_computed_from_real_counters(store):
     assert report["evidence_match_modes"] == {"exact": 5}
 
 
+def test_failure_report_ignores_repair_rows_from_a_previous_run(store):
+    """Regression: --redo clears extraction_progress but repair_log accumulated,
+    so the rate was measured against a stale, oversized numerator."""
+    conn, _ = store
+    # A repair_log row for a chunk that is no longer in this run.
+    conn.execute(
+        "INSERT INTO repair_log (chunk_id, stage, attempts, outcome, created_at) "
+        "VALUES ('stale_chunk','extraction',2,'ok_after_reprompt','2025')"
+    )
+    conn.commit()
+    r = failure_report(conn)
+    assert r["json_calls_needing_repair"] == 1  # still just doc_bbb, not the stale row
+    assert r["json_repair_rate"] == pytest.approx(0.5)
+
+
 def test_failure_report_repair_rate_is_not_trivially_one(store):
     """Regression: the rate divided repaired calls by themselves and was always 1.0."""
     conn, _ = store

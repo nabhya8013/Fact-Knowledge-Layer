@@ -133,8 +133,16 @@ def failure_report(conn: sqlite3.Connection, *, sample_size: int = 5) -> dict[st
     # mechanical repair, or failed outright - a clean first-try parse is *not*
     # logged. So the denominator for a repair rate is the number of chunks
     # attempted (each made at least one JSON call), not the size of repair_log.
+    # Scope to chunks in the current run: --redo clears repair_log, but joining
+    # to extraction_progress also protects against any stale rows.
     repair = dict(
-        conn.execute("SELECT outcome, COUNT(*) FROM repair_log GROUP BY outcome").fetchall()
+        conn.execute(
+            """SELECT rl.outcome, COUNT(DISTINCT rl.chunk_id)
+                 FROM repair_log rl
+                 JOIN extraction_progress ep ON ep.chunk_id = rl.chunk_id
+                WHERE rl.stage = 'extraction'
+                GROUP BY rl.outcome"""
+        ).fetchall()
     )
     repaired = repair.get("ok_after_reprompt", 0) + repair.get("ok_after_repair", 0)
     json_failed = repair.get("failed", 0)

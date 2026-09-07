@@ -240,7 +240,7 @@ listed in next steps.
 
 ```
 6 PDFs | 511 pages | 722 extraction + 2,417 retrieval chunks | 1.7 s total
-30 tests passing at this point (140 across all three stages)
+30 tests passing at this point (154 across all three stages)
 ```
 
 ### A finding that shapes stage 2

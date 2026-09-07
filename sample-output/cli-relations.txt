@@ -1,0 +1,104 @@
+================================================================================
+CONTRADICTS  (value_mismatch)  confidence=1.00  similarity=0.962
+  -> The two facts assert different real GDP growth rates for FY25, with values 6.4% and 6.6% respectively.
+  [A] India | real GDP growth = 6.4% % [FY25]
+      01-india-economic-survey-2024-25-excerpt.pdf p.01
+      "India’s real GDP is estimated to 
+grow by 6.4 per cent in FY25"
+  [B] India | real GDP growth = 6.6 % [2024/25]
+      03-imf-india-2025-article-iv-excerpt.pdf p.pdf#4
+      "Growth (in percent)"
+================================================================================
+CONTRADICTS  (value_mismatch)  confidence=1.00  similarity=0.954
+  -> The two facts assert different real GDP growth rates for FY25, with values 6.4% and 6.5% respectively.
+  [A] India | real GDP growth = 6.4% % [FY25]
+      01-india-economic-survey-2024-25-excerpt.pdf p.01
+      "India’s real GDP is estimated to 
+grow by 6.4 per cent in FY25"
+  [B] India | real GDP growth = 6.5 percent % [FY2024/25]
+      03-imf-india-2025-article-iv-excerpt.pdf p.4-5
+      "India’s real GDP grew by 6.5 percent in FY2024/25."
+
+================================================================================
+CORROBORATES  (same_value)  confidence=1.00  similarity=0.918
+  -> Both facts state the same value (3.3 %) for the same period ('2024' / '2024'), so they corroborate each other despite the different wording. (Model called this CONTEXT_RECONCILED: The values are the same, but the context and attribute differ. The first fact is about global growth, while the second is about the IMF's World Economic Outlook (WEO) growth outlook for 2024.)
+  [A] International Monetary Fund (IMF) | growth = 3.3 per cent % [2024]
+      02-rbi-annual-report-2024-25-excerpt.pdf p.1-2
+      "According to the International Monetary 
+Fund (IMF)1, global growth at 3.3 per cent 
+in 2024 (3.5 per cent a year ago) was below 
+the historical avera"
+  [B] IMF WEO (January 2025) | growth outlook = 3.3 % [2024]
+      01-india-economic-survey-2024-25-excerpt.pdf p.3
+      "World growth
+3.3"
+================================================================================
+CORROBORATES  (same_value)  confidence=1.00  similarity=0.912
+  -> Both facts state the same value (6.5 %) for the same period ('FY2024/25' / '2024-25'), so they corroborate each other despite the different wording. (Model called this CONTEXT_RECONCILED: The two facts are about the same subject (India) and attribute (economic growth), but they refer to different time periods (FY2024/25 vs 2024-25).)
+  [A] India | economic growth = 6.5 percent % [FY2024/25]
+      03-imf-india-2025-article-iv-excerpt.pdf p.pdf#2
+      "Following economic growth of 6.5 percent in 
+FY2024/25"
+  [B] India | real gross domestic product (GDP) growth = 6.5% % [2024-25]
+      02-rbi-annual-report-2024-25-excerpt.pdf p.3
+      "real gross domestic product (GDP)3 
+growth moderated to 6.5 per cent in 2024-25"
+================================================================================
+CORROBORATES  (same_value)  confidence=1.00  similarity=0.836
+  -> Both facts state the same value (7.225e+10 INR) for the same period ('FY23' / 'FY23'), so they corroborate each other despite the different wording. (Model called this CONTEXT_RECONCILED: The values differ but the difference is fully explained by the different time scope - consolidated vs standalone.)
+  [A] Delhivery | revenue = 7,225 INR crore [FY23]
+      03-delhivery-q4-fy24-earnings-presentation.pdf p.21-22
+      "23"
+  [B] Delhivery Limited | revenue = 72,236 ₹ million [FY23]
+      02-delhivery-annual-report-fy24-excerpt.pdf p.10-11
+      "Revenue from services* (₹ million)
+72,236"
+================================================================================
+CORROBORATES  (same_value)  confidence=1.00  similarity=0.835
+  -> Both facts state the same value (3.3 %) for the same period ('2024' / '2024'), so they corroborate each other despite the different wording. (Model called this UNRELATED: The two facts are about different subjects (IMF and OECD) and attributes (growth vs growth trends), despite having the same value of 3.3%.)
+  [A] International Monetary Fund (IMF) | growth = 3.3 per cent % [2024]
+      02-rbi-annual-report-2024-25-excerpt.pdf p.1-2
+      "According to the International Monetary 
+Fund (IMF)1, global growth at 3.3 per cent 
+in 2024 (3.5 per cent a year ago) was below 
+the historical avera"
+  [B] OECD Economic Outlook, Volume 2024 | growth trends = 3.3 % [2024]
+      01-india-economic-survey-2024-25-excerpt.pdf p.3
+      "World growth
+3.3"
+================================================================================
+CORROBORATES  (different_scope)  confidence=1.00  similarity=0.833
+  -> The two facts assert the same thing, however they refer to different time periods and scopes.
+  [A] IMF WEO (January 2025) | growth outlook = 3.3 % [2024]
+      01-india-economic-survey-2024-25-excerpt.pdf p.3
+      "World growth
+3.3"
+  [B] The Bank | economic growth = 3.3 per cent % [2024]
+      02-rbi-annual-report-2024-25-excerpt.pdf p.I
+      "The global economy in 2025 is likely to grow 
+not only below its historical average (2000-19) of 
+3.7 per cent, but also below the growth of 3.3 per 
+"
+================================================================================
+CORROBORATES  (same_value)  confidence=0.90  similarity=0.957
+  -> Both facts state the same value (6.5 %) for the same period ('2024-25' / 'FY2024/25'), so they corroborate each other despite the different wording. (Model called this CONTEXT_RECONCILED: The two facts are about the same subject (India) and attribute (real GDP growth), but they refer to different time periods (2024-25 vs FY2024/25).)
+  [A] India | real gross domestic product (GDP) growth = 6.5% % [2024-25]
+      02-rbi-annual-report-2024-25-excerpt.pdf p.3
+      "real gross domestic product (GDP)3 
+growth moderated to 6.5 per cent in 2024-25"
+  [B] India | real GDP growth = 6.5 percent % [FY2024/25]
+      03-imf-india-2025-article-iv-excerpt.pdf p.4-5
+      "India’s real GDP grew by 6.5 percent in FY2024/25."
+================================================================================
+CORROBORATES  (same_value)  confidence=0.90  similarity=0.848
+  -> Both facts state the same value (3.3 %) for the same period ('2024' / '2024'), so they corroborate each other despite the different wording. (Model called this CONTEXT_RECONCILED: The values are the same (3.3%), but the context and scope differ significantly.)
+  [A] The Bank | economic growth = 3.3 per cent % [2024]
+      02-rbi-annual-report-2024-25-excerpt.pdf p.I
+      "The global economy in 2025 is likely to grow 
+not only below its historical average (2000-19) of 
+3.7 per cent, but also below the growth of 3.3 per 
+"
+  [B] OECD Economic Outlook, Volume 2024 | growth trends = 3.3 % [2024]
+      01-india-economic-survey-2024-25-excerpt.pdf p.3
+      "World growth
+3.3"

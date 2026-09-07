@@ -1,0 +1,3194 @@
+[
+  {
+    "name": "revenue",
+    "first_seen_document_id": "doc_5ca307085c96c1fc",
+    "first_seen_at": "2026-09-07T17:17:51+00:00",
+    "last_seen_at": "2026-09-07T17:44:11+00:00",
+    "fact_count": 52,
+    "sample_fact_id": "fact_3a51877c97abd8d6",
+    "first_seen_document": "03-delhivery-q4-fy24-earnings-presentation.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "number",
+    "first_seen_document_id": "doc_5ca307085c96c1fc",
+    "first_seen_at": "2026-09-07T17:22:58+00:00",
+    "last_seen_at": "2026-09-07T17:22:58+00:00",
+    "fact_count": 10,
+    "sample_fact_id": "fact_b5892c139e9d06c6",
+    "first_seen_document": "03-delhivery-q4-fy24-earnings-presentation.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "real_effective_exchange_rate",
+    "first_seen_document_id": "doc_f6d3cfecafd95489",
+    "first_seen_at": "2026-09-07T17:34:54+00:00",
+    "last_seen_at": "2026-09-07T17:34:54+00:00",
+    "fact_count": 9,
+    "sample_fact_id": "fact_0dbdd39c8e199312",
+    "first_seen_document": "03-imf-india-2025-article-iv-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "real_gdp_growth",
+    "first_seen_document_id": "doc_86f2e79a3b7b4a36",
+    "first_seen_at": "2026-09-07T17:18:36+00:00",
+    "last_seen_at": "2026-09-07T17:42:42+00:00",
+    "fact_count": 8,
+    "sample_fact_id": "fact_91325d3ed2869d46",
+    "first_seen_document": "01-india-economic-survey-2024-25-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "production",
+    "first_seen_document_id": "doc_86f2e79a3b7b4a36",
+    "first_seen_at": "2026-09-07T17:25:44+00:00",
+    "last_seen_at": "2026-09-07T17:25:44+00:00",
+    "fact_count": 8,
+    "sample_fact_id": "fact_0810c7890a1263b3",
+    "first_seen_document": "01-india-economic-survey-2024-25-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "fiscal_consolidation",
+    "first_seen_document_id": "doc_f6d3cfecafd95489",
+    "first_seen_at": "2026-09-07T17:17:26+00:00",
+    "last_seen_at": "2026-09-07T17:47:26+00:00",
+    "fact_count": 7,
+    "sample_fact_id": "fact_81cec9f521bb03f6",
+    "first_seen_document": "03-imf-india-2025-article-iv-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "fees_non_executive_directors",
+    "first_seen_document_id": "doc_0d7e71e1766ef330",
+    "first_seen_at": "2026-09-07T17:33:28+00:00",
+    "last_seen_at": "2026-09-07T17:33:28+00:00",
+    "fact_count": 6,
+    "sample_fact_id": "fact_1d8661b71267781a",
+    "first_seen_document": "01-delhivery-prospectus-2022-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "economic_performance",
+    "first_seen_document_id": "doc_86f2e79a3b7b4a36",
+    "first_seen_at": "2026-09-07T17:24:07+00:00",
+    "last_seen_at": "2026-09-07T17:24:07+00:00",
+    "fact_count": 5,
+    "sample_fact_id": "fact_89059108564cfc07",
+    "first_seen_document": "01-india-economic-survey-2024-25-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "days",
+    "first_seen_document_id": "doc_5ca307085c96c1fc",
+    "first_seen_at": "2026-09-07T17:33:42+00:00",
+    "last_seen_at": "2026-09-07T17:33:42+00:00",
+    "fact_count": 5,
+    "sample_fact_id": "fact_2a9034a9bf0ea155",
+    "first_seen_document": "03-delhivery-q4-fy24-earnings-presentation.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "manufacturing_sector_growth",
+    "first_seen_document_id": "doc_86f2e79a3b7b4a36",
+    "first_seen_at": "2026-09-07T17:43:17+00:00",
+    "last_seen_at": "2026-09-07T17:43:17+00:00",
+    "fact_count": 5,
+    "sample_fact_id": "fact_ec6e3090dff20b87",
+    "first_seen_document": "01-india-economic-survey-2024-25-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "contact_person",
+    "first_seen_document_id": "doc_0d7e71e1766ef330",
+    "first_seen_at": "2026-09-07T17:17:36+00:00",
+    "last_seen_at": "2026-09-07T17:17:36+00:00",
+    "fact_count": 4,
+    "sample_fact_id": "fact_4b3cfeab486eb0c7",
+    "first_seen_document": "01-delhivery-prospectus-2022-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "growth",
+    "first_seen_document_id": "doc_73209a2caa2f5671",
+    "first_seen_at": "2026-09-07T17:23:31+00:00",
+    "last_seen_at": "2026-09-07T17:33:46+00:00",
+    "fact_count": 4,
+    "sample_fact_id": "fact_3715bb7754a84ed6",
+    "first_seen_document": "02-rbi-annual-report-2024-25-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "value",
+    "first_seen_document_id": "doc_86f2e79a3b7b4a36",
+    "first_seen_at": "2026-09-07T17:27:21+00:00",
+    "last_seen_at": "2026-09-07T17:27:21+00:00",
+    "fact_count": 4,
+    "sample_fact_id": "fact_1b57567205ddea70",
+    "first_seen_document": "01-india-economic-survey-2024-25-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "acquisition_price_per_equity_share",
+    "first_seen_document_id": "doc_0d7e71e1766ef330",
+    "first_seen_at": "2026-09-07T17:40:45+00:00",
+    "last_seen_at": "2026-09-07T17:40:45+00:00",
+    "fact_count": 4,
+    "sample_fact_id": "fact_bed127c66dad621a",
+    "first_seen_document": "01-delhivery-prospectus-2022-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "annual_report",
+    "first_seen_document_id": "doc_de6d79adc0667d66",
+    "first_seen_at": "2026-09-07T17:15:23+00:00",
+    "last_seen_at": "2026-09-07T17:36:29+00:00",
+    "fact_count": 3,
+    "sample_fact_id": "fact_54b06a7d17603593",
+    "first_seen_document": "02-delhivery-annual-report-fy24-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "equity_shares",
+    "first_seen_document_id": "doc_0d7e71e1766ef330",
+    "first_seen_at": "2026-09-07T17:16:00+00:00",
+    "last_seen_at": "2026-09-07T17:16:00+00:00",
+    "fact_count": 3,
+    "sample_fact_id": "fact_d54176af589e79bc",
+    "first_seen_document": "01-delhivery-prospectus-2022-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "economic_growth",
+    "first_seen_document_id": "doc_f6d3cfecafd95489",
+    "first_seen_at": "2026-09-07T17:17:26+00:00",
+    "last_seen_at": "2026-09-07T17:20:58+00:00",
+    "fact_count": 3,
+    "sample_fact_id": "fact_74d5e70eade750cd",
+    "first_seen_document": "03-imf-india-2025-article-iv-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "ebitda",
+    "first_seen_document_id": "doc_5ca307085c96c1fc",
+    "first_seen_at": "2026-09-07T17:17:51+00:00",
+    "last_seen_at": "2026-09-07T17:19:10+00:00",
+    "fact_count": 3,
+    "sample_fact_id": "fact_0d9b7a8383e251c8",
+    "first_seen_document": "03-delhivery-q4-fy24-earnings-presentation.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "inflation",
+    "first_seen_document_id": "doc_73209a2caa2f5671",
+    "first_seen_at": "2026-09-07T17:20:58+00:00",
+    "last_seen_at": "2026-09-07T17:23:31+00:00",
+    "fact_count": 3,
+    "sample_fact_id": "fact_bdc74aa8b00c8682",
+    "first_seen_document": "02-rbi-annual-report-2024-25-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "growth_trends",
+    "first_seen_document_id": "doc_86f2e79a3b7b4a36",
+    "first_seen_at": "2026-09-07T17:21:33+00:00",
+    "last_seen_at": "2026-09-07T17:21:33+00:00",
+    "fact_count": 3,
+    "sample_fact_id": "fact_c059b4069322f267",
+    "first_seen_document": "01-india-economic-survey-2024-25-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "growth_outlook",
+    "first_seen_document_id": "doc_86f2e79a3b7b4a36",
+    "first_seen_at": "2026-09-07T17:21:33+00:00",
+    "last_seen_at": "2026-09-07T17:21:33+00:00",
+    "fact_count": 3,
+    "sample_fact_id": "fact_7bafc3da46567310",
+    "first_seen_document": "01-india-economic-survey-2024-25-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "shareholders",
+    "first_seen_document_id": "doc_de6d79adc0667d66",
+    "first_seen_at": "2026-09-07T17:25:53+00:00",
+    "last_seen_at": "2026-09-07T17:25:53+00:00",
+    "fact_count": 3,
+    "sample_fact_id": "fact_82f6996faf5bc5e1",
+    "first_seen_document": "02-delhivery-annual-report-fy24-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "processing_capacity",
+    "first_seen_document_id": "doc_de6d79adc0667d66",
+    "first_seen_at": "2026-09-07T17:27:57+00:00",
+    "last_seen_at": "2026-09-07T17:29:16+00:00",
+    "fact_count": 3,
+    "sample_fact_id": "fact_10590060fe0f7695",
+    "first_seen_document": "02-delhivery-annual-report-fy24-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "tax_proceedings",
+    "first_seen_document_id": "doc_0d7e71e1766ef330",
+    "first_seen_at": "2026-09-07T17:31:17+00:00",
+    "last_seen_at": "2026-09-07T17:31:17+00:00",
+    "fact_count": 3,
+    "sample_fact_id": "fact_41253b573ede1b4d",
+    "first_seen_document": "01-delhivery-prospectus-2022-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "net_capital_flows",
+    "first_seen_document_id": "doc_73209a2caa2f5671",
+    "first_seen_at": "2026-09-07T17:32:12+00:00",
+    "last_seen_at": "2026-09-07T17:32:12+00:00",
+    "fact_count": 3,
+    "sample_fact_id": "fact_121fdf61e809d091",
+    "first_seen_document": "02-rbi-annual-report-2024-25-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "gdp_growth",
+    "first_seen_document_id": "doc_86f2e79a3b7b4a36",
+    "first_seen_at": "2026-09-07T17:46:23+00:00",
+    "last_seen_at": "2026-09-07T17:46:23+00:00",
+    "fact_count": 3,
+    "sample_fact_id": "fact_c466670bf145ee63",
+    "first_seen_document": "01-india-economic-survey-2024-25-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "female_employees",
+    "first_seen_document_id": "doc_de6d79adc0667d66",
+    "first_seen_at": "2026-09-07T17:46:50+00:00",
+    "last_seen_at": "2026-09-07T17:46:50+00:00",
+    "fact_count": 3,
+    "sample_fact_id": "fact_e4306ba05c84d739",
+    "first_seen_document": "02-delhivery-annual-report-fy24-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "express_parcel_shipments",
+    "first_seen_document_id": "doc_de6d79adc0667d66",
+    "first_seen_at": "2026-09-07T17:16:54+00:00",
+    "last_seen_at": "2026-09-07T17:17:51+00:00",
+    "fact_count": 2,
+    "sample_fact_id": "fact_dd024f06342ca12e",
+    "first_seen_document": "02-delhivery-annual-report-fy24-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "freight_service_centers",
+    "first_seen_document_id": "doc_de6d79adc0667d66",
+    "first_seen_at": "2026-09-07T17:16:54+00:00",
+    "last_seen_at": "2026-09-07T17:19:45+00:00",
+    "fact_count": 2,
+    "sample_fact_id": "fact_0d9d4a2516d9ea7e",
+    "first_seen_document": "02-delhivery-annual-report-fy24-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "current_account_deficit",
+    "first_seen_document_id": "doc_f6d3cfecafd95489",
+    "first_seen_at": "2026-09-07T17:17:26+00:00",
+    "last_seen_at": "2026-09-07T17:20:58+00:00",
+    "fact_count": 2,
+    "sample_fact_id": "fact_5f38cf2e133094fd",
+    "first_seen_document": "03-imf-india-2025-article-iv-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "ptl_freight_tonnage",
+    "first_seen_document_id": "doc_5ca307085c96c1fc",
+    "first_seen_at": "2026-09-07T17:17:51+00:00",
+    "last_seen_at": "2026-09-07T17:17:51+00:00",
+    "fact_count": 2,
+    "sample_fact_id": "fact_d012cc37d48ce18b",
+    "first_seen_document": "03-delhivery-q4-fy24-earnings-presentation.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "ebitda_profitability",
+    "first_seen_document_id": "doc_de6d79adc0667d66",
+    "first_seen_at": "2026-09-07T17:19:10+00:00",
+    "last_seen_at": "2026-09-07T17:19:10+00:00",
+    "fact_count": 2,
+    "sample_fact_id": "fact_108af31b6cae8847",
+    "first_seen_document": "02-delhivery-annual-report-fy24-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "hub",
+    "first_seen_document_id": "doc_de6d79adc0667d66",
+    "first_seen_at": "2026-09-07T17:19:58+00:00",
+    "last_seen_at": "2026-09-07T17:27:57+00:00",
+    "fact_count": 2,
+    "sample_fact_id": "fact_216ecc9f77a1e41f",
+    "first_seen_document": "02-delhivery-annual-report-fy24-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "partnership",
+    "first_seen_document_id": "doc_de6d79adc0667d66",
+    "first_seen_at": "2026-09-07T17:19:58+00:00",
+    "last_seen_at": "2026-09-07T17:34:18+00:00",
+    "fact_count": 2,
+    "sample_fact_id": "fact_df2e098dd2a299b0",
+    "first_seen_document": "02-delhivery-annual-report-fy24-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "shipments",
+    "first_seen_document_id": "doc_5ca307085c96c1fc",
+    "first_seen_at": "2026-09-07T17:20:42+00:00",
+    "last_seen_at": "2026-09-07T17:25:03+00:00",
+    "fact_count": 2,
+    "sample_fact_id": "fact_659e8402fa7c320d",
+    "first_seen_document": "03-delhivery-q4-fy24-earnings-presentation.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "tonnage",
+    "first_seen_document_id": "doc_5ca307085c96c1fc",
+    "first_seen_at": "2026-09-07T17:20:42+00:00",
+    "last_seen_at": "2026-09-07T17:25:03+00:00",
+    "fact_count": 2,
+    "sample_fact_id": "fact_e55f4b02cc31007b",
+    "first_seen_document": "03-delhivery-q4-fy24-earnings-presentation.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "investment_growth",
+    "first_seen_document_id": "doc_73209a2caa2f5671",
+    "first_seen_at": "2026-09-07T17:27:10+00:00",
+    "last_seen_at": "2026-09-07T17:31:06+00:00",
+    "fact_count": 2,
+    "sample_fact_id": "fact_0c5b46e3185e8fff",
+    "first_seen_document": "02-rbi-annual-report-2024-25-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "truck_fleet",
+    "first_seen_document_id": "doc_de6d79adc0667d66",
+    "first_seen_at": "2026-09-07T17:27:57+00:00",
+    "last_seen_at": "2026-09-07T17:27:57+00:00",
+    "fact_count": 2,
+    "sample_fact_id": "fact_03235d861dc0ca1b",
+    "first_seen_document": "02-delhivery-annual-report-fy24-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "female_workforce",
+    "first_seen_document_id": "doc_de6d79adc0667d66",
+    "first_seen_at": "2026-09-07T17:27:57+00:00",
+    "last_seen_at": "2026-09-07T17:27:57+00:00",
+    "fact_count": 2,
+    "sample_fact_id": "fact_a6d69688c0256086",
+    "first_seen_document": "02-delhivery-annual-report-fy24-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "inflows",
+    "first_seen_document_id": "doc_73209a2caa2f5671",
+    "first_seen_at": "2026-09-07T17:32:12+00:00",
+    "last_seen_at": "2026-09-07T17:32:12+00:00",
+    "fact_count": 2,
+    "sample_fact_id": "fact_fac50613af1d9455",
+    "first_seen_document": "02-rbi-annual-report-2024-25-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "net_inflows",
+    "first_seen_document_id": "doc_73209a2caa2f5671",
+    "first_seen_at": "2026-09-07T17:32:12+00:00",
+    "last_seen_at": "2026-09-07T17:32:12+00:00",
+    "fact_count": 2,
+    "sample_fact_id": "fact_ba5dafcdc5347f63",
+    "first_seen_document": "02-rbi-annual-report-2024-25-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "payable_days",
+    "first_seen_document_id": "doc_5ca307085c96c1fc",
+    "first_seen_at": "2026-09-07T17:33:42+00:00",
+    "last_seen_at": "2026-09-07T17:33:42+00:00",
+    "fact_count": 2,
+    "sample_fact_id": "fact_0fc4fe224f0d287d",
+    "first_seen_document": "03-delhivery-q4-fy24-earnings-presentation.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "impact_trade",
+    "first_seen_document_id": "doc_86f2e79a3b7b4a36",
+    "first_seen_at": "2026-09-07T17:34:02+00:00",
+    "last_seen_at": "2026-09-07T17:34:02+00:00",
+    "fact_count": 2,
+    "sample_fact_id": "fact_154312b1a2f79516",
+    "first_seen_document": "01-india-economic-survey-2024-25-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "optimisation",
+    "first_seen_document_id": "doc_de6d79adc0667d66",
+    "first_seen_at": "2026-09-07T17:38:28+00:00",
+    "last_seen_at": "2026-09-07T17:38:28+00:00",
+    "fact_count": 2,
+    "sample_fact_id": "fact_99c1ddb4de385d87",
+    "first_seen_document": "02-delhivery-annual-report-fy24-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "fleet",
+    "first_seen_document_id": "doc_de6d79adc0667d66",
+    "first_seen_at": "2026-09-07T17:40:22+00:00",
+    "last_seen_at": "2026-09-07T17:40:22+00:00",
+    "fact_count": 2,
+    "sample_fact_id": "fact_9a8aeab9f896d36a",
+    "first_seen_document": "02-delhivery-annual-report-fy24-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "nominal_gdp",
+    "first_seen_document_id": "doc_f6d3cfecafd95489",
+    "first_seen_at": "2026-09-07T17:41:20+00:00",
+    "last_seen_at": "2026-09-07T17:41:20+00:00",
+    "fact_count": 2,
+    "sample_fact_id": "fact_ae72da1334400c18",
+    "first_seen_document": "03-imf-india-2025-article-iv-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "services",
+    "first_seen_document_id": "doc_de6d79adc0667d66",
+    "first_seen_at": "2026-09-07T17:44:42+00:00",
+    "last_seen_at": "2026-09-07T17:44:42+00:00",
+    "fact_count": 2,
+    "sample_fact_id": "fact_219a68105e526df0",
+    "first_seen_document": "02-delhivery-annual-report-fy24-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "corporate_identity_number",
+    "first_seen_document_id": "doc_0d7e71e1766ef330",
+    "first_seen_at": "2026-09-07T17:15:02+00:00",
+    "last_seen_at": "2026-09-07T17:15:02+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_1f66ea9a2a5e93b6",
+    "first_seen_document": "01-delhivery-prospectus-2022-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "registered_office",
+    "first_seen_document_id": "doc_0d7e71e1766ef330",
+    "first_seen_at": "2026-09-07T17:15:02+00:00",
+    "last_seen_at": "2026-09-07T17:15:02+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_358c1cd0e50ac5f7",
+    "first_seen_document": "01-delhivery-prospectus-2022-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "telephone",
+    "first_seen_document_id": "doc_0d7e71e1766ef330",
+    "first_seen_at": "2026-09-07T17:15:02+00:00",
+    "last_seen_at": "2026-09-07T17:15:02+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_7acba891557f4d6f",
+    "first_seen_document": "01-delhivery-prospectus-2022-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "email",
+    "first_seen_document_id": "doc_0d7e71e1766ef330",
+    "first_seen_at": "2026-09-07T17:15:02+00:00",
+    "last_seen_at": "2026-09-07T17:15:02+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_f36df5491c13b8c8",
+    "first_seen_document": "01-delhivery-prospectus-2022-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "pin_codes_covered",
+    "first_seen_document_id": "doc_de6d79adc0667d66",
+    "first_seen_at": "2026-09-07T17:16:54+00:00",
+    "last_seen_at": "2026-09-07T17:16:54+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_4135432f3f19e2c9",
+    "first_seen_document": "02-delhivery-annual-report-fy24-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "last_mile_delivery_centres",
+    "first_seen_document_id": "doc_de6d79adc0667d66",
+    "first_seen_at": "2026-09-07T17:16:54+00:00",
+    "last_seen_at": "2026-09-07T17:16:54+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_580ae535ca2a35e5",
+    "first_seen_document": "02-delhivery-annual-report-fy24-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "count_46_ft_tractors",
+    "first_seen_document_id": "doc_de6d79adc0667d66",
+    "first_seen_at": "2026-09-07T17:16:54+00:00",
+    "last_seen_at": "2026-09-07T17:16:54+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_004b46e6e2debc52",
+    "first_seen_document": "02-delhivery-annual-report-fy24-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "workforce_strength",
+    "first_seen_document_id": "doc_de6d79adc0667d66",
+    "first_seen_at": "2026-09-07T17:16:54+00:00",
+    "last_seen_at": "2026-09-07T17:16:54+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_7adbee0da979a856",
+    "first_seen_document": "02-delhivery-annual-report-fy24-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "part_truckload_freight_delivered_since_inception",
+    "first_seen_document_id": "doc_de6d79adc0667d66",
+    "first_seen_at": "2026-09-07T17:16:54+00:00",
+    "last_seen_at": "2026-09-07T17:16:54+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_c14b9f787caf8b1b",
+    "first_seen_document": "02-delhivery-annual-report-fy24-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "logistics_area_under_management",
+    "first_seen_document_id": "doc_de6d79adc0667d66",
+    "first_seen_at": "2026-09-07T17:16:54+00:00",
+    "last_seen_at": "2026-09-07T17:16:54+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_92a6080d0ec21593",
+    "first_seen_document": "02-delhivery-annual-report-fy24-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "real_gdp",
+    "first_seen_document_id": "doc_f6d3cfecafd95489",
+    "first_seen_at": "2026-09-07T17:17:26+00:00",
+    "last_seen_at": "2026-09-07T17:17:26+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_3d0a38aa711c1643",
+    "first_seen_document": "03-imf-india-2025-article-iv-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "financial_corporate_sectors",
+    "first_seen_document_id": "doc_f6d3cfecafd95489",
+    "first_seen_at": "2026-09-07T17:17:26+00:00",
+    "last_seen_at": "2026-09-07T17:17:26+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_6cb7f7191ad40a6d",
+    "first_seen_document": "03-imf-india-2025-article-iv-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "express_delivery_centers",
+    "first_seen_document_id": "doc_5ca307085c96c1fc",
+    "first_seen_at": "2026-09-07T17:19:45+00:00",
+    "last_seen_at": "2026-09-07T17:19:45+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_02a8382c4d923cdc",
+    "first_seen_document": "03-delhivery-q4-fy24-earnings-presentation.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "partner_centers_constellation_bas",
+    "first_seen_document_id": "doc_5ca307085c96c1fc",
+    "first_seen_at": "2026-09-07T17:19:45+00:00",
+    "last_seen_at": "2026-09-07T17:19:45+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_bad0266a1237e7b3",
+    "first_seen_document": "03-delhivery-q4-fy24-earnings-presentation.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "team_size",
+    "first_seen_document_id": "doc_5ca307085c96c1fc",
+    "first_seen_at": "2026-09-07T17:19:45+00:00",
+    "last_seen_at": "2026-09-07T17:19:45+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_2ac1e17000c21c98",
+    "first_seen_document": "03-delhivery-q4-fy24-earnings-presentation.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "partner_agents",
+    "first_seen_document_id": "doc_5ca307085c96c1fc",
+    "first_seen_at": "2026-09-07T17:19:45+00:00",
+    "last_seen_at": "2026-09-07T17:19:45+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_30a4e7b0ff6b9f30",
+    "first_seen_document": "03-delhivery-q4-fy24-earnings-presentation.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "gateways",
+    "first_seen_document_id": "doc_5ca307085c96c1fc",
+    "first_seen_at": "2026-09-07T17:19:45+00:00",
+    "last_seen_at": "2026-09-07T17:19:45+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_28f92c73a5e13d52",
+    "first_seen_document": "03-delhivery-q4-fy24-earnings-presentation.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "automated_sort_centers",
+    "first_seen_document_id": "doc_5ca307085c96c1fc",
+    "first_seen_at": "2026-09-07T17:19:45+00:00",
+    "last_seen_at": "2026-09-07T17:19:45+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_2b1399a47ae44c49",
+    "first_seen_document": "03-delhivery-q4-fy24-earnings-presentation.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "infrastructure_million_sq_ft",
+    "first_seen_document_id": "doc_5ca307085c96c1fc",
+    "first_seen_at": "2026-09-07T17:19:45+00:00",
+    "last_seen_at": "2026-09-07T17:19:45+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_917fdc70a008ef70",
+    "first_seen_document": "03-delhivery-q4-fy24-earnings-presentation.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "growth_projection",
+    "first_seen_document_id": "doc_86f2e79a3b7b4a36",
+    "first_seen_at": "2026-09-07T17:19:51+00:00",
+    "last_seen_at": "2026-09-07T17:19:51+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_9fe6a30d809caf0f",
+    "first_seen_document": "01-india-economic-survey-2024-25-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "geopolitical_risk",
+    "first_seen_document_id": "doc_86f2e79a3b7b4a36",
+    "first_seen_at": "2026-09-07T17:19:51+00:00",
+    "last_seen_at": "2026-09-07T17:19:51+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_1c27879c58978d65",
+    "first_seen_document": "01-india-economic-survey-2024-25-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "hub_operations",
+    "first_seen_document_id": "doc_de6d79adc0667d66",
+    "first_seen_at": "2026-09-07T17:19:58+00:00",
+    "last_seen_at": "2026-09-07T17:19:58+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_2d95749b79681087",
+    "first_seen_document": "02-delhivery-annual-report-fy24-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "consumer_prices_combined",
+    "first_seen_document_id": "doc_f6d3cfecafd95489",
+    "first_seen_at": "2026-09-07T17:20:33+00:00",
+    "last_seen_at": "2026-09-07T17:20:33+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_1687bab1a7965e22",
+    "first_seen_document": "03-imf-india-2025-article-iv-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "saving_investment_percent_gdp",
+    "first_seen_document_id": "doc_f6d3cfecafd95489",
+    "first_seen_at": "2026-09-07T17:20:33+00:00",
+    "last_seen_at": "2026-09-07T17:20:33+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_a362132dc62d9288",
+    "first_seen_document": "03-imf-india-2025-article-iv-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "gross_saving",
+    "first_seen_document_id": "doc_f6d3cfecafd95489",
+    "first_seen_at": "2026-09-07T17:20:33+00:00",
+    "last_seen_at": "2026-09-07T17:20:33+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_68fa0875c0d9d021",
+    "first_seen_document": "03-imf-india-2025-article-iv-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "gross_investment",
+    "first_seen_document_id": "doc_f6d3cfecafd95489",
+    "first_seen_at": "2026-09-07T17:20:33+00:00",
+    "last_seen_at": "2026-09-07T17:20:33+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_9f215fc6690fc572",
+    "first_seen_document": "03-imf-india-2025-article-iv-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "central_government_balance",
+    "first_seen_document_id": "doc_f6d3cfecafd95489",
+    "first_seen_at": "2026-09-07T17:20:33+00:00",
+    "last_seen_at": "2026-09-07T17:20:33+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_0a890f3e0acbcdb0",
+    "first_seen_document": "03-imf-india-2025-article-iv-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "general_government_balance",
+    "first_seen_document_id": "doc_f6d3cfecafd95489",
+    "first_seen_at": "2026-09-07T17:20:33+00:00",
+    "last_seen_at": "2026-09-07T17:20:33+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_a077b33c6de5cc4b",
+    "first_seen_document": "03-imf-india-2025-article-iv-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "general_government_debt",
+    "first_seen_document_id": "doc_f6d3cfecafd95489",
+    "first_seen_at": "2026-09-07T17:20:33+00:00",
+    "last_seen_at": "2026-09-07T17:20:33+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_c6ae86e8b3246547",
+    "first_seen_document": "03-imf-india-2025-article-iv-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "freight_revenue",
+    "first_seen_document_id": "doc_5ca307085c96c1fc",
+    "first_seen_at": "2026-09-07T17:20:42+00:00",
+    "last_seen_at": "2026-09-07T17:20:42+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_7d4962e820a003f1",
+    "first_seen_document": "03-delhivery-q4-fy24-earnings-presentation.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "external_sector_resilience",
+    "first_seen_document_id": "doc_73209a2caa2f5671",
+    "first_seen_at": "2026-09-07T17:20:58+00:00",
+    "last_seen_at": "2026-09-07T17:20:58+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_d5313e915da1f3d3",
+    "first_seen_document": "02-rbi-annual-report-2024-25-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "real_gross_domestic_product_gdp_growth",
+    "first_seen_document_id": "doc_73209a2caa2f5671",
+    "first_seen_at": "2026-09-07T17:25:11+00:00",
+    "last_seen_at": "2026-09-07T17:25:11+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_9f588de8035bdaf5",
+    "first_seen_document": "02-rbi-annual-report-2024-25-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "gross_value_added_gva_agriculture_allied_sector",
+    "first_seen_document_id": "doc_73209a2caa2f5671",
+    "first_seen_at": "2026-09-07T17:25:11+00:00",
+    "last_seen_at": "2026-09-07T17:25:11+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_400f513ca2cb8b73",
+    "first_seen_document": "02-rbi-annual-report-2024-25-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "gross_value_added_gva_industrial_sector",
+    "first_seen_document_id": "doc_73209a2caa2f5671",
+    "first_seen_at": "2026-09-07T17:25:11+00:00",
+    "last_seen_at": "2026-09-07T17:25:11+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_3429d469d3c3a5e8",
+    "first_seen_document": "02-rbi-annual-report-2024-25-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "revenues",
+    "first_seen_document_id": "doc_de6d79adc0667d66",
+    "first_seen_at": "2026-09-07T17:25:53+00:00",
+    "last_seen_at": "2026-09-07T17:25:53+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_2938144136c6769c",
+    "first_seen_document": "02-delhivery-annual-report-fy24-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "pre_offer_shareholding",
+    "first_seen_document_id": "doc_0d7e71e1766ef330",
+    "first_seen_at": "2026-09-07T17:25:57+00:00",
+    "last_seen_at": "2026-09-07T17:25:57+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_cec50b179e3a1226",
+    "first_seen_document": "01-delhivery-prospectus-2022-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "electricity_demand",
+    "first_seen_document_id": "doc_73209a2caa2f5671",
+    "first_seen_at": "2026-09-07T17:27:10+00:00",
+    "last_seen_at": "2026-09-07T17:27:10+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_be6cfb0064127ce7",
+    "first_seen_document": "02-rbi-annual-report-2024-25-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "production_linked_incentive_pli_scheme",
+    "first_seen_document_id": "doc_73209a2caa2f5671",
+    "first_seen_at": "2026-09-07T17:27:10+00:00",
+    "last_seen_at": "2026-09-07T17:27:10+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_e7be0bce417d903d",
+    "first_seen_document": "02-rbi-annual-report-2024-25-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "share_aggregate_supply",
+    "first_seen_document_id": "doc_73209a2caa2f5671",
+    "first_seen_at": "2026-09-07T17:27:10+00:00",
+    "last_seen_at": "2026-09-07T17:27:10+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_c3035546642444c4",
+    "first_seen_document": "02-rbi-annual-report-2024-25-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "share_construction_activity",
+    "first_seen_document_id": "doc_73209a2caa2f5671",
+    "first_seen_at": "2026-09-07T17:27:10+00:00",
+    "last_seen_at": "2026-09-07T17:27:10+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_713a81c4ccabd9ef",
+    "first_seen_document": "02-rbi-annual-report-2024-25-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "share_trade_activity",
+    "first_seen_document_id": "doc_73209a2caa2f5671",
+    "first_seen_at": "2026-09-07T17:27:10+00:00",
+    "last_seen_at": "2026-09-07T17:27:10+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_11f8d1648d6da168",
+    "first_seen_document": "02-rbi-annual-report-2024-25-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "reason",
+    "first_seen_document_id": "doc_86f2e79a3b7b4a36",
+    "first_seen_at": "2026-09-07T17:27:21+00:00",
+    "last_seen_at": "2026-09-07T17:27:21+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_00728bd36930d4cb",
+    "first_seen_document": "01-india-economic-survey-2024-25-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "load_movement",
+    "first_seen_document_id": "doc_de6d79adc0667d66",
+    "first_seen_at": "2026-09-07T17:27:57+00:00",
+    "last_seen_at": "2026-09-07T17:27:57+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_48c47c96055f1e97",
+    "first_seen_document": "02-delhivery-annual-report-fy24-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "policy_stance",
+    "first_seen_document_id": "doc_73209a2caa2f5671",
+    "first_seen_at": "2026-09-07T17:29:07+00:00",
+    "last_seen_at": "2026-09-07T17:29:07+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_4eabd8735444385c",
+    "first_seen_document": "02-rbi-annual-report-2024-25-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "policy_rate",
+    "first_seen_document_id": "doc_73209a2caa2f5671",
+    "first_seen_at": "2026-09-07T17:29:07+00:00",
+    "last_seen_at": "2026-09-07T17:29:07+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_e3a1c92c2db3dafd",
+    "first_seen_document": "02-rbi-annual-report-2024-25-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "liquidity_conditions",
+    "first_seen_document_id": "doc_73209a2caa2f5671",
+    "first_seen_at": "2026-09-07T17:29:07+00:00",
+    "last_seen_at": "2026-09-07T17:29:07+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_ca0df577af6921a5",
+    "first_seen_document": "02-rbi-annual-report-2024-25-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "weighted_average_call_rate_wacr",
+    "first_seen_document_id": "doc_73209a2caa2f5671",
+    "first_seen_at": "2026-09-07T17:29:07+00:00",
+    "last_seen_at": "2026-09-07T17:29:07+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_091d86c8afc5e218",
+    "first_seen_document": "02-rbi-annual-report-2024-25-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "income_per_capita",
+    "first_seen_document_id": "doc_f6d3cfecafd95489",
+    "first_seen_at": "2026-09-07T17:29:26+00:00",
+    "last_seen_at": "2026-09-07T17:29:26+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_637147cce5d71edb",
+    "first_seen_document": "03-imf-india-2025-article-iv-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "handover_from_public_private_investment",
+    "first_seen_document_id": "doc_f6d3cfecafd95489",
+    "first_seen_at": "2026-09-07T17:29:26+00:00",
+    "last_seen_at": "2026-09-07T17:29:26+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_612e329c62151365",
+    "first_seen_document": "03-imf-india-2025-article-iv-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "public_debt",
+    "first_seen_document_id": "doc_f6d3cfecafd95489",
+    "first_seen_at": "2026-09-07T17:29:26+00:00",
+    "last_seen_at": "2026-09-07T17:29:26+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_75ac138e3deda0f7",
+    "first_seen_document": "03-imf-india-2025-article-iv-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "high_quality_employment_benefits",
+    "first_seen_document_id": "doc_f6d3cfecafd95489",
+    "first_seen_at": "2026-09-07T17:29:26+00:00",
+    "last_seen_at": "2026-09-07T17:29:26+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_d3d8601d3e94fb5d",
+    "first_seen_document": "03-imf-india-2025-article-iv-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "private_consumption_growth",
+    "first_seen_document_id": "doc_f6d3cfecafd95489",
+    "first_seen_at": "2026-09-07T17:31:06+00:00",
+    "last_seen_at": "2026-09-07T17:31:06+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_1b2da9a8e3a0af9f",
+    "first_seen_document": "03-imf-india-2025-article-iv-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "nominal_gdp_growth",
+    "first_seen_document_id": "doc_f6d3cfecafd95489",
+    "first_seen_at": "2026-09-07T17:31:06+00:00",
+    "last_seen_at": "2026-09-07T17:31:06+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_01b6eac2b300ebdf",
+    "first_seen_document": "03-imf-india-2025-article-iv-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "output_gap",
+    "first_seen_document_id": "doc_f6d3cfecafd95489",
+    "first_seen_at": "2026-09-07T17:31:06+00:00",
+    "last_seen_at": "2026-09-07T17:31:06+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_7b68e4a38ad698c4",
+    "first_seen_document": "03-imf-india-2025-article-iv-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "number_items_each_gst_rate_slab",
+    "first_seen_document_id": "doc_f6d3cfecafd95489",
+    "first_seen_at": "2026-09-07T17:32:51+00:00",
+    "last_seen_at": "2026-09-07T17:32:51+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_719cdfa02fd77d90",
+    "first_seen_document": "03-imf-india-2025-article-iv-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "salary_other_employee_benefits",
+    "first_seen_document_id": "doc_0d7e71e1766ef330",
+    "first_seen_at": "2026-09-07T17:33:28+00:00",
+    "last_seen_at": "2026-09-07T17:33:28+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_5eca8dbe67f5d3fe",
+    "first_seen_document": "01-delhivery-prospectus-2022-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "improving",
+    "first_seen_document_id": "doc_5ca307085c96c1fc",
+    "first_seen_at": "2026-09-07T17:33:42+00:00",
+    "last_seen_at": "2026-09-07T17:33:42+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_b82a3a111c979003",
+    "first_seen_document": "03-delhivery-q4-fy24-earnings-presentation.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "level",
+    "first_seen_document_id": "doc_86f2e79a3b7b4a36",
+    "first_seen_at": "2026-09-07T17:34:02+00:00",
+    "last_seen_at": "2026-09-07T17:34:02+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_973d3a4a4946feb4",
+    "first_seen_document": "01-india-economic-survey-2024-25-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "response_trade_disruptions",
+    "first_seen_document_id": "doc_86f2e79a3b7b4a36",
+    "first_seen_at": "2026-09-07T17:34:02+00:00",
+    "last_seen_at": "2026-09-07T17:34:02+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_f1aa51960045ab8b",
+    "first_seen_document": "01-india-economic-survey-2024-25-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "impact_freight_rates",
+    "first_seen_document_id": "doc_86f2e79a3b7b4a36",
+    "first_seen_at": "2026-09-07T17:34:02+00:00",
+    "last_seen_at": "2026-09-07T17:34:02+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_bc048bc92469e4d5",
+    "first_seen_document": "01-india-economic-survey-2024-25-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "impact_import_restrictive_measures",
+    "first_seen_document_id": "doc_86f2e79a3b7b4a36",
+    "first_seen_at": "2026-09-07T17:34:02+00:00",
+    "last_seen_at": "2026-09-07T17:34:02+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_4607e60c59949940",
+    "first_seen_document": "01-india-economic-survey-2024-25-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "delivery_times",
+    "first_seen_document_id": "doc_de6d79adc0667d66",
+    "first_seen_at": "2026-09-07T17:34:18+00:00",
+    "last_seen_at": "2026-09-07T17:34:18+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_6e60bfcd4b9a776b",
+    "first_seen_document": "02-delhivery-annual-report-fy24-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "operational_efficiency",
+    "first_seen_document_id": "doc_de6d79adc0667d66",
+    "first_seen_at": "2026-09-07T17:34:18+00:00",
+    "last_seen_at": "2026-09-07T17:34:18+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_707fe6b66740c850",
+    "first_seen_document": "02-delhivery-annual-report-fy24-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "logistics_network",
+    "first_seen_document_id": "doc_de6d79adc0667d66",
+    "first_seen_at": "2026-09-07T17:34:18+00:00",
+    "last_seen_at": "2026-09-07T17:34:18+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_e835f38fd4b51bc9",
+    "first_seen_document": "02-delhivery-annual-report-fy24-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "statutory_reports",
+    "first_seen_document_id": "doc_de6d79adc0667d66",
+    "first_seen_at": "2026-09-07T17:36:29+00:00",
+    "last_seen_at": "2026-09-07T17:36:29+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_dcb0244b3fcac0cd",
+    "first_seen_document": "02-delhivery-annual-report-fy24-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "financial_statements",
+    "first_seen_document_id": "doc_de6d79adc0667d66",
+    "first_seen_at": "2026-09-07T17:36:29+00:00",
+    "last_seen_at": "2026-09-07T17:36:29+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_782114b061af47a1",
+    "first_seen_document": "02-delhivery-annual-report-fy24-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "headline_inflation",
+    "first_seen_document_id": "doc_f6d3cfecafd95489",
+    "first_seen_at": "2026-09-07T17:37:03+00:00",
+    "last_seen_at": "2026-09-07T17:37:03+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_5d02a8222964ccdc",
+    "first_seen_document": "03-imf-india-2025-article-iv-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "core_inflation",
+    "first_seen_document_id": "doc_f6d3cfecafd95489",
+    "first_seen_at": "2026-09-07T17:37:03+00:00",
+    "last_seen_at": "2026-09-07T17:37:03+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_7cbe2d75e3e87a2a",
+    "first_seen_document": "03-imf-india-2025-article-iv-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "gst_reform",
+    "first_seen_document_id": "doc_f6d3cfecafd95489",
+    "first_seen_at": "2026-09-07T17:37:03+00:00",
+    "last_seen_at": "2026-09-07T17:37:03+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_28caeeeb666b62b0",
+    "first_seen_document": "03-imf-india-2025-article-iv-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "interest_income",
+    "first_seen_document_id": "doc_0d7e71e1766ef330",
+    "first_seen_at": "2026-09-07T17:37:13+00:00",
+    "last_seen_at": "2026-09-07T17:37:13+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_a52ee0b1a8608893",
+    "first_seen_document": "01-delhivery-prospectus-2022-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "investment_equity",
+    "first_seen_document_id": "doc_0d7e71e1766ef330",
+    "first_seen_at": "2026-09-07T17:37:13+00:00",
+    "last_seen_at": "2026-09-07T17:37:13+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_13c8e4beed1121e8",
+    "first_seen_document": "01-delhivery-prospectus-2022-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "deemed_investment",
+    "first_seen_document_id": "doc_0d7e71e1766ef330",
+    "first_seen_at": "2026-09-07T17:37:13+00:00",
+    "last_seen_at": "2026-09-07T17:37:13+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_f19a24bca9ecf785",
+    "first_seen_document": "01-delhivery-prospectus-2022-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "income_from_lorry_hire_charges",
+    "first_seen_document_id": "doc_0d7e71e1766ef330",
+    "first_seen_at": "2026-09-07T17:37:13+00:00",
+    "last_seen_at": "2026-09-07T17:37:13+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_071a5451e115c469",
+    "first_seen_document": "01-delhivery-prospectus-2022-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "last_mile_distribution_centres",
+    "first_seen_document_id": "doc_de6d79adc0667d66",
+    "first_seen_at": "2026-09-07T17:38:28+00:00",
+    "last_seen_at": "2026-09-07T17:38:28+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_9789e6ee9564ded6",
+    "first_seen_document": "02-delhivery-annual-report-fy24-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "average_shipments_daily_per_centre",
+    "first_seen_document_id": "doc_de6d79adc0667d66",
+    "first_seen_at": "2026-09-07T17:38:28+00:00",
+    "last_seen_at": "2026-09-07T17:38:28+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_a9813509ffaf7789",
+    "first_seen_document": "02-delhivery-annual-report-fy24-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "tractor_trailers",
+    "first_seen_document_id": "doc_de6d79adc0667d66",
+    "first_seen_at": "2026-09-07T17:38:28+00:00",
+    "last_seen_at": "2026-09-07T17:38:28+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_e3b695702cf055eb",
+    "first_seen_document": "02-delhivery-annual-report-fy24-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "economic_outlook",
+    "first_seen_document_id": "doc_f6d3cfecafd95489",
+    "first_seen_at": "2026-09-07T17:38:50+00:00",
+    "last_seen_at": "2026-09-07T17:38:50+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_be5b8d93d456bcbf",
+    "first_seen_document": "03-imf-india-2025-article-iv-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "loan_given",
+    "first_seen_document_id": "doc_0d7e71e1766ef330",
+    "first_seen_at": "2026-09-07T17:39:00+00:00",
+    "last_seen_at": "2026-09-07T17:39:00+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_5bc60eb06d60b7bc",
+    "first_seen_document": "01-delhivery-prospectus-2022-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "advances",
+    "first_seen_document_id": "doc_0d7e71e1766ef330",
+    "first_seen_at": "2026-09-07T17:39:00+00:00",
+    "last_seen_at": "2026-09-07T17:39:00+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_6d7b88709ddafb0c",
+    "first_seen_document": "01-delhivery-prospectus-2022-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "outlook",
+    "first_seen_document_id": "doc_73209a2caa2f5671",
+    "first_seen_at": "2026-09-07T17:40:05+00:00",
+    "last_seen_at": "2026-09-07T17:40:05+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_c11631c42b913715",
+    "first_seen_document": "02-rbi-annual-report-2024-25-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "prospects",
+    "first_seen_document_id": "doc_73209a2caa2f5671",
+    "first_seen_at": "2026-09-07T17:40:05+00:00",
+    "last_seen_at": "2026-09-07T17:40:05+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_686a8a4a3620f6d9",
+    "first_seen_document": "02-rbi-annual-report-2024-25-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "gva_recovery",
+    "first_seen_document_id": "doc_86f2e79a3b7b4a36",
+    "first_seen_at": "2026-09-07T17:40:17+00:00",
+    "last_seen_at": "2026-09-07T17:40:17+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_8cb95fbc534914a0",
+    "first_seen_document": "01-india-economic-survey-2024-25-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "agriculture_gva",
+    "first_seen_document_id": "doc_86f2e79a3b7b4a36",
+    "first_seen_at": "2026-09-07T17:40:17+00:00",
+    "last_seen_at": "2026-09-07T17:40:17+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_f4dff896626e3c80",
+    "first_seen_document": "01-india-economic-survey-2024-25-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "industrial_gva",
+    "first_seen_document_id": "doc_86f2e79a3b7b4a36",
+    "first_seen_at": "2026-09-07T17:40:17+00:00",
+    "last_seen_at": "2026-09-07T17:40:17+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_20ca3121c12176fc",
+    "first_seen_document": "01-india-economic-survey-2024-25-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "services_gva",
+    "first_seen_document_id": "doc_86f2e79a3b7b4a36",
+    "first_seen_at": "2026-09-07T17:40:17+00:00",
+    "last_seen_at": "2026-09-07T17:40:17+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_16d9d8ad4002fbf6",
+    "first_seen_document": "01-india-economic-survey-2024-25-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "construction_gva",
+    "first_seen_document_id": "doc_86f2e79a3b7b4a36",
+    "first_seen_at": "2026-09-07T17:40:17+00:00",
+    "last_seen_at": "2026-09-07T17:40:17+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_0548ad4180316060",
+    "first_seen_document": "01-india-economic-survey-2024-25-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "manufacturing_gva",
+    "first_seen_document_id": "doc_86f2e79a3b7b4a36",
+    "first_seen_at": "2026-09-07T17:40:17+00:00",
+    "last_seen_at": "2026-09-07T17:40:17+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_49a8b711cf2ac933",
+    "first_seen_document": "01-india-economic-survey-2024-25-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "fiscal_deficit",
+    "first_seen_document_id": "doc_f6d3cfecafd95489",
+    "first_seen_at": "2026-09-07T17:40:32+00:00",
+    "last_seen_at": "2026-09-07T17:40:32+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_e1a8307ba4458a5c",
+    "first_seen_document": "03-imf-india-2025-article-iv-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "personal_income_tax",
+    "first_seen_document_id": "doc_f6d3cfecafd95489",
+    "first_seen_at": "2026-09-07T17:40:32+00:00",
+    "last_seen_at": "2026-09-07T17:40:32+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_e7cb4cfdf6c28f65",
+    "first_seen_document": "03-imf-india-2025-article-iv-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "gst_rate",
+    "first_seen_document_id": "doc_f6d3cfecafd95489",
+    "first_seen_at": "2026-09-07T17:40:32+00:00",
+    "last_seen_at": "2026-09-07T17:40:32+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_50b6d2328fae470d",
+    "first_seen_document": "03-imf-india-2025-article-iv-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "focal_areas",
+    "first_seen_document_id": "doc_73209a2caa2f5671",
+    "first_seen_at": "2026-09-07T17:41:07+00:00",
+    "last_seen_at": "2026-09-07T17:41:07+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_c9945aef02308a35",
+    "first_seen_document": "02-rbi-annual-report-2024-25-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "transforming_logistics_landscape",
+    "first_seen_document_id": "doc_de6d79adc0667d66",
+    "first_seen_at": "2026-09-07T17:41:15+00:00",
+    "last_seen_at": "2026-09-07T17:41:15+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_9b1239cd1e88a16b",
+    "first_seen_document": "02-delhivery-annual-report-fy24-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "platform",
+    "first_seen_document_id": "doc_de6d79adc0667d66",
+    "first_seen_at": "2026-09-07T17:41:15+00:00",
+    "last_seen_at": "2026-09-07T17:41:15+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_d70da0ad9d27c19b",
+    "first_seen_document": "02-delhivery-annual-report-fy24-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "savings",
+    "first_seen_document_id": "doc_de6d79adc0667d66",
+    "first_seen_at": "2026-09-07T17:41:15+00:00",
+    "last_seen_at": "2026-09-07T17:41:15+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_89ac02d5264fc280",
+    "first_seen_document": "02-delhivery-annual-report-fy24-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "nuclear_power_capacity",
+    "first_seen_document_id": "doc_73209a2caa2f5671",
+    "first_seen_at": "2026-09-07T17:42:42+00:00",
+    "last_seen_at": "2026-09-07T17:42:42+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_05f8cd1dc92baebd",
+    "first_seen_document": "02-rbi-annual-report-2024-25-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "budgetary_provision_science_technology",
+    "first_seen_document_id": "doc_73209a2caa2f5671",
+    "first_seen_at": "2026-09-07T17:42:42+00:00",
+    "last_seen_at": "2026-09-07T17:42:42+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_8c67e54bc1e445a4",
+    "first_seen_document": "02-rbi-annual-report-2024-25-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "ai_capabilities",
+    "first_seen_document_id": "doc_73209a2caa2f5671",
+    "first_seen_at": "2026-09-07T17:42:42+00:00",
+    "last_seen_at": "2026-09-07T17:42:42+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_d3fbcc7aed33ab11",
+    "first_seen_document": "02-rbi-annual-report-2024-25-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "inflation_outlook",
+    "first_seen_document_id": "doc_73209a2caa2f5671",
+    "first_seen_at": "2026-09-07T17:42:42+00:00",
+    "last_seen_at": "2026-09-07T17:42:42+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_58507b8198b5c067",
+    "first_seen_document": "02-rbi-annual-report-2024-25-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "agricultural_prospects",
+    "first_seen_document_id": "doc_86f2e79a3b7b4a36",
+    "first_seen_at": "2026-09-07T17:43:17+00:00",
+    "last_seen_at": "2026-09-07T17:43:17+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_6953141f2d412a6c",
+    "first_seen_document": "01-india-economic-survey-2024-25-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "share_cod_orders_e_commerce",
+    "first_seen_document_id": "doc_de6d79adc0667d66",
+    "first_seen_at": "2026-09-07T17:43:23+00:00",
+    "last_seen_at": "2026-09-07T17:43:23+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_28f082887b2f331f",
+    "first_seen_document": "02-delhivery-annual-report-fy24-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "average_rto_reduction",
+    "first_seen_document_id": "doc_de6d79adc0667d66",
+    "first_seen_at": "2026-09-07T17:43:23+00:00",
+    "last_seen_at": "2026-09-07T17:43:23+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_023e1bcc1161dada",
+    "first_seen_document": "02-delhivery-annual-report-fy24-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "number_businesses_leveraging_solution",
+    "first_seen_document_id": "doc_de6d79adc0667d66",
+    "first_seen_at": "2026-09-07T17:43:23+00:00",
+    "last_seen_at": "2026-09-07T17:43:23+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_e992a03b6fb57db5",
+    "first_seen_document": "02-delhivery-annual-report-fy24-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "allotment",
+    "first_seen_document_id": "doc_0d7e71e1766ef330",
+    "first_seen_at": "2026-09-07T17:45:20+00:00",
+    "last_seen_at": "2026-09-07T17:45:20+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_772b51934723120b",
+    "first_seen_document": "01-delhivery-prospectus-2022-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "transfer",
+    "first_seen_document_id": "doc_0d7e71e1766ef330",
+    "first_seen_at": "2026-09-07T17:45:20+00:00",
+    "last_seen_at": "2026-09-07T17:45:20+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_93b398367f65b3ce",
+    "first_seen_document": "01-delhivery-prospectus-2022-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "regulatory_initiatives",
+    "first_seen_document_id": "doc_73209a2caa2f5671",
+    "first_seen_at": "2026-09-07T17:45:45+00:00",
+    "last_seen_at": "2026-09-07T17:45:45+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_1948ee449df1dc97",
+    "first_seen_document": "02-rbi-annual-report-2024-25-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "headcount",
+    "first_seen_document_id": "doc_de6d79adc0667d66",
+    "first_seen_at": "2026-09-07T17:46:50+00:00",
+    "last_seen_at": "2026-09-07T17:46:50+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_3e19d89e55d1a362",
+    "first_seen_document": "02-delhivery-annual-report-fy24-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "pre_ipo_placement",
+    "first_seen_document_id": "doc_0d7e71e1766ef330",
+    "first_seen_at": "2026-09-07T17:47:37+00:00",
+    "last_seen_at": "2026-09-07T17:47:37+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_6a39fe7ec50b7da1",
+    "first_seen_document": "01-delhivery-prospectus-2022-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "bonus_issue",
+    "first_seen_document_id": "doc_0d7e71e1766ef330",
+    "first_seen_at": "2026-09-07T17:47:37+00:00",
+    "last_seen_at": "2026-09-07T17:47:37+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_33376471138c312e",
+    "first_seen_document": "01-delhivery-prospectus-2022-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "split_or_consolidation_equity_shares",
+    "first_seen_document_id": "doc_0d7e71e1766ef330",
+    "first_seen_at": "2026-09-07T17:47:37+00:00",
+    "last_seen_at": "2026-09-07T17:47:37+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_130c15484a6f9b1c",
+    "first_seen_document": "01-delhivery-prospectus-2022-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "unspecified",
+    "first_seen_document_id": "doc_5ca307085c96c1fc",
+    "first_seen_at": "2026-09-07T17:48:13+00:00",
+    "last_seen_at": "2026-09-07T17:48:13+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_54dbc2d22d838c7a",
+    "first_seen_document": "03-delhivery-q4-fy24-earnings-presentation.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "percentage_shares_outstanding",
+    "first_seen_document_id": "doc_5ca307085c96c1fc",
+    "first_seen_at": "2026-09-07T17:48:13+00:00",
+    "last_seen_at": "2026-09-07T17:48:13+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_38a4efcf0b7de534",
+    "first_seen_document": "03-delhivery-q4-fy24-earnings-presentation.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "time_based_esops",
+    "first_seen_document_id": "doc_5ca307085c96c1fc",
+    "first_seen_at": "2026-09-07T17:48:13+00:00",
+    "last_seen_at": "2026-09-07T17:48:13+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_0d4095e32e4a5268",
+    "first_seen_document": "03-delhivery-q4-fy24-earnings-presentation.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "performance_based_esops",
+    "first_seen_document_id": "doc_5ca307085c96c1fc",
+    "first_seen_at": "2026-09-07T17:48:13+00:00",
+    "last_seen_at": "2026-09-07T17:48:13+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_70cfcbc1cd25ac93",
+    "first_seen_document": "03-delhivery-q4-fy24-earnings-presentation.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "vesting_period",
+    "first_seen_document_id": "doc_5ca307085c96c1fc",
+    "first_seen_at": "2026-09-07T17:48:13+00:00",
+    "last_seen_at": "2026-09-07T17:48:13+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_663000760b6d6e7e",
+    "first_seen_document": "03-delhivery-q4-fy24-earnings-presentation.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "cost_time_based_options",
+    "first_seen_document_id": "doc_5ca307085c96c1fc",
+    "first_seen_at": "2026-09-07T17:48:13+00:00",
+    "last_seen_at": "2026-09-07T17:48:13+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_31226eaf5ab0ce4d",
+    "first_seen_document": "03-delhivery-q4-fy24-earnings-presentation.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "cost_performance_based_options",
+    "first_seen_document_id": "doc_5ca307085c96c1fc",
+    "first_seen_at": "2026-09-07T17:48:13+00:00",
+    "last_seen_at": "2026-09-07T17:48:13+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_ff85fa958a16c088",
+    "first_seen_document": "03-delhivery-q4-fy24-earnings-presentation.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "growth_passenger_vehicle_sales",
+    "first_seen_document_id": "doc_86f2e79a3b7b4a36",
+    "first_seen_at": "2026-09-07T17:49:00+00:00",
+    "last_seen_at": "2026-09-07T17:49:00+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_d81f0c178188cf50",
+    "first_seen_document": "01-india-economic-survey-2024-25-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "growth_fmcg_sales",
+    "first_seen_document_id": "doc_86f2e79a3b7b4a36",
+    "first_seen_at": "2026-09-07T17:49:00+00:00",
+    "last_seen_at": "2026-09-07T17:49:00+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_95e48dce33257dd2",
+    "first_seen_document": "01-india-economic-survey-2024-25-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "growth_capital_expenditure",
+    "first_seen_document_id": "doc_86f2e79a3b7b4a36",
+    "first_seen_at": "2026-09-07T17:49:00+00:00",
+    "last_seen_at": "2026-09-07T17:49:00+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_9f77879b069a2675",
+    "first_seen_document": "01-india-economic-survey-2024-25-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "growth_capital_formation_growth",
+    "first_seen_document_id": "doc_86f2e79a3b7b4a36",
+    "first_seen_at": "2026-09-07T17:49:00+00:00",
+    "last_seen_at": "2026-09-07T17:49:00+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_e06cf641fe78d5a0",
+    "first_seen_document": "01-india-economic-survey-2024-25-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  },
+  {
+    "name": "correction_demand_supply_metrics",
+    "first_seen_document_id": "doc_86f2e79a3b7b4a36",
+    "first_seen_at": "2026-09-07T17:49:00+00:00",
+    "last_seen_at": "2026-09-07T17:49:00+00:00",
+    "fact_count": 1,
+    "sample_fact_id": "fact_720e8f1d8fb35a49",
+    "first_seen_document": "01-india-economic-survey-2024-25-excerpt.pdf",
+    "observed_keys": [
+      "attribute",
+      "confidence",
+      "qualifier",
+      "source_quote",
+      "subject",
+      "time_scope",
+      "unit",
+      "value"
+    ]
+  }
+]

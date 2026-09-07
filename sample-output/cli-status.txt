@@ -1,0 +1,30 @@
+================================================================================
+FACT KNOWLEDGE LAYER - store status
+================================================================================
+database: /home/nabhya/Fact Knowledge Layer/data/fkl.db
+totals:   documents=6  pages=511  chunks=3,139  facts=331  evidence=331  fact_types=168  relationships=129
+--------------------------------------------------------------------------------
+doc_0d7e71e1766ef330  01-delhivery-prospectus-2022-excerpt.pdf
+    title: 01 delhivery prospectus 2022 excerpt
+    100 pages | 149 extraction / 467 retrieval chunks | 41 facts | status=linked
+    printed page labels resolved: 98% | tables detected: 0 | parser v1
+doc_de6d79adc0667d66  02-delhivery-annual-report-fy24-excerpt.pdf
+    title: 02 delhivery annual report fy24 excerpt
+    100 pages | 237 extraction / 840 retrieval chunks | 66 facts | status=linked
+    printed page labels resolved: 100% | tables detected: 0 | parser v1
+doc_5ca307085c96c1fc  03-delhivery-q4-fy24-earnings-presentation.pdf
+    title: 03 delhivery q4 fy24 earnings presentation
+    27 pages | 23 extraction / 37 retrieval chunks | 76 facts | status=linked
+    printed page labels resolved: 67% | tables detected: 0 | parser v1
+doc_86f2e79a3b7b4a36  01-india-economic-survey-2024-25-excerpt.pdf
+    title: 01 india economic survey 2024 25 excerpt
+    89 pages | 92 extraction / 298 retrieval chunks | 56 facts | status=linked
+    printed page labels resolved: 99% | tables detected: 0 | parser v1
+doc_73209a2caa2f5671  02-rbi-annual-report-2024-25-excerpt.pdf
+    title: 02 rbi annual report 2024 25 excerpt
+    100 pages | 105 extraction / 399 retrieval chunks | 42 facts | status=linked
+    printed page labels resolved: 100% | tables detected: 0 | parser v1
+doc_f6d3cfecafd95489  03-imf-india-2025-article-iv-excerpt.pdf
+    title: India: 2025 Article IV Consultation-Press Release; Staff Report; and S
+    95 pages | 116 extraction / 376 retrieval chunks | 50 facts | status=linked
+    printed page labels resolved: 94% | tables detected: 0 | parser v1

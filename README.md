@@ -19,7 +19,7 @@ fact shape emerges from the documents into a dynamic registry.
 | 3 | Embeddings + vector search, relationship classification, FastAPI, web UI, showcase view | ✅ done |
 
 Measured on the six starter PDFs: 511 pages, 3,139 chunks, ingested in ~1.7 s.
-**141 tests passing.**
+**154 tests passing.**
 
 ---
 
@@ -228,8 +228,9 @@ The four extension suggestions in the brief are handled by design, not bolted on
   `attribute` becomes a new row; new payload keys are folded into a running
   `observed_keys` union. **No migration, ever.**
 - `payload_json` is schema-free; the promoted columns exist only for indexing.
-- Visible in the UI (Schema tab) and at `GET /api/fact-types` — 190+ distinct
-  fact types emerged from the six starter PDFs.
+- Visible in the UI (Schema tab) and at `GET /api/fact-types` — ~170 distinct
+  fact types emerged from a partial run over the six starter PDFs (a full run
+  yields more).
 
 ### New documents incrementally, without rebuilding
 

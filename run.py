@@ -189,16 +189,22 @@ def cmd_extract(args) -> int:
 
         if args.redo:
             if document_id:
+                chunk_ids = "(SELECT id FROM chunks WHERE document_id = ?)"
                 conn.execute("DELETE FROM facts WHERE document_id = ?", (document_id,))
                 conn.execute(
-                    """DELETE FROM extraction_progress WHERE chunk_id IN
-                       (SELECT id FROM chunks WHERE document_id = ?)""",
+                    f"DELETE FROM extraction_progress WHERE chunk_id IN {chunk_ids}",
+                    (document_id,),
+                )
+                conn.execute(
+                    f"DELETE FROM repair_log WHERE stage='extraction' AND chunk_id IN {chunk_ids}",
                     (document_id,),
                 )
             else:
                 conn.execute("DELETE FROM facts")
                 conn.execute("DELETE FROM extraction_progress")
                 conn.execute("DELETE FROM fact_types")
+                # Otherwise the repair rate is measured against a stale denominator.
+                conn.execute("DELETE FROM repair_log WHERE stage = 'extraction'")
             conn.commit()
             print("[extract] --redo: cleared existing facts for re-extraction")
 

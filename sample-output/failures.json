@@ -1,0 +1,187 @@
+{
+  "json_calls_needing_repair": 59,
+  "json_repair_rate": 0.47580645161290325,
+  "json_failure_rate": 0.0,
+  "json_outcomes": {
+    "ok_after_repair": 6,
+    "ok_after_reprompt": 53
+  },
+  "evidence_match_modes": {
+    "exact": 95,
+    "normalised_chars": 13,
+    "normalised_whitespace": 139,
+    "reconstructed_span": 84
+  },
+  "chunks_attempted": 124,
+  "chunks_failed": 0,
+  "chunks_yielding_no_grounded_fact": 49,
+  "recent_repair_samples": [
+    {
+      "chunk_id": "doc_86f2e79a3b7b4a36:e19",
+      "outcome": "ok_after_repair",
+      "attempts": 2,
+      "error": "Unterminated string starting at: line 80 column 21 (char 2244)",
+      "raw_output": "[\n  {\n    \"subject\": \"India\",\n    \"attribute\": \"GDP growth\",\n    \"value\": \"6.0 per cent\",\n    \"unit\": \"%\",\n    \"time_scope\": \"first half of the current fiscal\",\n    \"qualifier\": null,\n    \"confidence\": 0.95,\n    \"source_quote\": \"Real GDP Growth (RHS)\"\n  },\n  {\n    \"subject\": \"India\",\n    \"attribute\": \"GDP growth\",\n    \"value\": \"6.7 per cent\",\n    \"unit\": \"%\",\n    \"time_scope\": \"Q1 FY25\",\n    \"qual"
+    },
+    {
+      "chunk_id": "doc_0d7e71e1766ef330:e20",
+      "outcome": "ok_after_repair",
+      "attempts": 2,
+      "error": "Unterminated string starting at: line 50 column 21 (char 2133)",
+      "raw_output": "[\n  {\n    \"subject\": \"Kapil Bharati\",\n    \"attribute\": \"allotment\",\n    \"value\": \"Series G Preference Shares\",\n    \"unit\": null,\n    \"time_scope\": \"February 3, 2021\",\n    \"qualifier\": null,\n    \"confidence\": 0.95,\n    \"source_quote\": \"Suraj Saharan \\nN.A. \\nNil \\nN.A. \\nN.A \\nOther Shareholders with nominee director rights \\n8. \\nSahil Barua \\nFebruary 3, 2021 \\n6,408 \\n22,615.00 \\nAllotment of Se"
+    },
+    {
+      "chunk_id": "doc_0d7e71e1766ef330:e14",
+      "outcome": "ok_after_repair",
+      "attempts": 2,
+      "error": "Unterminated string starting at: line 30 column 21 (char 1623)",
+      "raw_output": "[\n  {\n    \"subject\": \"Delhivery Limited\",\n    \"attribute\": \"investment in equity\",\n    \"value\": \"20.79\",\n    \"unit\": null,\n    \"time_scope\": \"December 31, 2021\",\n    \"qualifier\": null,\n    \"confidence\": 0.95,\n    \"source_quote\": \"Transaction for the period Transactio\\nn for the period Transactio\\nn for the year Transactio\\nn for the year 1 Delhivery Corp Limited, United Kingdom Investment in equit"
+    },
+    {
+      "chunk_id": "doc_5ca307085c96c1fc:e9",
+      "outcome": "ok_after_repair",
+      "attempts": 2,
+      "error": "Expecting value: line 98 column 17 (char 2002)",
+      "raw_output": "[\n  {\n    \"subject\": \"Q4 FY24 performance\",\n    \"attribute\": \"revenue\",\n    \"value\": \"188\",\n    \"unit\": \"₹ Cr\",\n    \"time_scope\": \"Q4 FY24\",\n    \"qualifier\": null,\n    \"confidence\": 0.95,\n    \"source_quote\": \"188\"\n  },\n  {\n    \"subject\": \"Q4 FY23\",\n    \"attribute\": \"revenue\",\n    \"value\": \"173\",\n    \"unit\": \"₹ Cr\",\n    \"time_scope\": \"Q4 FY23\",\n    \"qualifier\": null,\n    \"confidence\": 0.95,\n    \"so"
+    },
+    {
+      "chunk_id": "doc_5ca307085c96c1fc:e7",
+      "outcome": "ok_after_repair",
+      "attempts": 2,
+      "error": "Expecting property name enclosed in double quotes: line 114 column 27 (char 2200)",
+      "raw_output": "[\n  {\n    \"subject\": \"318\",\n    \"attribute\": \"number\",\n    \"value\": \"318\",\n    \"unit\": null,\n    \"time_scope\": null,\n    \"qualifier\": null,\n    \"confidence\": 1.0,\n    \"source_quote\": \"318\"\n  },\n  {\n    \"subject\": \"296\",\n    \"attribute\": \"number\",\n    \"value\": \"296\",\n    \"unit\": null,\n    \"time_scope\": null,\n    \"qualifier\": null,\n    \"confidence\": 1.0,\n    \"source_quote\": \"296\"\n  },\n  {\n    \"subje"
+    },
+    {
+      "chunk_id": "doc_0d7e71e1766ef330:e1",
+      "outcome": "ok_after_repair",
+      "attempts": 2,
+      "error": "Expecting value: line 78 column 17 (char 2001)",
+      "raw_output": "[\n  {\n    \"subject\": \"Deli CMF Pte. Ltd.\",\n    \"attribute\": \"equity shares\",\n    \"value\": \"4,107,626\",\n    \"unit\": \"shares\",\n    \"time_scope\": \"as of 31 March 2022\",\n    \"qualifier\": null,\n    \"confidence\": 0.95,\n    \"source_quote\": \"4,107,626# Equity Shares aggregating to ₹2,000 million\"\n  },\n  {\n    \"subject\": \"Deli CMF Pte. Ltd.\",\n    \"attribute\": \"equity shares\",\n    \"value\": \"142.91\",\n    \"un"
+    }
+  ],
+  "grounding_failures": [
+    {
+      "chunk_id": "doc_73209a2caa2f5671:e20",
+      "page_label": "15",
+      "text": "ASSESSMENT AND PROSPECTS\n15\nI.59\t\nThe Reserve Bank would further expand the \nscope and coverage of ongoing pilots in e₹-Retail \nand e₹-Wholesale by introducing new use cases \nand features, besides bringing improvements to \ntechnological aspects of the account aggregator \nframework to enhance transparency, customer \nconvenience and efficiency. Moreover, the \nReserve Bank is exploring commencement of \nCBDC pilots on cross-border payments both on \nbilateral and multilateral basis to overcome key \nc"
+    },
+    {
+      "chunk_id": "doc_5ca307085c96c1fc:e20",
+      "page_label": "23",
+      "text": "Cost drivers – Q4 FY24 vs Q3 FY24\n(1)\nOn reported basis\n(2)\nBreakup as per notes to accounts\n₹ Cr\nQ4 FY22\nQ4 FY23\nQ3 FY24\nQ4 FY24\nFY23\nFY24\nFreight, Handling and Servicing Cost(1,2)\n1,502\n1,372\n1,572\n1,519\n5,669\n5,971\n% of Revenue from services(2)\n72.5%\n73.8%\n71.6%\n73.2%\n78.5%\n73.3%\nLine haul expenses\n724\n616\n696\n708\n2,517\n2,684\n% of revenue\n34.5%\n33.1%\n31.7%\n34.1%\n34.8%\n33.0%\nVehicle rental expenses\n419\n384\n434\n391\n1,523\n1,603\n% of revenue\n20.2%\n20.6%\n19.8%\n18.8%\n21.1%\n19.7%\nContractual manpowe"
+    },
+    {
+      "chunk_id": "doc_f6d3cfecafd95489:e18",
+      "page_label": "12",
+      "text": "2025/26\n2026/27\n2027/28\n2028/29\n2029/30\n2030/31\n2031/32\nOverall Balance, Baseline (percent of GDP)\nCentre\n-4.5\n-4.5\n-4.4\n-4.2\n-4.0\n-3.8\n-3.8\nState\n-3.1\n-3.0\n-3.0\n-3.0\n-3.0\n-3.0\n-2.9\nGeneral\n-7.1\n-7.2\n-7.1\n-6.9\n-6.8\n-6.6\n-6.5\nOverall Balance, Reform Scenario (percent of GDP)\nCentre\n-4.5\n-4.5\n-4.2\n-3.8\n-3.5\n-3.3\n-3.3\nState\n-3.1\n-3.0\n-2.8\n-2.7\n-2.6\n-2.6\n-2.5\nGeneral\n-7.1\n-7.2\n-6.7\n-6.2\n-5.8\n-5.7\n-5.6\nDebt, Baseline (percent of GDP)\nCentre\n56.2\n55.4\n54.3\n53.0\n51.7\n50.3\n48.8\nState\n28.3\n28.3\n28.3\n28.3"
+    },
+    {
+      "chunk_id": "doc_73209a2caa2f5671:e18",
+      "page_label": "13",
+      "text": "ASSESSMENT AND PROSPECTS\n13\nthe MPC also decided to change the stance from \nneutral to accommodative. The Reserve Bank \nwill continue to undertake liquidity management \noperations in sync with the monetary policy \nstance to keep system liquidity adequate to meet \nthe productive requirements of the economy. It \nwill deploy an appropriate mix of instruments to \nmodulate frictional as well as durable liquidity, \nensuring orderly movement of money market \ninterest rates.\nI.50\t\nIn 2025-26, markets wi"
+    },
+    {
+      "chunk_id": "doc_86f2e79a3b7b4a36:e18",
+      "page_label": "16",
+      "text": "Economic Survey 2024-25\n16\nChart I.27: Global slowdown impacted manufacturing in Q2 of FY25\n \n56.4\n54.7\n48\n50\n52\n54\n56\n58\n60\nApr 23\nMay 23\nJun 23\nJul 23\nAug 23\nSep 23\nOct 23\nNov 23\nDec 23\nJan 24\nFeb 24\nMar 24\nApr 24\nMay 24\nJun 24\nJul 24\nAug 24\nSep 24\nOct 24\nNov 24\nDec 24\nIndex\nPMI manufacturing\nNew Export Orders\nSource: Compiled from various monthly HSBC India Manufacturing PMI reports\n1.33\tAccording to the RBI's Industrial Outlook Survey, manufacturing firms reported \nimproved demand conditions"
+    },
+    {
+      "chunk_id": "doc_0d7e71e1766ef330:e19",
+      "page_label": "32",
+      "text": " \n32 \n \nNotes: \n1. \nTill the listing and trading of the Equity Shares of our Company on BSE and NSE or the Long Stop Date, whichever is earlier, each \nof (i) (a) Canada Pension Plan Investment Board, and (b) jointly, Nexus Ventures III, Ltd. and Nexus Opportunity Fund Ltd., at each \nof their sole discretion, have the right to appoint one non-executive, non-independent Director on our Board, (ii) SVF Doorbell \n(Cayman) Ltd has the right to appoint two non-executive, non-independent Directors on o"
+    },
+    {
+      "chunk_id": "doc_f6d3cfecafd95489:e17",
+      "page_label": "12",
+      "text": "INDIA \n12 \nINTERNATIONAL MONETARY FUND \n20.      Over the medium term, the fiscal deficit and the public debt ratio are projected to \ngradually decline, with risks of sovereign stress remaining moderate (Annex V). The general \ngovernment deficit is expected to narrow further under current policies, supporting a gradual \nreduction in debt to 77 percent of GDP in FY2030/31. Under shock scenarios, reflecting conditions \nsuch as lower growth or slower fiscal adjustment, debt paths are skewed towards"
+    },
+    {
+      "chunk_id": "doc_0d7e71e1766ef330:e18",
+      "page_label": "31",
+      "text": " \n31 \nS. No. \nName of the \nacquirer/shareholder \nDate of acquisition \nof equity shares \nNumber of \nequity shares \nacquired \nAcquisition \nprice per \nequity share \n(in ₹) \nMode of acquisition \n \nAugust 8, 2020 \n       785,260  \n        78.00  \nConversion of Series B \nPreference Shares \nAugust 8, 2020 \n         12,760  \n226.42  \nConversion of Series C \nPreference Shares \nSeptember 29, 2021 \n 28,533,510  \nN.A.*  \nAllotment of  bonus \nshares \n5. \nMohit Tandon \nSeptember 29, 2021 \n10,497,780 \nN.A.*  \n"
+    },
+    {
+      "chunk_id": "doc_86f2e79a3b7b4a36:e16",
+      "page_label": "14",
+      "text": "Economic Survey 2024-25\n14\nChart I.26: Uneven recovery within the services sector\n2\n4\n6\n8\n10\nSep-11\nSep-12\nSep-13\nSep-14\nSep-15\nSep-16\nSep-17\nSep-18\nSep-19\nSep-20\nSep-21\nSep-22\nSep-23\nSep-24\n₹ lakh crore\nDeseasonalised FREPS GVA\nDeseasonalised TTHCSB GVA\nDeseasonalised PADOS GVA\nPre pandemic trend\nSource: Calculations based on Statement 13: Annual and Quarterly Estimates of GDP at constant prices, MoSPI\nNote: i) FREPS- Financial, real estate and professional services ii) TTHCSB – Trade, transpor"
+    },
+    {
+      "chunk_id": "doc_5ca307085c96c1fc:e17",
+      "page_label": "20",
+      "text": "Cash flow summary\n(1)\nFY23 includes the impact of certain reclassifications\n(2)\nChange in inventory, receivables, other financial assets, loans, other assets, payables, other liabilities\n(3)\nIncludes investments, margin money deposits and deposits with original maturity for >12 months; doesn’t include accrued interests on deposits and investments\n₹ Cr\nFY23\nFY24\nNet cash from / (used in) operating activities\n(30)\n472\nCash generated from / (used in) operations\n42\n510\nCash operating profit/ (loss) "
+    }
+  ],
+  "reconstructed_span_examples": [
+    {
+      "fact_id": "fact_ddb4a44321630bbd",
+      "canonical_text": "IMF WEO (January 2025) - growth outlook: 1.9 % [2024]",
+      "document": "01-india-economic-survey-2024-25-excerpt.pdf",
+      "page_label": "3",
+      "stored_span": "growth \ntrends in 2024\nChart I.2: Steady growth outlook \nacross country groups\n3.3 3.1 3.2\n0\n1\n2\n3\n4\n5\nMar-22\nJun-22\nSep-22\nDec-22\nMar-23\nJun-23\nSep-23\nDec-23\nMar-24\nJun-24\nSep-24\nPer cent\nWorld growth\n3.3\n1.7\n4.4\n3.2\n1.7\n4.2\n3.3\n1.9"
+    },
+    {
+      "fact_id": "fact_26a723a6c1cd84c5",
+      "canonical_text": "Delhivery Limited - revenue: 27,748 ₹ million [FY24]",
+      "document": "02-delhivery-annual-report-fy24-excerpt.pdf",
+      "page_label": "10-11",
+      "stored_span": "24\nProfit after tax (₹ million) (%)*\n(2,689)\n(2.9)\n(10.8)\n(9.0)\n(4,157) (10,808) (10,078) (2,492)\nFY20 FY21 FY22 FY23 FY24\n(13.4)\n(14.6)\n11.6\n5.8\n10.4\nRevenue from services* (₹ million)\n72,236\nFY23\n70,536\nFY22\n81,415\nFY24\n27,748"
+    },
+    {
+      "fact_id": "fact_358c1cd0e50ac5f7",
+      "canonical_text": "DELHIVERY LIMITED - registered office: N24-N34, S24-S34, Air Cargo Logistics Centre-II, Opposite Gate 6 Cargo Terminal, Indira Gandhi International Airport, New Delhi 110037 Delhi, India",
+      "document": "01-delhivery-prospectus-2022-excerpt.pdf",
+      "page_label": null,
+      "stored_span": "OFFICE \nCORPORATE \nOFFICE \nCONTACT \nPERSON \nTELEPHONE AND E-MAIL \nWEBSITE \n  N24-N34, S24-S34, Air Cargo Logistics \nCentre-II, Opposite Gate 6 Cargo \nTerminal, Indira Gandhi International \nAirport, New Delhi 110037 Delhi, India"
+    },
+    {
+      "fact_id": "fact_e19a7018638aa4cb",
+      "canonical_text": "Express Parcel - shipments: 10 [Q4 FY23]",
+      "document": "03-delhivery-q4-fy24-earnings-presentation.pdf",
+      "page_label": null,
+      "stored_span": "1)\n(₹ Cr)\nYoY: 12%\nQoQ: (5%)\nQ4 FY24 performance\n180\n201\n176\nQ4 FY23\nQ3 FY24\nQ4 FY24\n1,177\n1,448\n1,217\nQ4 FY23\nQ3 FY24\nQ4 FY24\nExpress Parcel revenue\n(₹ Cr)\n(Mn)\nExpress Parcel shipments\nYoY: 3%\nYoY: (2%)\n10\nQoQ: (13%)\nQoQ: (16"
+    },
+    {
+      "fact_id": "fact_e18d9613d3aff026",
+      "canonical_text": "Delhivery Limited - revenue: 81,415 ₹ million [FY22]",
+      "document": "02-delhivery-annual-report-fy24-excerpt.pdf",
+      "page_label": "10-11",
+      "stored_span": "22 FY23 FY24\nProfit after tax (₹ million) (%)*\n(2,689)\n(2.9)\n(10.8)\n(9.0)\n(4,157) (10,808) (10,078) (2,492)\nFY20 FY21 FY22 FY23 FY24\n(13.4)\n(14.6)\n11.6\n5.8\n10.4\nRevenue from services* (₹ million)\n72,236\nFY23\n70,536\nFY22\n81,415"
+    },
+    {
+      "fact_id": "fact_81efc17bee67592f",
+      "canonical_text": "Deli CMF Pte. Ltd. - acquisition price per equity share: 108.47 ₹ [January 13, 2022]",
+      "document": "01-delhivery-prospectus-2022-excerpt.pdf",
+      "page_label": "30",
+      "stored_span": "January 13, 2022 \n30,248,700 \n        108.47 \nConversion of Series E \nPreference Shares \nJanuary 13, 2022 \n  15,883,100 \n199.71 \nConversion of Series F \nPreference Shares \n2. \nDeli CMF Pte. Ltd. \nJanuary 13, 2022 \n   4,142,400"
+    },
+    {
+      "fact_id": "fact_7bafc3da46567310",
+      "canonical_text": "IMF WEO (January 2025) - growth outlook: 4.2 % [2024]",
+      "document": "01-india-economic-survey-2024-25-excerpt.pdf",
+      "page_label": "3",
+      "stored_span": "growth \ntrends in 2024\nChart I.2: Steady growth outlook \nacross country groups\n3.3 3.1 3.2\n0\n1\n2\n3\n4\n5\nMar-22\nJun-22\nSep-22\nDec-22\nMar-23\nJun-23\nSep-23\nDec-23\nMar-24\nJun-24\nSep-24\nPer cent\nWorld growth\n3.3\n1.7\n4.4\n3.2\n1.7\n4.2"
+    },
+    {
+      "fact_id": "fact_121fdf61e809d091",
+      "canonical_text": "ASSESSMENT AND PROSPECTS - net capital flows: more than sufficient [2024-25]",
+      "document": "02-rbi-annual-report-2024-25-excerpt.pdf",
+      "page_label": "7",
+      "stored_span": "than US$ 10.1 billion a year ago, and FPI \nrecorded net inflows of US$ 1.7 billion during \n2024-25 (US$ 41.6 billion a year ago). In terms of \nexternal financing needs, net capital flows were \nmore than sufficient to finance"
+    },
+    {
+      "fact_id": "fact_1cbf7da81cf2d98a",
+      "canonical_text": "OECD Economic Outlook, Volume 2024 - growth trends: 4.4 % [2024]",
+      "document": "01-india-economic-survey-2024-25-excerpt.pdf",
+      "page_label": "3",
+      "stored_span": "growth \ntrends in 2024\nChart I.2: Steady growth outlook \nacross country groups\n3.3 3.1 3.2\n0\n1\n2\n3\n4\n5\nMar-22\nJun-22\nSep-22\nDec-22\nMar-23\nJun-23\nSep-23\nDec-23\nMar-24\nJun-24\nSep-24\nPer cent\nWorld growth\n3.3\n1.7\n4.4"
+    },
+    {
+      "fact_id": "fact_04aa4b0e606e5749",
+      "canonical_text": "OECD Economic Outlook, Volume 2024 - growth trends: 1.7 % [2023]",
+      "document": "01-india-economic-survey-2024-25-excerpt.pdf",
+      "page_label": "3",
+      "stored_span": "growth \ntrends in 2024\nChart I.2: Steady growth outlook \nacross country groups\n3.3 3.1 3.2\n0\n1\n2\n3\n4\n5\nMar-22\nJun-22\nSep-22\nDec-22\nMar-23\nJun-23\nSep-23\nDec-23\nMar-24\nJun-24\nSep-24\nPer cent\nWorld growth\n3.3\n1.7"
+    }
+  ],
+  "note": "Ungrounded facts are discarded rather than stored, so these counters are the visible surface of extraction failure. See DECISIONS.md for the narrative analysis of specific failures."
+}

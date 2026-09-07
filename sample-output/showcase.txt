@@ -1,0 +1,65 @@
+FACT KNOWLEDGE LAYER - showcase (the four required cases)
+======================================================================
+
+Store: 6 documents, 331 facts, 129 relationships
+Complete: True
+
+======================================================================
+(a) A fact corroborated across documents
+======================================================================
+
+  relation : CORROBORATES  (reason same_value, confidence 0.9)
+  reasoning: Both facts state the same value (6.5 %) for the same period ('2024-25' / 'FY2024/25'), so they corroborate each other despite the different wording. (Model called this CONTEXT_RECONCILED: The two facts are about the same subject (India) and attribute (real GDP growth), but they refer to different time periods (2024-25 vs FY2024/25).)
+
+  FACT A: India | real gross domestic product (GDP) growth = 6.5% % [2024-25]
+    document: 02-rbi-annual-report-2024-25-excerpt.pdf  (page 3, match normalised_whitespace)
+    evidence: "real gross domestic product (GDP)3  / growth moderated to 6.5 per cent in 2024-25"
+
+  FACT B: India | real GDP growth = 6.5 percent % [FY2024/25]
+    document: 03-imf-india-2025-article-iv-excerpt.pdf  (page 4-5, match exact)
+    evidence: "India’s real GDP grew by 6.5 percent in FY2024/25."
+
+======================================================================
+(b) A genuine / likely contradiction
+======================================================================
+
+  relation : CONTRADICTS  (reason value_mismatch, confidence 1.0)
+  reasoning: The two facts assert different real GDP growth rates for FY25, with values 6.4% and 6.5% respectively.
+
+  FACT A: India | real GDP growth = 6.4% % [FY25]
+    document: 01-india-economic-survey-2024-25-excerpt.pdf  (page 01, match normalised_whitespace)
+    evidence: "India’s real GDP is estimated to  / grow by 6.4 per cent in FY25"
+
+  FACT B: India | real GDP growth = 6.5 percent % [FY2024/25]
+    document: 03-imf-india-2025-article-iv-excerpt.pdf  (page 4-5, match exact)
+    evidence: "India’s real GDP grew by 6.5 percent in FY2024/25."
+
+======================================================================
+(c) An apparent contradiction explained by context
+======================================================================
+
+  relation : CONTEXT_RECONCILED  (reason different_value, confidence 1.0)
+  reasoning: The values differ but the difference is fully explained by context - different time period (2024 vs 2025).
+
+  FACT A: International Monetary Fund (IMF) | growth = 3.3 per cent % [2024]
+    document: 02-rbi-annual-report-2024-25-excerpt.pdf  (page 1-2, match normalised_whitespace)
+    evidence: "According to the International Monetary  / Fund (IMF)1, global growth at 3.3 per cent  / in 2024 (3.5 per cent a year ago) was below  / the historical average (2000-19) of 3.7 per  / cent, owing to structural challenges like weak  / investment, slow productivity growth and high  / debt levels."
+
+  FACT B: International Monetary Fund | growth projection = 3.2 per cent % [2024 and 2025]
+    document: 01-india-economic-survey-2024-25-excerpt.pdf  (page 2, match normalised_whitespace)
+    evidence: "The International Monetary Fund (IMF) has  / projected growth of 3.2 per cent and 3.3 per cent for 2024 and 2025, respectively."
+
+======================================================================
+(d) A documented extraction / reasoning failure
+======================================================================
+
+  chunks attempted                : 124
+  chunks that produced no fact     : 49  (the model wrote text not in the document; those facts were discarded)
+  chunks abandoned (unrecoverable) : 0
+  JSON re-prompt/repair rate       : 47.6% of chunks  {'ok_after_repair': 6, 'ok_after_reprompt': 53}
+  JSON hard-failure rate          : 0.0% of chunks
+  evidence match modes            : {'exact': 95, 'normalised_chars': 13, 'normalised_whitespace': 139, 'reconstructed_span': 84}
+
+  5 concrete no-grounded-fact chunks and 5 reconstructed_span examples are in failures.json.
+  A specific failure we found and fixed (a chart-caption mis-extraction, and a
+  period mismatch mislabelled as a contradiction) is written up in ../DECISIONS.md.

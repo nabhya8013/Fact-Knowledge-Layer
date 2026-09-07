@@ -1,0 +1,101 @@
+================================================================================
+DELHIVERY LIMITED | telephone = +91 124 6225602 
+  type=telephone  value_num=91124622.0  unit=None  conf=1.00  by=local-llm
+  EVIDENCE 01-delhivery-prospectus-2022-excerpt.pdf p.pdf#0 (normalised_chars):
+    "Tel: +91 124 6225602"
+================================================================================
+318 | number = 318 
+  type=number  value_num=318.0  unit=None  conf=1.00  by=local-llm
+  EVIDENCE 03-delhivery-q4-fy24-earnings-presentation.pdf p.pdf#9 (reconstructed_span):
+    "318"
+================================================================================
+296 | number = 296 
+  type=number  value_num=296.0  unit=None  conf=1.00  by=local-llm
+  EVIDENCE 03-delhivery-q4-fy24-earnings-presentation.pdf p.pdf#9 (reconstructed_span):
+    "296"
+================================================================================
+153 | number = 153 
+  type=number  value_num=153.0  unit=None  conf=1.00  by=local-llm
+  EVIDENCE 03-delhivery-q4-fy24-earnings-presentation.pdf p.pdf#9 (reconstructed_span):
+    "153"
+================================================================================
+FY22 | number = 551 
+  type=number  value_num=551.0  unit=None  conf=1.00  by=local-llm
+  EVIDENCE 03-delhivery-q4-fy24-earnings-presentation.pdf p.pdf#9 (reconstructed_span):
+    "22"
+================================================================================
+FY23 | number = 782 
+  type=number  value_num=782.0  unit=None  conf=1.00  by=local-llm
+  EVIDENCE 03-delhivery-q4-fy24-earnings-presentation.pdf p.pdf#9 (reconstructed_span):
+    "23"
+================================================================================
+FY24 | number = 609 
+  type=number  value_num=609.0  unit=None  conf=1.00  by=local-llm
+  EVIDENCE 03-delhivery-q4-fy24-earnings-presentation.pdf p.pdf#9 (reconstructed_span):
+    "24"
+================================================================================
+FY24 performance | number = 59 
+  type=number  value_num=59.0  unit=None  conf=1.00  by=local-llm
+  EVIDENCE 03-delhivery-q4-fy24-earnings-presentation.pdf p.pdf#9 (exact):
+    "FY24 performance"
+================================================================================
+551 | number = 782 
+  type=number  value_num=782.0  unit=None  conf=1.00  by=local-llm
+  EVIDENCE 03-delhivery-q4-fy24-earnings-presentation.pdf p.pdf#9 (reconstructed_span):
+    "551"
+================================================================================
+782 | number = 776 
+  type=number  value_num=776.0  unit=None  conf=1.00  by=local-llm
+  EVIDENCE 03-delhivery-q4-fy24-earnings-presentation.pdf p.pdf#9 (reconstructed_span):
+    "782"
+================================================================================
+776 | number = 609 
+  type=number  value_num=609.0  unit=None  conf=1.00  by=local-llm
+  EVIDENCE 03-delhivery-q4-fy24-earnings-presentation.pdf p.pdf#9 (reconstructed_span):
+    "776"
+================================================================================
+India | number of items in each GST rate slab = 13 
+  type=number_items_each_gst_rate_slab  value_num=13.0  unit=None  conf=1.00  by=local-llm
+  EVIDENCE 03-imf-india-2025-article-iv-excerpt.pdf p.6 (exact):
+    "India: Number of Items in Each GST Rate Slab"
+================================================================================
+Delhivery Limited | annual report = 2023-24   [as of 31 March 2024]
+  type=annual_report  value_num=2023.0  unit=None  conf=0.95  by=local-llm
+  EVIDENCE 02-delhivery-annual-report-fy24-excerpt.pdf p.1 (exact):
+    "Annual Report 2023-24"
+================================================================================
+Deli CMF Pte. Ltd. | equity shares = 4,107,626 shares  [as of 31 March 2022]
+  type=equity_shares  value_num=4107626.0  unit=shares  conf=0.95  by=local-llm
+  EVIDENCE 01-delhivery-prospectus-2022-excerpt.pdf p.pdf#0 (exact):
+    "4,107,626# Equity Shares aggregating to ₹2,000 million"
+================================================================================
+Deli CMF Pte. Ltd. | equity shares = 142.91 %  [as of 31 March 2022]
+  type=equity_shares  value_num=142.91  unit=%  conf=0.95  by=local-llm
+  EVIDENCE 01-delhivery-prospectus-2022-excerpt.pdf p.pdf#0 (reconstructed_span):
+    "142.91"
+================================================================================
+Deli CMF Pte. Ltd. | equity shares = 2,000 million  [as of 31 March 2022]
+  type=equity_shares  value_num=2000000000.0  unit=None  conf=0.95  by=local-llm
+  EVIDENCE 01-delhivery-prospectus-2022-excerpt.pdf p.pdf#0 (exact):
+    "aggregating to ₹2,000 million"
+================================================================================
+Delhivery | express parcel shipments = 2.8Bn tonnes tonnes  [since inception]
+  type=express_parcel_shipments  value_num=2800000000.0  unit=tonnes  conf=0.95  by=local-llm
+  EVIDENCE 02-delhivery-annual-report-fy24-excerpt.pdf p.2-3 (normalised_whitespace):
+    "Express parcel shipments 
+delivered since inception"
+================================================================================
+Delhivery | pin codes covered = 4,445 pin codes pin codes  [as of March 31, 2024]
+  type=pin_codes_covered  value_num=4445.0  unit=pin codes  conf=0.95  by=local-llm
+  EVIDENCE 02-delhivery-annual-report-fy24-excerpt.pdf p.2-3 (exact):
+    "Pin codes covered"
+================================================================================
+Delhivery | last-mile delivery centres = 753 centres centres  [as of March 31, 2024]
+  type=last_mile_delivery_centres  value_num=753.0  unit=centres  conf=0.95  by=local-llm
+  EVIDENCE 02-delhivery-annual-report-fy24-excerpt.pdf p.2-3 (exact):
+    "Last-mile delivery centres"
+================================================================================
+Delhivery | count of 46-ft tractors = 98,135 tractors tractors  [as of March 31, 2024]
+  type=count_46_ft_tractors  value_num=98135.0  unit=tractors  conf=0.95  by=local-llm
+  EVIDENCE 02-delhivery-annual-report-fy24-excerpt.pdf p.2-3 (exact):
+    "Count of 46-ft tractors"

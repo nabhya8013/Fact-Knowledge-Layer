@@ -1,0 +1,793 @@
+{
+  "cases": {
+    "corroboration": {
+      "requirement": "(a) a corroborated fact across documents",
+      "relation_type": "CORROBORATES",
+      "examples": [
+        {
+          "relation_type": "CORROBORATES",
+          "reason_tag": "same_value",
+          "explanation": "Both facts state the same value (6.5 %) for the same period ('2024-25' / 'FY2024/25'), so they corroborate each other despite the different wording. (Model called this CONTEXT_RECONCILED: The two facts are about the same subject (India) and attribute (real GDP growth), but they refer to different time periods (2024-25 vs FY2024/25).)",
+          "confidence": 0.9,
+          "similarity_score": 0.9569568634033203,
+          "model": "Qwen2.5-1.5B-Instruct-Q4_K_M.gguf",
+          "fact_a": {
+            "id": "fact_9f588de8035bdaf5",
+            "document_id": "doc_73209a2caa2f5671",
+            "document": "02-rbi-annual-report-2024-25-excerpt.pdf",
+            "document_title": "02 rbi annual report 2024 25 excerpt",
+            "subject": "India",
+            "attribute": "real gross domestic product (GDP) growth",
+            "value": "6.5%",
+            "unit": "%",
+            "time_scope": "2024-25",
+            "qualifier": null,
+            "fact_type": "real_gross_domestic_product_gdp_growth",
+            "value_num": 6.5,
+            "normalised_unit": "%",
+            "confidence": 0.95,
+            "extractor": "local-llm",
+            "payload": {
+              "subject": "India",
+              "attribute": "real gross domestic product (GDP) growth",
+              "value": "6.5%",
+              "unit": "%",
+              "time_scope": "2024-25",
+              "qualifier": null,
+              "confidence": 0.95,
+              "source_quote": "real gross domestic product (GDP)3 \ngrowth moderated to 6.5 per cent in 2024-25"
+            },
+            "evidence": {
+              "quote": "real gross domestic product (GDP)3 \ngrowth moderated to 6.5 per cent in 2024-25",
+              "pdf_page_index": 7,
+              "printed_page_label": "3",
+              "page_label": "3",
+              "match_mode": "normalised_whitespace",
+              "char_start": 1547,
+              "char_end": 1626
+            }
+          },
+          "fact_b": {
+            "id": "fact_dde9e4468d9e3dda",
+            "document_id": "doc_f6d3cfecafd95489",
+            "document": "03-imf-india-2025-article-iv-excerpt.pdf",
+            "document_title": "India: 2025 Article IV Consultation-Press Release; Staff Report; and Statement by the Executive Director for India; IMF Country Report No. 25/314; November 6, 2025",
+            "subject": "India",
+            "attribute": "real GDP growth",
+            "value": "6.5 percent",
+            "unit": "%",
+            "time_scope": "FY2024/25",
+            "qualifier": null,
+            "fact_type": "real_gdp_growth",
+            "value_num": 6.5,
+            "normalised_unit": "%",
+            "confidence": 0.95,
+            "extractor": "local-llm",
+            "payload": {
+              "subject": "India",
+              "attribute": "real GDP growth",
+              "value": "6.5 percent",
+              "unit": "%",
+              "time_scope": "FY2024/25",
+              "qualifier": null,
+              "confidence": 0.95,
+              "source_quote": "India’s real GDP grew by 6.5 percent in FY2024/25."
+            },
+            "evidence": {
+              "quote": "India’s real GDP grew by 6.5 percent in FY2024/25.",
+              "pdf_page_index": 9,
+              "printed_page_label": "4-5",
+              "page_label": "4-5",
+              "match_mode": "exact",
+              "char_start": 300,
+              "char_end": 350
+            }
+          }
+        },
+        {
+          "relation_type": "CORROBORATES",
+          "reason_tag": "same_value",
+          "explanation": "Both facts state the same value (6.5 %) for the same period ('FY2024/25' / '2024-25'), so they corroborate each other despite the different wording. (Model called this CONTEXT_RECONCILED: The two facts are about the same subject (India) and attribute (economic growth), but they refer to different time periods (FY2024/25 vs 2024-25).)",
+          "confidence": 1.0,
+          "similarity_score": 0.912376880645752,
+          "model": "Qwen2.5-1.5B-Instruct-Q4_K_M.gguf",
+          "fact_a": {
+            "id": "fact_74d5e70eade750cd",
+            "document_id": "doc_f6d3cfecafd95489",
+            "document": "03-imf-india-2025-article-iv-excerpt.pdf",
+            "document_title": "India: 2025 Article IV Consultation-Press Release; Staff Report; and Statement by the Executive Director for India; IMF Country Report No. 25/314; November 6, 2025",
+            "subject": "India",
+            "attribute": "economic growth",
+            "value": "6.5 percent",
+            "unit": "%",
+            "time_scope": "FY2024/25",
+            "qualifier": null,
+            "fact_type": "economic_growth",
+            "value_num": 6.5,
+            "normalised_unit": "%",
+            "confidence": 0.95,
+            "extractor": "local-llm",
+            "payload": {
+              "subject": "India",
+              "attribute": "economic growth",
+              "value": "6.5 percent",
+              "unit": "%",
+              "time_scope": "FY2024/25",
+              "qualifier": null,
+              "confidence": 0.95,
+              "source_quote": "Following economic growth of 6.5 percent in \nFY2024/25"
+            },
+            "evidence": {
+              "quote": "Following economic growth of 6.5 percent in \nFY2024/25",
+              "pdf_page_index": 2,
+              "printed_page_label": null,
+              "page_label": "pdf#2",
+              "match_mode": "normalised_whitespace",
+              "char_start": 412,
+              "char_end": 466
+            }
+          },
+          "fact_b": {
+            "id": "fact_9f588de8035bdaf5",
+            "document_id": "doc_73209a2caa2f5671",
+            "document": "02-rbi-annual-report-2024-25-excerpt.pdf",
+            "document_title": "02 rbi annual report 2024 25 excerpt",
+            "subject": "India",
+            "attribute": "real gross domestic product (GDP) growth",
+            "value": "6.5%",
+            "unit": "%",
+            "time_scope": "2024-25",
+            "qualifier": null,
+            "fact_type": "real_gross_domestic_product_gdp_growth",
+            "value_num": 6.5,
+            "normalised_unit": "%",
+            "confidence": 0.95,
+            "extractor": "local-llm",
+            "payload": {
+              "subject": "India",
+              "attribute": "real gross domestic product (GDP) growth",
+              "value": "6.5%",
+              "unit": "%",
+              "time_scope": "2024-25",
+              "qualifier": null,
+              "confidence": 0.95,
+              "source_quote": "real gross domestic product (GDP)3 \ngrowth moderated to 6.5 per cent in 2024-25"
+            },
+            "evidence": {
+              "quote": "real gross domestic product (GDP)3 \ngrowth moderated to 6.5 per cent in 2024-25",
+              "pdf_page_index": 7,
+              "printed_page_label": "3",
+              "page_label": "3",
+              "match_mode": "normalised_whitespace",
+              "char_start": 1547,
+              "char_end": 1626
+            }
+          }
+        },
+        {
+          "relation_type": "CORROBORATES",
+          "reason_tag": "same_value",
+          "explanation": "Both facts state the same value (3.3 %) for the same period ('2024' / '2024'), so they corroborate each other despite the different wording. (Model called this CONTEXT_RECONCILED: The values are the same, but the context and attribute differ. The first fact is about global growth, while the second is about the IMF's World Economic Outlook (WEO) growth outlook for 2024.)",
+          "confidence": 1.0,
+          "similarity_score": 0.9180243015289307,
+          "model": "Qwen2.5-1.5B-Instruct-Q4_K_M.gguf",
+          "fact_a": {
+            "id": "fact_3715bb7754a84ed6",
+            "document_id": "doc_73209a2caa2f5671",
+            "document": "02-rbi-annual-report-2024-25-excerpt.pdf",
+            "document_title": "02 rbi annual report 2024 25 excerpt",
+            "subject": "International Monetary Fund (IMF)",
+            "attribute": "growth",
+            "value": "3.3 per cent",
+            "unit": "%",
+            "time_scope": "2024",
+            "qualifier": "according to",
+            "fact_type": "growth",
+            "value_num": 3.3,
+            "normalised_unit": "%",
+            "confidence": 0.95,
+            "extractor": "local-llm",
+            "payload": {
+              "subject": "International Monetary Fund (IMF)",
+              "attribute": "growth",
+              "value": "3.3 per cent",
+              "unit": "%",
+              "time_scope": "2024",
+              "qualifier": "according to",
+              "confidence": 0.95,
+              "source_quote": "According to the International Monetary \nFund (IMF)1, global growth at 3.3 per cent \nin 2024 (3.5 per cent a year ago) was below \nthe historical average (2000-19) of 3.7 per \ncent, owing to structural challenges like weak \ninvestment, slow productivity growth and high \ndebt levels."
+            },
+            "evidence": {
+              "quote": "According to the International Monetary \nFund (IMF)1, global growth at 3.3 per cent \nin 2024 (3.5 per cent a year ago) was below \nthe historical average (2000-19) of 3.7 per \ncent, owing to structural challenges like weak \ninvestment, slow productivity growth and high \ndebt levels.",
+              "pdf_page_index": 6,
+              "printed_page_label": "1-2",
+              "page_label": "1-2",
+              "match_mode": "normalised_whitespace",
+              "char_start": 1363,
+              "char_end": 1645
+            }
+          },
+          "fact_b": {
+            "id": "fact_7b238ce01fa2eb5e",
+            "document_id": "doc_86f2e79a3b7b4a36",
+            "document": "01-india-economic-survey-2024-25-excerpt.pdf",
+            "document_title": "01 india economic survey 2024 25 excerpt",
+            "subject": "IMF WEO (January 2025)",
+            "attribute": "growth outlook",
+            "value": "3.3",
+            "unit": "%",
+            "time_scope": "2024",
+            "qualifier": null,
+            "fact_type": "growth_outlook",
+            "value_num": 3.3,
+            "normalised_unit": "%",
+            "confidence": 0.95,
+            "extractor": "local-llm",
+            "payload": {
+              "subject": "IMF WEO (January 2025)",
+              "attribute": "growth outlook",
+              "value": "3.3",
+              "unit": "%",
+              "time_scope": "2024",
+              "qualifier": null,
+              "confidence": 0.95,
+              "source_quote": "World growth\n3.3"
+            },
+            "evidence": {
+              "quote": "World growth\n3.3",
+              "pdf_page_index": 5,
+              "printed_page_label": "3",
+              "page_label": "3",
+              "match_mode": "exact",
+              "char_start": 240,
+              "char_end": 256
+            }
+          }
+        }
+      ]
+    },
+    "contradiction": {
+      "requirement": "(b) a genuine or likely contradiction",
+      "relation_type": "CONTRADICTS",
+      "examples": [
+        {
+          "relation_type": "CONTRADICTS",
+          "reason_tag": "value_mismatch",
+          "explanation": "The two facts assert different real GDP growth rates for FY25, with values 6.4% and 6.5% respectively.",
+          "confidence": 1.0,
+          "similarity_score": 0.9537822008132935,
+          "model": "Qwen2.5-1.5B-Instruct-Q4_K_M.gguf",
+          "fact_a": {
+            "id": "fact_91325d3ed2869d46",
+            "document_id": "doc_86f2e79a3b7b4a36",
+            "document": "01-india-economic-survey-2024-25-excerpt.pdf",
+            "document_title": "01 india economic survey 2024 25 excerpt",
+            "subject": "India",
+            "attribute": "real GDP growth",
+            "value": "6.4%",
+            "unit": "%",
+            "time_scope": "FY25",
+            "qualifier": null,
+            "fact_type": "real_gdp_growth",
+            "value_num": 6.4,
+            "normalised_unit": "%",
+            "confidence": 0.95,
+            "extractor": "local-llm",
+            "payload": {
+              "subject": "India",
+              "attribute": "real GDP growth",
+              "value": "6.4%",
+              "unit": "%",
+              "time_scope": "FY25",
+              "qualifier": null,
+              "confidence": 0.95,
+              "source_quote": "India’s real GDP is estimated to \ngrow by 6.4 per cent in FY25"
+            },
+            "evidence": {
+              "quote": "India’s real GDP is estimated to \ngrow by 6.4 per cent in FY25",
+              "pdf_page_index": 3,
+              "printed_page_label": "01",
+              "page_label": "01",
+              "match_mode": "normalised_whitespace",
+              "char_start": 1087,
+              "char_end": 1149
+            }
+          },
+          "fact_b": {
+            "id": "fact_dde9e4468d9e3dda",
+            "document_id": "doc_f6d3cfecafd95489",
+            "document": "03-imf-india-2025-article-iv-excerpt.pdf",
+            "document_title": "India: 2025 Article IV Consultation-Press Release; Staff Report; and Statement by the Executive Director for India; IMF Country Report No. 25/314; November 6, 2025",
+            "subject": "India",
+            "attribute": "real GDP growth",
+            "value": "6.5 percent",
+            "unit": "%",
+            "time_scope": "FY2024/25",
+            "qualifier": null,
+            "fact_type": "real_gdp_growth",
+            "value_num": 6.5,
+            "normalised_unit": "%",
+            "confidence": 0.95,
+            "extractor": "local-llm",
+            "payload": {
+              "subject": "India",
+              "attribute": "real GDP growth",
+              "value": "6.5 percent",
+              "unit": "%",
+              "time_scope": "FY2024/25",
+              "qualifier": null,
+              "confidence": 0.95,
+              "source_quote": "India’s real GDP grew by 6.5 percent in FY2024/25."
+            },
+            "evidence": {
+              "quote": "India’s real GDP grew by 6.5 percent in FY2024/25.",
+              "pdf_page_index": 9,
+              "printed_page_label": "4-5",
+              "page_label": "4-5",
+              "match_mode": "exact",
+              "char_start": 300,
+              "char_end": 350
+            }
+          }
+        },
+        {
+          "relation_type": "CONTRADICTS",
+          "reason_tag": "value_mismatch",
+          "explanation": "The two facts assert different real GDP growth rates for FY25, with values 6.4% and 6.6% respectively.",
+          "confidence": 1.0,
+          "similarity_score": 0.9622775316238403,
+          "model": "Qwen2.5-1.5B-Instruct-Q4_K_M.gguf",
+          "fact_a": {
+            "id": "fact_91325d3ed2869d46",
+            "document_id": "doc_86f2e79a3b7b4a36",
+            "document": "01-india-economic-survey-2024-25-excerpt.pdf",
+            "document_title": "01 india economic survey 2024 25 excerpt",
+            "subject": "India",
+            "attribute": "real GDP growth",
+            "value": "6.4%",
+            "unit": "%",
+            "time_scope": "FY25",
+            "qualifier": null,
+            "fact_type": "real_gdp_growth",
+            "value_num": 6.4,
+            "normalised_unit": "%",
+            "confidence": 0.95,
+            "extractor": "local-llm",
+            "payload": {
+              "subject": "India",
+              "attribute": "real GDP growth",
+              "value": "6.4%",
+              "unit": "%",
+              "time_scope": "FY25",
+              "qualifier": null,
+              "confidence": 0.95,
+              "source_quote": "India’s real GDP is estimated to \ngrow by 6.4 per cent in FY25"
+            },
+            "evidence": {
+              "quote": "India’s real GDP is estimated to \ngrow by 6.4 per cent in FY25",
+              "pdf_page_index": 3,
+              "printed_page_label": "01",
+              "page_label": "01",
+              "match_mode": "normalised_whitespace",
+              "char_start": 1087,
+              "char_end": 1149
+            }
+          },
+          "fact_b": {
+            "id": "fact_c18c662622b827ac",
+            "document_id": "doc_f6d3cfecafd95489",
+            "document": "03-imf-india-2025-article-iv-excerpt.pdf",
+            "document_title": "India: 2025 Article IV Consultation-Press Release; Staff Report; and Statement by the Executive Director for India; IMF Country Report No. 25/314; November 6, 2025",
+            "subject": "India",
+            "attribute": "real GDP growth",
+            "value": "6.6",
+            "unit": "%",
+            "time_scope": "2024/25",
+            "qualifier": null,
+            "fact_type": "real_gdp_growth",
+            "value_num": 6.6,
+            "normalised_unit": "%",
+            "confidence": 0.95,
+            "extractor": "local-llm",
+            "payload": {
+              "subject": "India",
+              "attribute": "real GDP growth",
+              "value": "6.6",
+              "unit": "%",
+              "time_scope": "2024/25",
+              "qualifier": null,
+              "confidence": 0.95,
+              "source_quote": "Growth (in percent)"
+            },
+            "evidence": {
+              "quote": "Growth (in percent)",
+              "pdf_page_index": 4,
+              "printed_page_label": null,
+              "page_label": "pdf#4",
+              "match_mode": "exact",
+              "char_start": 167,
+              "char_end": 186
+            }
+          }
+        }
+      ]
+    },
+    "context_reconciled": {
+      "requirement": "(c) an apparent contradiction explained by context",
+      "relation_type": "CONTEXT_RECONCILED",
+      "examples": [
+        {
+          "relation_type": "CONTEXT_RECONCILED",
+          "reason_tag": "different_value",
+          "explanation": "The values differ but the difference is fully explained by context - different time period (2024 vs 2025).",
+          "confidence": 1.0,
+          "similarity_score": 0.9185618162155151,
+          "model": "Qwen2.5-1.5B-Instruct-Q4_K_M.gguf",
+          "fact_a": {
+            "id": "fact_3715bb7754a84ed6",
+            "document_id": "doc_73209a2caa2f5671",
+            "document": "02-rbi-annual-report-2024-25-excerpt.pdf",
+            "document_title": "02 rbi annual report 2024 25 excerpt",
+            "subject": "International Monetary Fund (IMF)",
+            "attribute": "growth",
+            "value": "3.3 per cent",
+            "unit": "%",
+            "time_scope": "2024",
+            "qualifier": "according to",
+            "fact_type": "growth",
+            "value_num": 3.3,
+            "normalised_unit": "%",
+            "confidence": 0.95,
+            "extractor": "local-llm",
+            "payload": {
+              "subject": "International Monetary Fund (IMF)",
+              "attribute": "growth",
+              "value": "3.3 per cent",
+              "unit": "%",
+              "time_scope": "2024",
+              "qualifier": "according to",
+              "confidence": 0.95,
+              "source_quote": "According to the International Monetary \nFund (IMF)1, global growth at 3.3 per cent \nin 2024 (3.5 per cent a year ago) was below \nthe historical average (2000-19) of 3.7 per \ncent, owing to structural challenges like weak \ninvestment, slow productivity growth and high \ndebt levels."
+            },
+            "evidence": {
+              "quote": "According to the International Monetary \nFund (IMF)1, global growth at 3.3 per cent \nin 2024 (3.5 per cent a year ago) was below \nthe historical average (2000-19) of 3.7 per \ncent, owing to structural challenges like weak \ninvestment, slow productivity growth and high \ndebt levels.",
+              "pdf_page_index": 6,
+              "printed_page_label": "1-2",
+              "page_label": "1-2",
+              "match_mode": "normalised_whitespace",
+              "char_start": 1363,
+              "char_end": 1645
+            }
+          },
+          "fact_b": {
+            "id": "fact_9fe6a30d809caf0f",
+            "document_id": "doc_86f2e79a3b7b4a36",
+            "document": "01-india-economic-survey-2024-25-excerpt.pdf",
+            "document_title": "01 india economic survey 2024 25 excerpt",
+            "subject": "International Monetary Fund",
+            "attribute": "growth projection",
+            "value": "3.2 per cent",
+            "unit": "%",
+            "time_scope": "2024 and 2025",
+            "qualifier": "projected",
+            "fact_type": "growth_projection",
+            "value_num": 3.2,
+            "normalised_unit": "%",
+            "confidence": 0.95,
+            "extractor": "local-llm",
+            "payload": {
+              "subject": "International Monetary Fund",
+              "attribute": "growth projection",
+              "value": "3.2 per cent",
+              "unit": "%",
+              "time_scope": "2024 and 2025",
+              "qualifier": "projected",
+              "confidence": 0.95,
+              "source_quote": "The International Monetary Fund (IMF) has \nprojected growth of 3.2 per cent and 3.3 per cent for 2024 and 2025, respectively."
+            },
+            "evidence": {
+              "quote": "The International Monetary Fund (IMF) has \nprojected growth of 3.2 per cent and 3.3 per cent for 2024 and 2025, respectively.",
+              "pdf_page_index": 4,
+              "printed_page_label": "2",
+              "page_label": "2",
+              "match_mode": "normalised_whitespace",
+              "char_start": 2070,
+              "char_end": 2195
+            }
+          }
+        },
+        {
+          "relation_type": "CONTEXT_RECONCILED",
+          "reason_tag": "different_scope",
+          "explanation": "The two facts are about the same subject (India) but refer to different time periods (FY25 vs 2024-25). The scope of GDP growth is also different in the two facts.",
+          "confidence": 1.0,
+          "similarity_score": 0.945792555809021,
+          "model": "Qwen2.5-1.5B-Instruct-Q4_K_M.gguf",
+          "fact_a": {
+            "id": "fact_91325d3ed2869d46",
+            "document_id": "doc_86f2e79a3b7b4a36",
+            "document": "01-india-economic-survey-2024-25-excerpt.pdf",
+            "document_title": "01 india economic survey 2024 25 excerpt",
+            "subject": "India",
+            "attribute": "real GDP growth",
+            "value": "6.4%",
+            "unit": "%",
+            "time_scope": "FY25",
+            "qualifier": null,
+            "fact_type": "real_gdp_growth",
+            "value_num": 6.4,
+            "normalised_unit": "%",
+            "confidence": 0.95,
+            "extractor": "local-llm",
+            "payload": {
+              "subject": "India",
+              "attribute": "real GDP growth",
+              "value": "6.4%",
+              "unit": "%",
+              "time_scope": "FY25",
+              "qualifier": null,
+              "confidence": 0.95,
+              "source_quote": "India’s real GDP is estimated to \ngrow by 6.4 per cent in FY25"
+            },
+            "evidence": {
+              "quote": "India’s real GDP is estimated to \ngrow by 6.4 per cent in FY25",
+              "pdf_page_index": 3,
+              "printed_page_label": "01",
+              "page_label": "01",
+              "match_mode": "normalised_whitespace",
+              "char_start": 1087,
+              "char_end": 1149
+            }
+          },
+          "fact_b": {
+            "id": "fact_9f588de8035bdaf5",
+            "document_id": "doc_73209a2caa2f5671",
+            "document": "02-rbi-annual-report-2024-25-excerpt.pdf",
+            "document_title": "02 rbi annual report 2024 25 excerpt",
+            "subject": "India",
+            "attribute": "real gross domestic product (GDP) growth",
+            "value": "6.5%",
+            "unit": "%",
+            "time_scope": "2024-25",
+            "qualifier": null,
+            "fact_type": "real_gross_domestic_product_gdp_growth",
+            "value_num": 6.5,
+            "normalised_unit": "%",
+            "confidence": 0.95,
+            "extractor": "local-llm",
+            "payload": {
+              "subject": "India",
+              "attribute": "real gross domestic product (GDP) growth",
+              "value": "6.5%",
+              "unit": "%",
+              "time_scope": "2024-25",
+              "qualifier": null,
+              "confidence": 0.95,
+              "source_quote": "real gross domestic product (GDP)3 \ngrowth moderated to 6.5 per cent in 2024-25"
+            },
+            "evidence": {
+              "quote": "real gross domestic product (GDP)3 \ngrowth moderated to 6.5 per cent in 2024-25",
+              "pdf_page_index": 7,
+              "printed_page_label": "3",
+              "page_label": "3",
+              "match_mode": "normalised_whitespace",
+              "char_start": 1547,
+              "char_end": 1626
+            }
+          }
+        },
+        {
+          "relation_type": "CONTEXT_RECONCILED",
+          "reason_tag": "different_period",
+          "explanation": "The two facts refer to different fiscal years (FY2026/27 and FY25), which explains the difference in the growth rates.",
+          "confidence": 1.0,
+          "similarity_score": 0.9487358331680298,
+          "model": "Qwen2.5-1.5B-Instruct-Q4_K_M.gguf",
+          "fact_a": {
+            "id": "fact_092bea8e38fdf1f8",
+            "document_id": "doc_f6d3cfecafd95489",
+            "document": "03-imf-india-2025-article-iv-excerpt.pdf",
+            "document_title": "India: 2025 Article IV Consultation-Press Release; Staff Report; and Statement by the Executive Director for India; IMF Country Report No. 25/314; November 6, 2025",
+            "subject": "India",
+            "attribute": "real GDP growth",
+            "value": "6.2",
+            "unit": "%",
+            "time_scope": "FY2026/27",
+            "qualifier": "staff's baseline scenario",
+            "fact_type": "real_gdp_growth",
+            "value_num": 6.2,
+            "normalised_unit": "%",
+            "confidence": 0.95,
+            "extractor": "local-llm",
+            "payload": {
+              "subject": "India",
+              "attribute": "real GDP growth",
+              "value": "6.2",
+              "unit": "%",
+              "time_scope": "FY2026/27",
+              "qualifier": "staff's baseline scenario",
+              "confidence": 0.95,
+              "source_quote": "Growth is expected to \ndecline to 6.2 percent in FY2026/27"
+            },
+            "evidence": {
+              "quote": "Growth is expected to \ndecline to 6.2 percent in FY2026/27",
+              "pdf_page_index": 12,
+              "printed_page_label": "8",
+              "page_label": "8",
+              "match_mode": "normalised_chars",
+              "char_start": 1416,
+              "char_end": 1474
+            }
+          },
+          "fact_b": {
+            "id": "fact_91325d3ed2869d46",
+            "document_id": "doc_86f2e79a3b7b4a36",
+            "document": "01-india-economic-survey-2024-25-excerpt.pdf",
+            "document_title": "01 india economic survey 2024 25 excerpt",
+            "subject": "India",
+            "attribute": "real GDP growth",
+            "value": "6.4%",
+            "unit": "%",
+            "time_scope": "FY25",
+            "qualifier": null,
+            "fact_type": "real_gdp_growth",
+            "value_num": 6.4,
+            "normalised_unit": "%",
+            "confidence": 0.95,
+            "extractor": "local-llm",
+            "payload": {
+              "subject": "India",
+              "attribute": "real GDP growth",
+              "value": "6.4%",
+              "unit": "%",
+              "time_scope": "FY25",
+              "qualifier": null,
+              "confidence": 0.95,
+              "source_quote": "India’s real GDP is estimated to \ngrow by 6.4 per cent in FY25"
+            },
+            "evidence": {
+              "quote": "India’s real GDP is estimated to \ngrow by 6.4 per cent in FY25",
+              "pdf_page_index": 3,
+              "printed_page_label": "01",
+              "page_label": "01",
+              "match_mode": "normalised_whitespace",
+              "char_start": 1087,
+              "char_end": 1149
+            }
+          }
+        }
+      ]
+    },
+    "failure": {
+      "requirement": "(d) a documented extraction or reasoning failure",
+      "relation_type": null,
+      "report": {
+        "json_calls_needing_repair": 59,
+        "json_repair_rate": 0.47580645161290325,
+        "json_failure_rate": 0.0,
+        "json_outcomes": {
+          "ok_after_repair": 6,
+          "ok_after_reprompt": 53
+        },
+        "evidence_match_modes": {
+          "exact": 95,
+          "normalised_chars": 13,
+          "normalised_whitespace": 139,
+          "reconstructed_span": 84
+        },
+        "chunks_attempted": 124,
+        "chunks_failed": 0,
+        "chunks_yielding_no_grounded_fact": 49,
+        "recent_repair_samples": [
+          {
+            "chunk_id": "doc_86f2e79a3b7b4a36:e19",
+            "outcome": "ok_after_repair",
+            "attempts": 2,
+            "error": "Unterminated string starting at: line 80 column 21 (char 2244)",
+            "raw_output": "[\n  {\n    \"subject\": \"India\",\n    \"attribute\": \"GDP growth\",\n    \"value\": \"6.0 per cent\",\n    \"unit\": \"%\",\n    \"time_scope\": \"first half of the current fiscal\",\n    \"qualifier\": null,\n    \"confidence\": 0.95,\n    \"source_quote\": \"Real GDP Growth (RHS)\"\n  },\n  {\n    \"subject\": \"India\",\n    \"attribute\": \"GDP growth\",\n    \"value\": \"6.7 per cent\",\n    \"unit\": \"%\",\n    \"time_scope\": \"Q1 FY25\",\n    \"qual"
+          },
+          {
+            "chunk_id": "doc_0d7e71e1766ef330:e20",
+            "outcome": "ok_after_repair",
+            "attempts": 2,
+            "error": "Unterminated string starting at: line 50 column 21 (char 2133)",
+            "raw_output": "[\n  {\n    \"subject\": \"Kapil Bharati\",\n    \"attribute\": \"allotment\",\n    \"value\": \"Series G Preference Shares\",\n    \"unit\": null,\n    \"time_scope\": \"February 3, 2021\",\n    \"qualifier\": null,\n    \"confidence\": 0.95,\n    \"source_quote\": \"Suraj Saharan \\nN.A. \\nNil \\nN.A. \\nN.A \\nOther Shareholders with nominee director rights \\n8. \\nSahil Barua \\nFebruary 3, 2021 \\n6,408 \\n22,615.00 \\nAllotment of Se"
+          },
+          {
+            "chunk_id": "doc_0d7e71e1766ef330:e14",
+            "outcome": "ok_after_repair",
+            "attempts": 2,
+            "error": "Unterminated string starting at: line 30 column 21 (char 1623)",
+            "raw_output": "[\n  {\n    \"subject\": \"Delhivery Limited\",\n    \"attribute\": \"investment in equity\",\n    \"value\": \"20.79\",\n    \"unit\": null,\n    \"time_scope\": \"December 31, 2021\",\n    \"qualifier\": null,\n    \"confidence\": 0.95,\n    \"source_quote\": \"Transaction for the period Transactio\\nn for the period Transactio\\nn for the year Transactio\\nn for the year 1 Delhivery Corp Limited, United Kingdom Investment in equit"
+          },
+          {
+            "chunk_id": "doc_5ca307085c96c1fc:e9",
+            "outcome": "ok_after_repair",
+            "attempts": 2,
+            "error": "Expecting value: line 98 column 17 (char 2002)",
+            "raw_output": "[\n  {\n    \"subject\": \"Q4 FY24 performance\",\n    \"attribute\": \"revenue\",\n    \"value\": \"188\",\n    \"unit\": \"₹ Cr\",\n    \"time_scope\": \"Q4 FY24\",\n    \"qualifier\": null,\n    \"confidence\": 0.95,\n    \"source_quote\": \"188\"\n  },\n  {\n    \"subject\": \"Q4 FY23\",\n    \"attribute\": \"revenue\",\n    \"value\": \"173\",\n    \"unit\": \"₹ Cr\",\n    \"time_scope\": \"Q4 FY23\",\n    \"qualifier\": null,\n    \"confidence\": 0.95,\n    \"so"
+          },
+          {
+            "chunk_id": "doc_5ca307085c96c1fc:e7",
+            "outcome": "ok_after_repair",
+            "attempts": 2,
+            "error": "Expecting property name enclosed in double quotes: line 114 column 27 (char 2200)",
+            "raw_output": "[\n  {\n    \"subject\": \"318\",\n    \"attribute\": \"number\",\n    \"value\": \"318\",\n    \"unit\": null,\n    \"time_scope\": null,\n    \"qualifier\": null,\n    \"confidence\": 1.0,\n    \"source_quote\": \"318\"\n  },\n  {\n    \"subject\": \"296\",\n    \"attribute\": \"number\",\n    \"value\": \"296\",\n    \"unit\": null,\n    \"time_scope\": null,\n    \"qualifier\": null,\n    \"confidence\": 1.0,\n    \"source_quote\": \"296\"\n  },\n  {\n    \"subje"
+          }
+        ],
+        "grounding_failures": [
+          {
+            "chunk_id": "doc_73209a2caa2f5671:e20",
+            "page_label": "15",
+            "text": "ASSESSMENT AND PROSPECTS\n15\nI.59\t\nThe Reserve Bank would further expand the \nscope and coverage of ongoing pilots in e₹-Retail \nand e₹-Wholesale by introducing new use cases \nand features, besides bringing improvements to \ntechnological aspects of the account aggregator \nframework to enhance transparency, customer \nconvenience and efficiency. Moreover, the \nReserve Bank is exploring commencement of \nCBDC pilots on cross-border payments both on \nbilateral and multilateral basis to overcome key \nc"
+          },
+          {
+            "chunk_id": "doc_5ca307085c96c1fc:e20",
+            "page_label": "23",
+            "text": "Cost drivers – Q4 FY24 vs Q3 FY24\n(1)\nOn reported basis\n(2)\nBreakup as per notes to accounts\n₹ Cr\nQ4 FY22\nQ4 FY23\nQ3 FY24\nQ4 FY24\nFY23\nFY24\nFreight, Handling and Servicing Cost(1,2)\n1,502\n1,372\n1,572\n1,519\n5,669\n5,971\n% of Revenue from services(2)\n72.5%\n73.8%\n71.6%\n73.2%\n78.5%\n73.3%\nLine haul expenses\n724\n616\n696\n708\n2,517\n2,684\n% of revenue\n34.5%\n33.1%\n31.7%\n34.1%\n34.8%\n33.0%\nVehicle rental expenses\n419\n384\n434\n391\n1,523\n1,603\n% of revenue\n20.2%\n20.6%\n19.8%\n18.8%\n21.1%\n19.7%\nContractual manpowe"
+          },
+          {
+            "chunk_id": "doc_f6d3cfecafd95489:e18",
+            "page_label": "12",
+            "text": "2025/26\n2026/27\n2027/28\n2028/29\n2029/30\n2030/31\n2031/32\nOverall Balance, Baseline (percent of GDP)\nCentre\n-4.5\n-4.5\n-4.4\n-4.2\n-4.0\n-3.8\n-3.8\nState\n-3.1\n-3.0\n-3.0\n-3.0\n-3.0\n-3.0\n-2.9\nGeneral\n-7.1\n-7.2\n-7.1\n-6.9\n-6.8\n-6.6\n-6.5\nOverall Balance, Reform Scenario (percent of GDP)\nCentre\n-4.5\n-4.5\n-4.2\n-3.8\n-3.5\n-3.3\n-3.3\nState\n-3.1\n-3.0\n-2.8\n-2.7\n-2.6\n-2.6\n-2.5\nGeneral\n-7.1\n-7.2\n-6.7\n-6.2\n-5.8\n-5.7\n-5.6\nDebt, Baseline (percent of GDP)\nCentre\n56.2\n55.4\n54.3\n53.0\n51.7\n50.3\n48.8\nState\n28.3\n28.3\n28.3\n28.3"
+          },
+          {
+            "chunk_id": "doc_73209a2caa2f5671:e18",
+            "page_label": "13",
+            "text": "ASSESSMENT AND PROSPECTS\n13\nthe MPC also decided to change the stance from \nneutral to accommodative. The Reserve Bank \nwill continue to undertake liquidity management \noperations in sync with the monetary policy \nstance to keep system liquidity adequate to meet \nthe productive requirements of the economy. It \nwill deploy an appropriate mix of instruments to \nmodulate frictional as well as durable liquidity, \nensuring orderly movement of money market \ninterest rates.\nI.50\t\nIn 2025-26, markets wi"
+          },
+          {
+            "chunk_id": "doc_86f2e79a3b7b4a36:e18",
+            "page_label": "16",
+            "text": "Economic Survey 2024-25\n16\nChart I.27: Global slowdown impacted manufacturing in Q2 of FY25\n \n56.4\n54.7\n48\n50\n52\n54\n56\n58\n60\nApr 23\nMay 23\nJun 23\nJul 23\nAug 23\nSep 23\nOct 23\nNov 23\nDec 23\nJan 24\nFeb 24\nMar 24\nApr 24\nMay 24\nJun 24\nJul 24\nAug 24\nSep 24\nOct 24\nNov 24\nDec 24\nIndex\nPMI manufacturing\nNew Export Orders\nSource: Compiled from various monthly HSBC India Manufacturing PMI reports\n1.33\tAccording to the RBI's Industrial Outlook Survey, manufacturing firms reported \nimproved demand conditions"
+          }
+        ],
+        "reconstructed_span_examples": [
+          {
+            "fact_id": "fact_ddb4a44321630bbd",
+            "canonical_text": "IMF WEO (January 2025) - growth outlook: 1.9 % [2024]",
+            "document": "01-india-economic-survey-2024-25-excerpt.pdf",
+            "page_label": "3",
+            "stored_span": "growth \ntrends in 2024\nChart I.2: Steady growth outlook \nacross country groups\n3.3 3.1 3.2\n0\n1\n2\n3\n4\n5\nMar-22\nJun-22\nSep-22\nDec-22\nMar-23\nJun-23\nSep-23\nDec-23\nMar-24\nJun-24\nSep-24\nPer cent\nWorld growth\n3.3\n1.7\n4.4\n3.2\n1.7\n4.2\n3.3\n1.9"
+          },
+          {
+            "fact_id": "fact_26a723a6c1cd84c5",
+            "canonical_text": "Delhivery Limited - revenue: 27,748 ₹ million [FY24]",
+            "document": "02-delhivery-annual-report-fy24-excerpt.pdf",
+            "page_label": "10-11",
+            "stored_span": "24\nProfit after tax (₹ million) (%)*\n(2,689)\n(2.9)\n(10.8)\n(9.0)\n(4,157) (10,808) (10,078) (2,492)\nFY20 FY21 FY22 FY23 FY24\n(13.4)\n(14.6)\n11.6\n5.8\n10.4\nRevenue from services* (₹ million)\n72,236\nFY23\n70,536\nFY22\n81,415\nFY24\n27,748"
+          },
+          {
+            "fact_id": "fact_358c1cd0e50ac5f7",
+            "canonical_text": "DELHIVERY LIMITED - registered office: N24-N34, S24-S34, Air Cargo Logistics Centre-II, Opposite Gate 6 Cargo Terminal, Indira Gandhi International Airport, New Delhi 110037 Delhi, India",
+            "document": "01-delhivery-prospectus-2022-excerpt.pdf",
+            "page_label": null,
+            "stored_span": "OFFICE \nCORPORATE \nOFFICE \nCONTACT \nPERSON \nTELEPHONE AND E-MAIL \nWEBSITE \n  N24-N34, S24-S34, Air Cargo Logistics \nCentre-II, Opposite Gate 6 Cargo \nTerminal, Indira Gandhi International \nAirport, New Delhi 110037 Delhi, India"
+          },
+          {
+            "fact_id": "fact_e19a7018638aa4cb",
+            "canonical_text": "Express Parcel - shipments: 10 [Q4 FY23]",
+            "document": "03-delhivery-q4-fy24-earnings-presentation.pdf",
+            "page_label": null,
+            "stored_span": "1)\n(₹ Cr)\nYoY: 12%\nQoQ: (5%)\nQ4 FY24 performance\n180\n201\n176\nQ4 FY23\nQ3 FY24\nQ4 FY24\n1,177\n1,448\n1,217\nQ4 FY23\nQ3 FY24\nQ4 FY24\nExpress Parcel revenue\n(₹ Cr)\n(Mn)\nExpress Parcel shipments\nYoY: 3%\nYoY: (2%)\n10\nQoQ: (13%)\nQoQ: (16"
+          },
+          {
+            "fact_id": "fact_e18d9613d3aff026",
+            "canonical_text": "Delhivery Limited - revenue: 81,415 ₹ million [FY22]",
+            "document": "02-delhivery-annual-report-fy24-excerpt.pdf",
+            "page_label": "10-11",
+            "stored_span": "22 FY23 FY24\nProfit after tax (₹ million) (%)*\n(2,689)\n(2.9)\n(10.8)\n(9.0)\n(4,157) (10,808) (10,078) (2,492)\nFY20 FY21 FY22 FY23 FY24\n(13.4)\n(14.6)\n11.6\n5.8\n10.4\nRevenue from services* (₹ million)\n72,236\nFY23\n70,536\nFY22\n81,415"
+          }
+        ],
+        "note": "Ungrounded facts are discarded rather than stored, so these counters are the visible surface of extraction failure. See DECISIONS.md for the narrative analysis of specific failures."
+      }
+    }
+  },
+  "complete": true,
+  "missing": [],
+  "totals": {
+    "documents": 6,
+    "facts": 331,
+    "relationships": 129
+  }
+}
