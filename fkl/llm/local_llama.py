@@ -88,11 +88,92 @@ def resolve_model(cfg: Config, *, quiet: bool = False) -> tuple[str, str, Path]:
     return repo, filename, target
 
 
+def resolve_threads(cfg: Config) -> int:
+    """Thread count, capped.
+
+    Counter-intuitive but measured: this model gets *slower* with more threads
+    past ~6 (20 threads ran ~4x slower than 6), because a 1.5B Q4 model is
+    memory-bandwidth bound and extra threads just contend. Defaulting to
+    `os.cpu_count()` would therefore be a pessimisation on a big machine.
+    """
+    if cfg.n_threads:
+        return cfg.n_threads
+    return max(1, min(cfg.n_threads_cap, os.cpu_count() or 4))
+
+
+def preload_gpu_runtime() -> None:
+    """Make pip-installed CUDA runtime libraries loadable without LD_LIBRARY_PATH.
+
+    A CUDA llama-cpp wheel links against libcudart/libcublas, which are not on
+    the loader path when they come from the `nvidia-*-cu12` pip packages.
+    Setting LD_LIBRARY_PATH after the process has started is too late, so the
+    libraries are dlopen'd explicitly with RTLD_GLOBAL before llama_cpp is
+    imported; the dynamic linker then resolves libllama's dependencies against
+    the already-loaded copies. No-op when the packages are absent, which is the
+    normal case for the shipped CPU build.
+    """
+    import ctypes
+    import site
+
+    roots: list[Path] = []
+    for base in {*(site.getsitepackages() or []), site.getusersitepackages()}:
+        candidate = Path(base) / "nvidia"
+        if candidate.is_dir():
+            roots.append(candidate)
+
+    # cublas depends on cublasLt, so load in dependency order.
+    for pattern in ("cuda_runtime/lib/libcudart.so*", "cublas/lib/libcublasLt.so*",
+                    "cublas/lib/libcublas.so*"):
+        for root in roots:
+            for lib in sorted(root.glob(pattern)):
+                try:
+                    ctypes.CDLL(str(lib), mode=ctypes.RTLD_GLOBAL)
+                    break
+                except OSError:
+                    continue
+
+
+def gpu_offload_supported() -> bool:
+    """Whether the installed llama-cpp build ships a GPU backend.
+
+    Deliberately a *static* check for the backend shared library rather than a
+    call to `llama_supports_gpu_offload()`. That function crashes with SIGILL in
+    the prebuilt CUDA wheel used here, and SIGILL cannot be caught in Python -
+    it takes the whole process down - so it is not safe to probe at runtime.
+    """
+    # Locate the package WITHOUT importing it: importing llama_cpp executes the
+    # shared-library load, which fails when the CUDA runtime has not been
+    # preloaded yet - and this function is what decides whether to preload.
+    try:
+        import importlib.util
+
+        spec = importlib.util.find_spec("llama_cpp")
+        if spec is None or not spec.origin:
+            return False
+        lib_dir = Path(spec.origin).parent / "lib"
+    except Exception:
+        return False
+
+    return any(
+        any(lib_dir.glob(f"libggml-{backend}.so*")) or any(lib_dir.glob(f"ggml-{backend}.dll"))
+        for backend in ("cuda", "metal", "hip", "vulkan", "sycl")
+    )
+
+
+def resolve_gpu_layers(cfg: Config) -> int:
+    """Resolve the `-1 => auto` sentinel into a concrete layer count."""
+    if cfg.n_gpu_layers >= 0:
+        return cfg.n_gpu_layers
+    # 999 is llama.cpp's idiom for "offload every layer".
+    return 999 if gpu_offload_supported() else 0
+
+
 class LocalLlamaClient(LLMClient):
     name = "local-llm"
     supports_json_mode = True
 
     def __init__(self, cfg: Config, *, model_path: Path | None = None, quiet: bool = True):
+        preload_gpu_runtime()  # must happen before llama_cpp is imported
         from llama_cpp import Llama, LlamaGrammar
 
         if model_path is None:
@@ -102,12 +183,15 @@ class LocalLlamaClient(LLMClient):
 
         self.model_name = filename
         self._cfg = cfg
-        n_threads = cfg.n_threads or max(1, (os.cpu_count() or 4))
+        self.n_threads = resolve_threads(cfg)
+        self.n_gpu_layers = resolve_gpu_layers(cfg)
+        self.using_gpu = self.n_gpu_layers != 0
 
         self._llm = Llama(
             model_path=str(model_path),
             n_ctx=cfg.n_ctx,
-            n_threads=n_threads,
+            n_threads=self.n_threads,
+            n_gpu_layers=self.n_gpu_layers,
             n_batch=512,
             verbose=False,
         )

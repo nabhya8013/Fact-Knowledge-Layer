@@ -118,7 +118,17 @@ class Config:
     min_free_ram_gb: float = field(default_factory=lambda: _env_float("FKL_MIN_FREE_RAM_GB", 3.0))
 
     n_ctx: int = field(default_factory=lambda: _env_int("FKL_N_CTX", 4096))
-    n_threads: int = field(default_factory=lambda: _env_int("FKL_N_THREADS", 0))  # 0 => auto
+    # 0 => auto. Measured: throughput plateaus around 6 threads and *degrades*
+    # badly beyond that (20 threads was ~4x slower than 6 on this model), so
+    # "use every core" is actively wrong here. See DECISIONS.md.
+    n_threads: int = field(default_factory=lambda: _env_int("FKL_N_THREADS", 0))
+    n_threads_cap: int = field(default_factory=lambda: _env_int("FKL_N_THREADS_CAP", 6))
+    # GPU offload. -1 => auto-detect: offload everything when the installed
+    # llama-cpp build supports it, otherwise run on CPU. The shipped
+    # requirements.txt installs the CPU build, so this resolves to 0 for a
+    # normal clone; installing a CUDA/Metal wheel turns it on with no code
+    # change. Set FKL_N_GPU_LAYERS=0 to force CPU even on a GPU machine.
+    n_gpu_layers: int = field(default_factory=lambda: _env_int("FKL_N_GPU_LAYERS", -1))
     max_output_tokens: int = field(default_factory=lambda: _env_int("FKL_MAX_OUTPUT_TOKENS", 768))
     temperature: float = field(default_factory=lambda: _env_float("FKL_TEMPERATURE", 0.0))
 

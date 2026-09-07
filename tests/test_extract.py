@@ -77,6 +77,51 @@ def test_model_added_quotation_marks_are_stripped():
     assert m is not None
 
 
+# PyMuPDF emits table text column-major, so a row label, its value and the
+# column's unit header are never contiguous.
+TABLE_TEXT = """Particulars
+As at March 31, 2024
+As at March 31, 2023
+(INR million)
+Total equity
+59,798.47
+29,148.37
+Non-current liabilities
+Borrowings
+1,005.28
+1,329.84
+"""
+
+
+def test_table_fact_grounds_via_reconstructed_span():
+    """The model assembles "Total equity 59,798.47 INR million" from three
+    separate places on the page. That is a real fact and must not be lost."""
+    from fkl.extract.grounding import find_reconstructed_span
+
+    assert find_quote(TABLE_TEXT, "Total equity 59,798.47 INR million") is None
+    m = find_reconstructed_span(TABLE_TEXT, "Total equity 59,798.47 INR million")
+    assert m is not None and m.match_mode == "reconstructed_span"
+    # Evidence must be REAL source text, never the model's reconstruction.
+    assert m.text == TABLE_TEXT[m.start : m.end]
+    assert "59,798.47" in m.text
+
+
+def test_reconstructed_span_still_rejects_hallucinated_numbers():
+    """The relaxed tier must not become a licence to invent figures."""
+    from fkl.extract.grounding import find_reconstructed_span
+
+    assert find_reconstructed_span(TABLE_TEXT, "Total equity 99,999.99 INR million") is None
+    assert find_reconstructed_span(TABLE_TEXT, "Total equity 12,345.67 INR million") is None
+
+
+def test_reconstructed_span_is_bounded():
+    """Tokens scattered far apart must not be stitched into one 'fact'."""
+    from fkl.extract.grounding import find_reconstructed_span
+
+    far = "Total equity\n59,798.47\n" + ("filler text line\n" * 60) + "Borrowings\n1,005.28\n"
+    assert find_reconstructed_span(far, "Total equity 59,798.47 Borrowings 1,005.28") is None
+
+
 def test_locate_in_page_translates_chunk_offsets_to_page_offsets():
     page = "HEADER\n" + WRAPPED
     chunk_start = len("HEADER\n")
