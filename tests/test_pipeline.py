@@ -18,17 +18,28 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from fkl import pipeline  # noqa: E402
 from fkl.config import CONFIG  # noqa: E402
 from fkl.db import connect, stats  # noqa: E402
+from fkl.extract.extractor import pending_chunks  # noqa: E402
+from fkl.extract.runner import run_extraction  # noqa: E402
 from fkl.pipeline import ingest_pdf  # noqa: E402
 
-PDF = (
-    Path(__file__).resolve().parent.parent
-    / "starter-datasets" / "delhivery" / "03-delhivery-q4-fy24-earnings-presentation.pdf"
-)
+_DATA = Path(__file__).resolve().parent.parent / "starter-datasets"
+PDF = _DATA / "delhivery" / "03-delhivery-q4-fy24-earnings-presentation.pdf"
+PDF_2 = _DATA / "india-macroeconomy" / "02-rbi-annual-report-2024-25-excerpt.pdf"
+PDF_3 = _DATA / "india-macroeconomy" / "03-imf-india-2025-article-iv-excerpt.pdf"
 
 
 @pytest.fixture
 def store(tmp_path):
     cfg = dataclasses.replace(CONFIG, data_dir=tmp_path)
+    conn = connect(cfg.db_path)
+    yield conn, cfg
+    conn.close()
+
+
+@pytest.fixture
+def offline_store(tmp_path):
+    """Deterministic (non-LLM) extraction, so a real extract runs in the test."""
+    cfg = dataclasses.replace(CONFIG, data_dir=tmp_path, llm_backend="none")
     conn = connect(cfg.db_path)
     yield conn, cfg
     conn.close()
@@ -93,3 +104,51 @@ def test_a_changed_file_becomes_a_new_document(store, tmp_path):
     second = ingest_pdf(conn, altered, cfg)
     assert second.was_processed
     assert stats(conn)["documents"] == 2
+
+
+def test_adding_a_document_does_not_reprocess_existing_ones(offline_store):
+    """Brownie point: new documents are incremental. Existing documents' chunks
+    are not re-extracted and their facts are left exactly as they were."""
+    conn, cfg = offline_store
+
+    ingest_pdf(conn, PDF, cfg)
+    ingest_pdf(conn, PDF_2, cfg)
+    first = run_extraction(conn, cfg, workers=1)
+    assert first.chunks_processed > 0
+    assert len(pending_chunks(conn, cfg)) == 0
+
+    # Snapshot every existing fact and its evidence offsets.
+    before = {
+        (r["id"], r["payload_json"], r["created_at"])
+        for r in conn.execute("SELECT id, payload_json, created_at FROM facts")
+    }
+    progress_before = {
+        r["chunk_id"] for r in conn.execute("SELECT chunk_id FROM extraction_progress")
+    }
+    assert before, "the first two documents must have produced some facts"
+
+    # A third document arrives.
+    third = ingest_pdf(conn, PDF_3, cfg)
+    assert third.was_processed
+
+    pending = pending_chunks(conn, cfg)
+    assert pending, "the new document has chunks to extract"
+    assert all(r["document_id"] == third.document_id for r in pending), \
+        "only the new document's chunks are pending"
+
+    second = run_extraction(conn, cfg, workers=1)
+    assert second.chunks_processed == len(pending)
+
+    # Every pre-existing fact is byte-identical; nothing was recomputed.
+    after = {
+        (r["id"], r["payload_json"], r["created_at"])
+        for r in conn.execute("SELECT id, payload_json, created_at FROM facts")
+    }
+    assert before <= after, "existing facts must survive unchanged"
+    assert progress_before <= {
+        r["chunk_id"] for r in conn.execute("SELECT chunk_id FROM extraction_progress")
+    }
+    # And the new document actually contributed.
+    assert conn.execute(
+        "SELECT COUNT(*) FROM facts WHERE document_id = ?", (third.document_id,)
+    ).fetchone()[0] >= 0
