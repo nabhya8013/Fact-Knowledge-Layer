@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fact Knowledge Layer</title>
+<style>
+  :root {
+    --bg: #f7f7f5; --panel: #fff; --ink: #1a1a18; --muted: #6b6b66;
+    --line: #e3e3de; --accent: #2f6f4f; --accent-soft: #eaf3ee;
+    --corrob: #2f6f4f; --contra: #b23a34; --recon: #a06520; --unrel: #78787a;
+    --quote-bg: #fbf9f2; --highlight: #ffe9a8;
+    --radius: 8px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #16171a; --panel: #1e2024; --ink: #e8e8e4; --muted: #9a9a95;
+      --line: #2e3136; --accent: #6dbd92; --accent-soft: #1c2c24;
+      --corrob: #6dbd92; --contra: #e8837c; --recon: #ddaa5c; --unrel: #9a9a95;
+      --quote-bg: #24262b; --highlight: #55471d;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font: 15px/1.55 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  header {
+    background: var(--panel); border-bottom: 1px solid var(--line);
+    padding: 14px 22px; position: sticky; top: 0; z-index: 10;
+  }
+  .brand { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+  h1 { font-size: 17px; margin: 0; letter-spacing: -.01em; }
+  .sub { color: var(--muted); font-size: 12.5px; }
+  nav { display: flex; gap: 4px; margin-top: 12px; flex-wrap: wrap; }
+  nav button {
+    background: none; border: 1px solid transparent; color: var(--muted);
+    padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 13.5px;
+    font-family: inherit;
+  }
+  nav button:hover { background: var(--bg); color: var(--ink); }
+  nav button.active { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+  main { padding: 22px; max-width: 1120px; margin: 0 auto; }
+  .card {
+    background: var(--panel); border: 1px solid var(--line);
+    border-radius: var(--radius); padding: 16px; margin-bottom: 14px;
+  }
+  .card h3 { margin: 0 0 4px; font-size: 15px; }
+  .muted { color: var(--muted); }
+  .small { font-size: 12.5px; }
+  .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12.5px; }
+  .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 760px) { .grid2 { grid-template-columns: 1fr; } }
+  .tag {
+    display: inline-block; padding: 2px 8px; border-radius: 20px;
+    font-size: 11.5px; font-weight: 600; letter-spacing: .02em;
+    border: 1px solid currentColor;
+  }
+  .CORROBORATES { color: var(--corrob); }
+  .CONTRADICTS { color: var(--contra); }
+  .CONTEXT_RECONCILED { color: var(--recon); }
+  .UNRELATED { color: var(--unrel); }
+  blockquote {
+    margin: 8px 0 0; padding: 9px 12px; background: var(--quote-bg);
+    border-left: 3px solid var(--line); border-radius: 0 6px 6px 0;
+    font-size: 13px; white-space: pre-wrap; word-break: break-word;
+  }
+  mark { background: var(--highlight); color: inherit; padding: 1px 0; }
+  .fact-head { font-weight: 600; }
+  .val { color: var(--accent); }
+  input, select, button.action {
+    font: inherit; padding: 7px 10px; border-radius: 6px;
+    border: 1px solid var(--line); background: var(--panel); color: var(--ink);
+  }
+  button.action { cursor: pointer; }
+  button.action:hover { border-color: var(--accent); color: var(--accent); }
+  button.action[disabled] { opacity: .5; cursor: not-allowed; }
+  table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+  th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--line); }
+  th { color: var(--muted); font-weight: 600; font-size: 12px; text-transform: uppercase; }
+  .scroll { overflow-x: auto; }
+  .banner {
+    padding: 10px 14px; border-radius: 6px; margin-bottom: 14px;
+    border: 1px solid var(--line); background: var(--accent-soft);
+  }
+  .banner.warn { background: #fdf3e3; border-color: #e8cfa0; color: #7a5518; }
+  @media (prefers-color-scheme: dark) {
+    .banner.warn { background: #33270f; border-color: #6b5426; color: #e8c88a; }
+  }
+  .bar { height: 5px; background: var(--line); border-radius: 3px; overflow: hidden; }
+  .bar > i { display: block; height: 100%; background: var(--accent); transition: width .3s; }
+  .kv { display: grid; grid-template-columns: auto 1fr; gap: 3px 14px; font-size: 13px; }
+  .kv dt { color: var(--muted); }
+  .kv dd { margin: 0; }
+  .spinner { color: var(--muted); padding: 30px; text-align: center; }
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <h1>Fact Knowledge Layer</h1>
+    <span class="sub" id="health">connecting…</span>
+  </div>
+  <nav id="nav"></nav>
+</header>
+<main id="view"><div class="spinner">Loading…</div></main>
+
+<script>
+const $ = (sel, el = document) => el.querySelector(sel);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const api = async (path, opts) => {
+  const r = await fetch(path, opts);
+  if (!r.ok) throw new Error(`${r.status} ${await r.text()}`);
+  return r.json();
+};
+const num = n => (n ?? 0).toLocaleString();
+
+const TABS = [
+  ["showcase", "Showcase"],
+  ["facts", "Facts"],
+  ["relationships", "Relationships"],
+  ["schema", "Schema"],
+  ["documents", "Documents"],
+];
+let current = location.hash.slice(1) || "showcase";
+
+function renderNav() {
+  $("#nav").innerHTML = TABS.map(([id, label]) =>
+    `<button data-tab="${id}" class="${id === current ? "active" : ""}">${label}</button>`).join("");
+  $("#nav").onclick = e => {
+    const tab = e.target.closest("button")?.dataset.tab;
+    if (tab) { current = tab; location.hash = tab; renderNav(); route(); }
+  };
+}
+
+// --------------------------------------------------------------- fragments
+function factCard(f, label) {
+  if (!f) return "";
+  const ev = f.evidence || {};
+  const page = ev.page_label ?? "?";
+  const unit = f.unit ? ` ${esc(f.unit)}` : "";
+  const scope = f.time_scope ? ` <span class="muted">[${esc(f.time_scope)}]</span>` : "";
+  const qual = f.qualifier ? ` <span class="muted small">(${esc(f.qualifier)})</span>` : "";
+  return `<div class="card" style="margin:0">
+    ${label ? `<div class="small muted">${label}</div>` : ""}
+    <div class="fact-head">${esc(f.subject)} — ${esc(f.attribute)}:
+      <span class="val">${esc(f.value)}${unit}</span>${scope}${qual}</div>
+    <div class="small muted mono">${esc(f.document)} · page ${esc(page)} · ${esc(ev.match_mode || "")}</div>
+    <blockquote>${esc(ev.quote || "(no quote)")}</blockquote>
+    <div class="small muted" style="margin-top:6px">
+      <a href="#" data-evidence="${esc(f.id)}">verify in page context →</a>
+    </div>
+  </div>`;
+}
+
+function relationCard(r) {
+  return `<div class="card">
+    <div class="row" style="justify-content:space-between">
+      <span class="tag ${esc(r.relation_type)}">${esc(r.relation_type)}</span>
+      <span class="small muted mono">${esc(r.reason_tag || "")} ·
+        conf ${(r.confidence ?? 0).toFixed(2)} · sim ${(r.similarity_score ?? 0).toFixed(3)}</span>
+    </div>
+    <p style="margin:10px 0 12px">${esc(r.explanation)}</p>
+    <div class="grid2">${factCard(r.fact_a, "Fact A")}${factCard(r.fact_b, "Fact B")}</div>
+  </div>`;
+}
+
+async function showEvidence(factId) {
+  try {
+    const d = await api(`/api/evidence/${factId}/context`);
+    const body = d.context === null && !d.highlight
+      ? `<p class="muted">No stored offsets for this quote.</p>`
+      : `<blockquote>${esc(d.before)}<mark>${esc(d.highlight)}</mark>${esc(d.after)}</blockquote>`;
+    const win = window.open("", "_blank", "width=760,height=560");
+    win.document.write(`<title>Evidence</title>
+      <body style="font:14px/1.6 system-ui;padding:20px;max-width:700px">
+      <h3 style="margin-top:0">${esc(d.filename)} — page ${esc(d.printed_page_label ?? d.pdf_page_index)}</h3>
+      <p style="color:#666;font-size:13px">match mode: ${esc(d.match_mode)} ·
+         offsets [${d.char_start}, ${d.char_end}] ·
+         offsets verified against stored quote: <b>${d.offsets_verified}</b></p>
+      <div style="background:#fbf9f2;padding:12px;border-left:3px solid #ddd;white-space:pre-wrap">${body}</div>
+      </body>`);
+  } catch (e) { alert(e.message); }
+}
+
+document.addEventListener("click", e => {
+  const id = e.target.closest("[data-evidence]")?.dataset.evidence;
+  if (id) { e.preventDefault(); showEvidence(id); }
+});
+
+// ------------------------------------------------------------------ views
+const views = {};
+
+views.showcase = async () => {
+  const d = await api("/api/showcase");
+  const labels = {
+    corroboration: "(a) Corroborated across documents",
+    contradiction: "(b) Genuine / likely contradiction",
+    context_reconciled: "(c) Apparent contradiction explained by context",
+  };
+  let html = "";
+  if (!d.complete) {
+    html += `<div class="banner warn"><b>Showcase incomplete.</b> Missing:
+      ${d.missing.map(esc).join(", ")}. Run extraction and linking first
+      (<span class="mono">python run.py extract</span> then
+       <span class="mono">python run.py link</span>).</div>`;
+  }
+  html += `<div class="banner">${num(d.totals.documents)} documents ·
+    ${num(d.totals.facts)} facts · ${num(d.totals.relationships)} relationships</div>`;
+
+  for (const key of ["corroboration", "contradiction", "context_reconciled"]) {
+    const c = d.cases[key];
+    html += `<h3 style="margin:22px 0 8px">${esc(labels[key])}</h3>`;
+    html += c.examples.length
+      ? c.examples.map(relationCard).join("")
+      : `<div class="card muted">No example found yet.</div>`;
+  }
+
+  const rep = d.cases.failure.report;
+  html += `<h3 style="margin:22px 0 8px">(d) Documented extraction / reasoning failure</h3>
+    <div class="card">
+      <p class="muted small">Measured from counters the pipeline recorded. Ungrounded facts are
+      discarded rather than stored, so these are the visible surface of extraction failure.
+      Narrative analysis is in DECISIONS.md.</p>
+      <dl class="kv">
+        <dt>Chunks attempted</dt><dd>${num(rep.chunks_attempted)}</dd>
+        <dt>Chunks that produced no grounded fact</dt><dd>${num(rep.chunks_yielding_no_grounded_fact)}</dd>
+        <dt>Chunks abandoned (unrecoverable JSON)</dt><dd>${num(rep.chunks_failed)}</dd>
+        <dt>JSON repair rate</dt><dd>${(rep.json_repair_rate * 100).toFixed(1)}%</dd>
+        <dt>JSON outcomes</dt><dd class="mono">${esc(JSON.stringify(rep.json_outcomes))}</dd>
+        <dt>Evidence match modes</dt><dd class="mono">${esc(JSON.stringify(rep.evidence_match_modes))}</dd>
+      </dl>
+    </div>`;
+  return html;
+};
+
+views.facts = async () => {
+  const params = new URLSearchParams(location.search);
+  const q = $("#f-q")?.value ?? "";
+  const conf = $("#f-conf")?.value ?? "0";
+  const numeric = $("#f-num")?.checked ?? false;
+  const d = await api(`/api/facts?limit=50&q=${encodeURIComponent(q)}&min_confidence=${conf}&numeric_only=${numeric}`);
+  return `
+    <div class="card row">
+      <input id="f-q" placeholder="search facts…" value="${esc(q)}" style="flex:1;min-width:180px">
+      <label class="small muted">min confidence
+        <select id="f-conf">
+          ${[0, 0.5, 0.7, 0.9].map(v => `<option value="${v}" ${String(v) === conf ? "selected" : ""}>${v}</option>`).join("")}
+        </select></label>
+      <label class="small muted"><input type="checkbox" id="f-num" ${numeric ? "checked" : ""}> numeric only</label>
+      <button class="action" id="f-go">Apply</button>
+      <span class="muted small">${num(d.total)} facts</span>
+    </div>
+    ${d.items.map(f => factCard(f)).join("") || `<div class="card muted">No facts yet.</div>`}`;
+};
+
+views.relationships = async () => {
+  const type = $("#r-type")?.value ?? "";
+  const d = await api(`/api/relationships?limit=40${type ? `&relation_type=${type}` : ""}${type ? "" : ""}`);
+  const counts = Object.entries(d.by_type).map(([k, v]) => `${k}: ${v}`).join(" · ") || "none yet";
+  return `<div class="card row">
+      <label class="small muted">type
+        <select id="r-type">
+          <option value="">all (excl. unrelated)</option>
+          ${["CORROBORATES", "CONTRADICTS", "CONTEXT_RECONCILED", "UNRELATED"]
+            .map(t => `<option ${t === type ? "selected" : ""}>${t}</option>`).join("")}
+        </select></label>
+      <button class="action" id="r-go">Apply</button>
+      <span class="muted small">${esc(counts)}</span>
+    </div>
+    ${d.items.map(relationCard).join("") || `<div class="card muted">No relationships yet. Run <span class="mono">python run.py link</span>.</div>`}`;
+};
+
+views.schema = async () => {
+  const rows = await api("/api/fact-types");
+  return `<div class="banner">The schema is not predefined. Each distinct attribute the documents
+    yield becomes a fact type, and new payload keys are absorbed without a migration.
+    <b>${num(rows.length)}</b> types discovered so far.</div>
+    <div class="card scroll"><table>
+      <tr><th>count</th><th>fact type</th><th>observed keys</th><th>first seen in</th></tr>
+      ${rows.map(r => `<tr>
+        <td>${num(r.fact_count)}</td>
+        <td class="mono">${esc(r.name)}</td>
+        <td class="mono small muted">${esc((r.observed_keys || []).join(", "))}</td>
+        <td class="small muted">${esc(r.first_seen_document || "—")}</td></tr>`).join("")}
+    </table></div>`;
+};
+
+views.documents = async () => {
+  const docs = await api("/api/documents");
+  return `<div class="card">
+      <h3>Add a PDF</h3>
+      <p class="muted small">Uploading ingests the document, then extracts and links it in the
+      background. Nothing about the pipeline is specific to the starter files.</p>
+      <div class="row">
+        <input type="file" id="up" accept="application/pdf">
+        <button class="action" id="up-go">Upload &amp; process</button>
+      </div>
+      <div id="up-status" class="small muted" style="margin-top:10px"></div>
+    </div>
+    <div class="card scroll"><table>
+      <tr><th>document</th><th>pages</th><th>chunks done</th><th>facts</th><th>page labels</th><th>status</th></tr>
+      ${docs.map(d => `<tr>
+        <td>${esc(d.filename)}</td>
+        <td>${num(d.page_count)}</td>
+        <td>${num(d.chunks_done)} / ${num(d.chunk_count)}</td>
+        <td>${num(d.fact_count)}</td>
+        <td>${((d.meta?.printed_label_coverage ?? 0) * 100).toFixed(0)}%</td>
+        <td class="small muted">${esc(d.status)}</td></tr>`).join("")}
+    </table></div>`;
+};
+
+// ----------------------------------------------------------------- wiring
+async function route() {
+  $("#view").innerHTML = `<div class="spinner">Loading…</div>`;
+  try {
+    $("#view").innerHTML = await (views[current] || views.showcase)();
+  } catch (e) {
+    $("#view").innerHTML = `<div class="card"><b>Error:</b> ${esc(e.message)}</div>`;
+  }
+  $("#f-go") && ($("#f-go").onclick = route);
+  $("#f-q") && ($("#f-q").onkeydown = e => e.key === "Enter" && route());
+  $("#r-go") && ($("#r-go").onclick = route);
+  $("#up-go") && ($("#up-go").onclick = doUpload);
+}
+
+async function doUpload() {
+  const input = $("#up"), status = $("#up-status");
+  if (!input.files.length) { status.textContent = "Choose a PDF first."; return; }
+  const body = new FormData();
+  body.append("file", input.files[0]);
+  $("#up-go").disabled = true;
+  status.innerHTML = "Uploading and parsing…";
+  try {
+    const res = await api("/api/upload", { method: "POST", body });
+    status.innerHTML = `Ingested <b>${esc(res.filename)}</b> —
+      ${num(res.page_count)} pages, ${num(res.extraction_chunks)} chunks
+      (${res.status}).` + (res.probably_scanned
+        ? ` <span style="color:var(--contra)">Warning: little extractable text; this PDF may be scanned.</span>` : "");
+    if (res.job_id) pollJob(res.job_id, status);
+    else $("#up-go").disabled = false;
+  } catch (e) {
+    status.textContent = e.message;
+    $("#up-go").disabled = false;
+  }
+}
+
+async function pollJob(jobId, status) {
+  const tick = async () => {
+    try {
+      const j = await api(`/api/jobs/${jobId}`);
+      const pct = Math.round((j.progress || 0) * 100);
+      status.innerHTML = `<div>${esc(j.status)} — ${esc(j.message || "")}</div>
+        <div class="bar" style="margin-top:6px"><i style="width:${pct}%"></i></div>`;
+      if (j.status === "done" || j.status === "error") {
+        $("#up-go").disabled = false;
+        if (j.status === "done") setTimeout(route, 800);
+        return;
+      }
+      setTimeout(tick, 1500);
+    } catch { $("#up-go").disabled = false; }
+  };
+  tick();
+}
+
+(async () => {
+  renderNav();
+  route();
+  try {
+    const h = await api("/api/health");
+    $("#health").textContent =
+      `${h.llm_backend} · ${h.embedding_model} · ${num(h.counts.facts)} facts · ${num(h.counts.relationships)} links`;
+  } catch { $("#health").textContent = "API unavailable"; }
+})();
+</script>
+</body>
+</html>

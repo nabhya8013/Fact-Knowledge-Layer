@@ -1,13 +1,16 @@
 #!/usr/bin/env python3
 """Fact Knowledge Layer - single entry point.
 
-    python run.py                     # preflight + ingest the default dataset
+    python run.py                     # ingest -> extract -> link -> serve the UI
     python run.py ingest --dataset all
     python run.py ingest path/to/a.pdf path/to/b.pdf
     python run.py status
     python run.py doc <document_id>
     python run.py page <document_id> <pdf_page_index>
-    python run.py chunks <document_id> [--role extraction] [--limit 5]
+    python run.py extract [--limit N]  # grounded fact extraction (resumable)
+    python run.py link                # cross-document relationships
+    python run.py facts | relations | schema
+    python run.py serve               # web UI + API only
     python run.py reset
 
 No accounts, no API keys and no background services are required.
@@ -672,28 +675,85 @@ def cmd_reset(args) -> int:
     return 0
 
 
+def cmd_serve(args) -> int:
+    preflight([("fitz", "pymupdf"), ("fastapi", "fastapi"), ("uvicorn", "uvicorn")])
+    import uvicorn
+
+    from fkl.config import CONFIG
+    from fkl.db import connect, stats as db_stats
+
+    CONFIG.ensure_dirs()
+    conn = connect(CONFIG.db_path)
+    try:
+        s = db_stats(conn)
+    finally:
+        conn.close()
+
+    host, port = args.host or CONFIG.host, args.port or CONFIG.port
+    print(_hr("="))
+    print("FACT KNOWLEDGE LAYER - web UI")
+    print(_hr("="))
+    print(f"  UI       http://{host}:{port}/")
+    print(f"  API docs http://{host}:{port}/docs")
+    print(f"  showcase http://{host}:{port}/api/showcase")
+    print(f"\n  store: {s['documents']} documents, {s['facts']:,} facts, "
+          f"{s['relationships']:,} relationships")
+    if s["relationships"] == 0:
+        print("  (no relationships yet - run `python run.py link`)")
+    print(_hr())
+    uvicorn.run("fkl.api:app", host=host, port=port, log_level="warning")
+    return 0
+
+
 def cmd_default(args) -> int:
-    """`python run.py` with no arguments."""
+    """`python run.py` - the one command a reviewer runs.
+
+    Ingest, extract, link, then serve. Each stage is resumable and skips work
+    that is already done, so re-running is cheap and interrupting is safe.
+    """
     preflight()
     from fkl.config import CONFIG
+    from fkl.db import connect, stats as db_stats
     from fkl.pipeline import available_datasets
 
+    CONFIG.ensure_dirs()
     datasets = available_datasets(CONFIG)
+
     print(_hr("="))
     print("FACT KNOWLEDGE LAYER")
     print(_hr("="))
     print(f"data directory : {CONFIG.data_dir}")
     print(f"datasets found : {', '.join(datasets) if datasets else '(none)'}")
-    print(f"llm backend    : {CONFIG.llm_backend}  (stage 2)")
     print(_hr())
-    if not datasets:
-        print("No datasets found. Ingest PDFs directly:  python run.py ingest FILE.pdf")
-        return 0
 
-    target = args.dataset or datasets[0]
-    print(f"Ingesting dataset '{target}'.  (use --dataset all for every dataset)\n")
-    ingest_args = argparse.Namespace(paths=[], dataset=target, force=False, tables=False)
-    return cmd_ingest(ingest_args)
+    if datasets:
+        target = args.dataset or "all"
+        rc = cmd_ingest(argparse.Namespace(
+            paths=[], dataset=target, force=False, tables=False))
+        if rc != 0:
+            return rc
+
+    if not args.no_extract:
+        rc = cmd_extract(argparse.Namespace(
+            document_id=None, workers=None, seconds_per_chunk=None,
+            redo=False, limit=args.limit))
+        if rc not in (0, 130):
+            return rc
+        if rc == 130:
+            return rc
+
+        conn = connect(CONFIG.db_path)
+        try:
+            has_facts = db_stats(conn)["facts"] > 0
+        finally:
+            conn.close()
+        if has_facts:
+            rc = cmd_link(argparse.Namespace(
+                threshold=None, top_k=None, limit=None, dry_run=False))
+            if rc != 0:
+                return rc
+
+    return cmd_serve(argparse.Namespace(host=None, port=None))
 
 
 # --------------------------------------------------------------------------- #
@@ -707,6 +767,10 @@ def build_parser() -> argparse.ArgumentParser:
         epilog=__doc__,
     )
     p.add_argument("--dataset", help="dataset folder name, a substring of one, or 'all'")
+    p.add_argument("--no-extract", action="store_true",
+                   help="ingest and serve without running extraction")
+    p.add_argument("--limit", type=int, default=None,
+                   help="cap extraction chunks (quick demo run)")
     sub = p.add_subparsers(dest="command")
 
     ing = sub.add_parser("ingest", help="parse and store PDFs")
@@ -774,6 +838,11 @@ def build_parser() -> argparse.ArgumentParser:
     ch.add_argument("--limit", type=int, default=3)
     ch.add_argument("--chars", type=int, default=1200)
     ch.set_defaults(func=cmd_chunks)
+
+    sv = sub.add_parser("serve", help="run the web UI and API")
+    sv.add_argument("--host", default=None)
+    sv.add_argument("--port", type=int, default=None)
+    sv.set_defaults(func=cmd_serve)
 
     rs = sub.add_parser("reset", help="delete the database (and optionally models)")
     rs.add_argument("--all", action="store_true", help="also delete downloaded models")

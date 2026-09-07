@@ -280,3 +280,46 @@ def test_deterministic_backend_uses_one_worker():
 def test_worker_count_is_bounded_and_positive():
     workers = resolve_workers(dataclasses.replace(CONFIG, llm_backend="local"))
     assert 1 <= workers <= 4
+
+
+def test_pending_chunks_interleave_documents(tmp_path):
+    """A partial run must cover every document, not just the first.
+
+    Ordering document-by-document meant an interrupted run produced facts from
+    one document and therefore zero cross-document relationships - which is the
+    entire point of the system.
+    """
+    cfg = dataclasses.replace(CONFIG, data_dir=tmp_path, llm_backend="none")
+    conn = connect(cfg.db_path)
+    try:
+        for d in range(3):
+            doc_id = f"doc_{d:016d}"
+            conn.execute(
+                """INSERT INTO documents (id, content_sha256, filename, title, page_count,
+                                          byte_size, parser_version, status, ingested_at)
+                   VALUES (?,?,?,?,?,?,?,?,?)""",
+                (doc_id, str(d) * 64, f"{d}.pdf", f"Doc {d}", 1, 10, "1", "parsed", "2026"),
+            )
+            conn.execute(
+                "INSERT INTO pages (id, document_id, pdf_page_index, text, char_count) "
+                "VALUES (?,?,?,?,?)",
+                (f"{doc_id}:p0", doc_id, 0, "text " * 50, 250),
+            )
+            for i in range(10):
+                conn.execute(
+                    """INSERT INTO chunks (id, document_id, page_id, pdf_page_index, role, kind,
+                                           ordinal, char_start, char_end, text, token_estimate,
+                                           numeric_density)
+                       VALUES (?,?,?,?,?,?,?,?,?,?,?,?)""",
+                    (f"{doc_id}:e{i}", doc_id, f"{doc_id}:p0", 0, "extraction", "prose",
+                     i, 0, 10, "Revenue was 100 crore in FY24.", 10, 0.5),
+                )
+        conn.commit()
+
+        pending = pending_chunks(conn, cfg)
+        assert len(pending) == 30
+        # The first slice must touch every document rather than exhausting one.
+        first_round = {r["document_id"] for r in pending[:3]}
+        assert len(first_round) == 3, "the first three chunks should span all three documents"
+    finally:
+        conn.close()

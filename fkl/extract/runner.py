@@ -144,7 +144,7 @@ def run_extraction(
     document_id: str | None = None,
     workers: int | None = None,
     on_progress=None,
-    commit_every: int = 10,
+    commit_every: int = 1,
     limit: int | None = None,
 ) -> ExtractionStats:
     """Extract facts for every pending chunk. Safe to re-run; resumes."""

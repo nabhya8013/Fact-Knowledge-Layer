@@ -325,8 +325,21 @@ def mark_chunk_done(
 def pending_chunks(
     conn: sqlite3.Connection, cfg: Config, *, document_id: str | None = None
 ) -> list[sqlite3.Row]:
-    """Extraction chunks not yet attempted, newest documents last."""
-    sql = """SELECT c.*, p.text AS page_text, d.title AS document_title
+    """Extraction chunks not yet attempted, interleaved across documents.
+
+    Ordering matters more than it looks. Processing document by document means a
+    partial run - and on CPU a full run takes about an hour, so partial runs are
+    the common case - produces facts from only the first document or two, and
+    therefore *zero* cross-document relationships. The whole point of the system
+    is the links between documents, so a run that is interrupted halfway should
+    still be able to demonstrate them.
+
+    Round-robin fixes that: take the first chunk of every document, then the
+    second of every document, and so on. Any prefix of the resulting order covers
+    all documents roughly evenly.
+    """
+    sql = """SELECT c.*, p.text AS page_text, d.title AS document_title,
+                    ROW_NUMBER() OVER (PARTITION BY c.document_id ORDER BY c.ordinal) AS doc_rank
                FROM chunks c
                JOIN pages p ON p.id = c.page_id
                JOIN documents d ON d.id = c.document_id
@@ -338,7 +351,7 @@ def pending_chunks(
     if document_id:
         sql += " AND c.document_id = ?"
         params.append(document_id)
-    sql += " ORDER BY c.document_id, c.ordinal"
+    sql += " ORDER BY doc_rank, c.document_id"
     return conn.execute(sql, params).fetchall()
 
 
@@ -349,7 +362,7 @@ def extract_document(
     cfg: Config,
     *,
     on_progress=None,
-    commit_every: int = 10,
+    commit_every: int = 1,
 ) -> ExtractionStats:
     """Extract facts for every eligible extraction chunk of one document."""
     doc = conn.execute("SELECT * FROM documents WHERE id = ?", (document_id,)).fetchone()

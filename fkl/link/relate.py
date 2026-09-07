@@ -256,8 +256,7 @@ def link_facts(
         store_relationship(conn, candidate, verdict, model_name)
         stats.stored += 1
 
-        if index_i % 10 == 0:
-            conn.commit()
+        conn.commit()
         if on_progress:
             on_progress(index_i, len(candidates), stats)
 
