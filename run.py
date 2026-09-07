@@ -156,6 +156,214 @@ def cmd_ingest(args) -> int:
     return 0
 
 
+def _progress_bar(done: int, total: int, width: int = 28) -> str:
+    filled = int(width * done / total) if total else width
+    return "[" + "#" * filled + "." * (width - filled) + f"] {done}/{total}"
+
+
+def cmd_extract(args) -> int:
+    preflight()
+    import time
+
+    from fkl.config import CONFIG
+    from fkl.db import connect, stats as db_stats
+    from fkl.extract.runner import estimate_runtime, resolve_workers, run_extraction
+    from fkl.llm.factory import describe_backend
+
+    CONFIG.ensure_dirs()
+    conn = connect(CONFIG.db_path)
+    try:
+        document_id = None
+        if args.document_id:
+            row = conn.execute(
+                "SELECT id FROM documents WHERE id = ? OR filename LIKE ?",
+                (args.document_id, f"%{args.document_id}%"),
+            ).fetchone()
+            if not row:
+                print(f"No document matching '{args.document_id}'", file=sys.stderr)
+                return 1
+            document_id = row["id"]
+
+        if args.redo:
+            if document_id:
+                conn.execute("DELETE FROM facts WHERE document_id = ?", (document_id,))
+                conn.execute(
+                    """DELETE FROM extraction_progress WHERE chunk_id IN
+                       (SELECT id FROM chunks WHERE document_id = ?)""",
+                    (document_id,),
+                )
+            else:
+                conn.execute("DELETE FROM facts")
+                conn.execute("DELETE FROM extraction_progress")
+                conn.execute("DELETE FROM fact_types")
+            conn.commit()
+            print("[extract] --redo: cleared existing facts for re-extraction")
+
+        workers = resolve_workers(CONFIG, args.workers)
+        pending, per_chunk, est_s = estimate_runtime(
+            conn, CONFIG, args.seconds_per_chunk, document_id=document_id,
+            workers=args.workers, limit=args.limit,
+        )
+
+        print(_hr("="))
+        print("FACT EXTRACTION")
+        print(_hr("="))
+        print(f"backend        : {describe_backend(CONFIG)}")
+        print(f"workers        : {workers}")
+        print(f"pending chunks : {pending:,}")
+        if pending == 0:
+            print("\nNothing to do - every chunk has already been extracted.")
+            print("Use --redo to discard existing facts and extract again.")
+            return 0
+        print(
+            f"estimated time : ~{est_s/60:.1f} min "
+            f"(at {per_chunk:.1f}s/chunk, measured for this backend)"
+        )
+        print("               progress is saved continuously - Ctrl-C and re-run to resume")
+        print(_hr())
+
+        start = time.perf_counter()
+        last_line = [0.0]
+
+        def on_progress(done, total, running):
+            now = time.perf_counter()
+            if now - last_line[0] < 1.0 and done != total:
+                return
+            last_line[0] = now
+            elapsed = now - start
+            rate = done / elapsed if elapsed else 0
+            remaining = (total - done) / rate if rate else 0
+            sys.stdout.write(
+                f"\r  {_progress_bar(done, total)}  "
+                f"{running.facts_stored:,} facts  "
+                f"{elapsed/60:.1f}m elapsed, ~{remaining/60:.1f}m left   "
+            )
+            sys.stdout.flush()
+
+        try:
+            result = run_extraction(
+                conn, CONFIG, document_id=document_id, workers=args.workers,
+                on_progress=on_progress, limit=args.limit,
+            )
+        except KeyboardInterrupt:
+            conn.commit()
+            print("\n\nInterrupted. Progress saved - re-run `python run.py extract` to resume.")
+            return 130
+
+        print("\n" + _hr())
+        print(
+            f"chunks processed : {result.chunks_processed:,} "
+            f"({result.chunks_failed:,} failed)\n"
+            f"facts proposed   : {result.facts_proposed:,}\n"
+            f"facts stored     : {result.facts_stored:,} "
+            f"(grounding rate {result.grounding_rate:.0%})\n"
+            f"  rejected       : {result.rejected_ungrounded:,} ungrounded, "
+            f"{result.rejected_invalid:,} malformed, {result.rejected_duplicate:,} duplicate\n"
+            f"elapsed          : {result.elapsed_s/60:.1f} min"
+        )
+        if result.match_modes:
+            print("evidence match modes:")
+            for mode, count in result.match_modes.most_common():
+                print(f"    {mode:24s} {count:,}")
+        if result.repair_outcomes:
+            print(f"JSON repair path fired on {result.repair_rate:.1%} of chunks:")
+            for outcome, count in result.repair_outcomes.most_common():
+                print(f"    {outcome:24s} {count:,}")
+
+        s = db_stats(conn)
+        print(_hr())
+        print(f"store: {s['facts']:,} facts, {s['evidence']:,} evidence rows, "
+              f"{s['fact_types']:,} fact types")
+    finally:
+        conn.close()
+    return 0
+
+
+def cmd_facts(args) -> int:
+    preflight()
+    from fkl.config import CONFIG
+    from fkl.db import connect, json_load
+
+    conn = connect(CONFIG.db_path)
+    try:
+        sql = """SELECT f.*, e.quote, e.pdf_page_index, e.printed_page_label, e.match_mode,
+                        d.filename
+                   FROM facts f
+                   JOIN evidence e ON e.fact_id = f.id
+                   JOIN documents d ON d.id = f.document_id
+                  WHERE 1=1"""
+        params: list = []
+        if args.document_id:
+            sql += " AND (d.id = ? OR d.filename LIKE ?)"
+            params += [args.document_id, f"%{args.document_id}%"]
+        if args.type:
+            sql += " AND f.fact_type LIKE ?"
+            params.append(f"%{args.type}%")
+        if args.numeric_only:
+            sql += " AND f.value_num IS NOT NULL"
+        sql += " ORDER BY f.confidence DESC LIMIT ?"
+        params.append(args.limit)
+
+        rows = conn.execute(sql, params).fetchall()
+        if not rows:
+            print("No facts matched. Run `python run.py extract` first?")
+            return 0
+        for r in rows:
+            payload = json_load(r["payload_json"], {}) or {}
+            page = r["printed_page_label"] or f"pdf#{r['pdf_page_index']}"
+            print(_hr("="))
+            print(
+                f"{payload.get('subject')} | {payload.get('attribute')} = "
+                f"{payload.get('value')} {payload.get('unit') or ''}"
+                + (f"  [{payload.get('time_scope')}]" if payload.get("time_scope") else "")
+            )
+            print(
+                f"  type={r['fact_type']}  value_num={r['value_num']}  unit={r['unit']}  "
+                f"conf={r['confidence']:.2f}  by={r['extractor']}"
+            )
+            extra = {k: v for k, v in payload.items() if k not in
+                     ("subject", "attribute", "value", "unit", "time_scope",
+                      "qualifier", "confidence", "source_quote")}
+            if extra:
+                print(f"  emergent keys: {extra}")
+            print(f"  EVIDENCE {r['filename']} p.{page} ({r['match_mode']}):")
+            print(f"    \"{(r['quote'] or '')[:220]}\"")
+    finally:
+        conn.close()
+    return 0
+
+
+def cmd_schema(args) -> int:
+    """Show the dynamic fact-type registry - the schema as it actually emerged."""
+    preflight()
+    from fkl.config import CONFIG
+    from fkl.db import connect, json_load
+
+    conn = connect(CONFIG.db_path)
+    try:
+        rows = conn.execute(
+            """SELECT ft.*, d.filename FROM fact_types ft
+               LEFT JOIN documents d ON d.id = ft.first_seen_document_id
+               ORDER BY ft.fact_count DESC LIMIT ?""",
+            (args.limit,),
+        ).fetchall()
+        if not rows:
+            print("No fact types yet. Run `python run.py extract` first.")
+            return 0
+        total = conn.execute("SELECT COUNT(*) FROM fact_types").fetchone()[0]
+        print(_hr("="))
+        print(f"DYNAMIC FACT SCHEMA - {total:,} types discovered from the documents")
+        print(_hr("="))
+        for r in rows:
+            keys = json_load(r["observed_keys_json"], []) or []
+            print(f"{r['fact_count']:>5}x  {r['name']}")
+            print(f"         keys: {', '.join(keys)}")
+            print(f"         first seen in: {r['filename'] or '-'} at {r['first_seen_at']}")
+    finally:
+        conn.close()
+    return 0
+
+
 def cmd_status(args) -> int:
     preflight()
     from fkl.config import CONFIG
@@ -375,6 +583,27 @@ def build_parser() -> argparse.ArgumentParser:
         help="also run PyMuPDF table detection (much slower; see DECISIONS.md)",
     )
     ing.set_defaults(func=cmd_ingest)
+
+    ex = sub.add_parser("extract", help="extract grounded facts from ingested chunks")
+    ex.add_argument("document_id", nargs="?", help="limit to one document")
+    ex.add_argument("--workers", type=int, default=None, help="override worker count")
+    ex.add_argument("--seconds-per-chunk", type=float, default=None,
+                    help="override the up-front estimate only (not control flow)")
+    ex.add_argument("--limit", type=int, default=None,
+                    help="stop after N chunks (for quick iteration)")
+    ex.add_argument("--redo", action="store_true", help="discard existing facts and re-extract")
+    ex.set_defaults(func=cmd_extract)
+
+    fa = sub.add_parser("facts", help="browse extracted facts with their evidence")
+    fa.add_argument("document_id", nargs="?")
+    fa.add_argument("--type", help="filter by fact type substring")
+    fa.add_argument("--numeric-only", action="store_true")
+    fa.add_argument("--limit", type=int, default=15)
+    fa.set_defaults(func=cmd_facts)
+
+    sc = sub.add_parser("schema", help="show the dynamic fact-type registry")
+    sc.add_argument("--limit", type=int, default=30)
+    sc.set_defaults(func=cmd_schema)
 
     st = sub.add_parser("status", help="summarise what is in the store")
     st.set_defaults(func=cmd_status)

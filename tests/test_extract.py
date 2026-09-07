@@ -173,6 +173,35 @@ def test_normalize_value(value, unit, expected):
     assert normalize_value(value, unit) == expected
 
 
+@pytest.mark.parametrize(
+    "value",
+    [
+        "U63090DL2011PLC221234",                              # corporate identity number
+        "N24-N34, S24-S34, Air Cargo Logistics Centre-II",    # address
+        "Plot 5, Sector 44, Gurugram 122002 Haryana, India",  # address
+        "Sunil Kumar Bansal",
+        "www.delhivery.com",
+    ],
+)
+def test_identifiers_and_addresses_do_not_yield_a_magnitude(value):
+    """Regression: these produced 63090.0, 24.0 and 5.0 on the real corpus.
+
+    A fabricated magnitude is worse than none, because linking would compare it
+    against genuine figures and invent contradictions out of postcodes.
+    """
+    number, _ = normalize_value(value)
+    assert number is None
+
+
+def test_word_only_quotes_do_not_use_the_reconstructed_tier():
+    """Regression: without numeric anchors this grounded 'registered office' to a
+    200-character blob spanning six unrelated headers on a prospectus cover."""
+    from fkl.extract.grounding import find_reconstructed_span
+
+    source = "CORPORATE IDENTITY NUMBER\nREGISTERED OFFICE\nCORPORATE\nOFFICE\nCONTACT\nPERSON\n"
+    assert find_reconstructed_span(source, "registered office corporate office contact person") is None
+
+
 def test_crore_and_billion_are_recognised_as_the_same_quantity():
     """This is what makes the 'units differ' reconciliation case detectable."""
     a, unit_a = normalize_value("Rs 8,142 crore")

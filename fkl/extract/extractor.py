@@ -167,42 +167,42 @@ def _upsert_fact_type(conn: sqlite3.Connection, name: str, document_id: str,
     )
 
 
-def extract_from_chunk(
-    conn: sqlite3.Connection,
-    chunk: sqlite3.Row,
-    page_text: str,
+def propose_records(
+    chunk_text: str,
     client: LLMClient | None,
     cfg: Config,
     *,
     document_title: str | None = None,
-) -> ExtractionStats:
-    """Extract, verify and store facts for a single chunk."""
-    stats = ExtractionStats(chunks_seen=1)
-    t0 = time.perf_counter()
+) -> tuple[list[dict], GuardResult | None, str]:
+    """Ask the backend for candidate facts. Pure inference - no database access.
 
+    Split out from storage so the expensive half can run in a worker process
+    while SQLite stays single-writer in the parent (see extract/runner.py).
+    """
     if client is None:
-        records = deterministic_facts(chunk["text"], document_title=document_title)
-        extractor_name = "deterministic"
-        stats.repair_outcomes["ok_first_try"] += 1
-    else:
-        result = guarded_json(
-            client,
-            EXTRACTION_SYSTEM,
-            build_extraction_prompt(chunk["text"], document_title=document_title),
-            max_retries=cfg.json_max_retries,
-            max_tokens=cfg.max_output_tokens,
-            temperature=cfg.temperature,
-        )
-        _log_repair(conn, chunk["id"], result)
-        stats.repair_outcomes[result.outcome] += 1
-        if not result.ok:
-            stats.chunks_failed = 1
-            stats.elapsed_s = time.perf_counter() - t0
-            return stats
-        records = result.data or []
-        extractor_name = client.name
+        return deterministic_facts(chunk_text, document_title=document_title), None, "deterministic"
 
-    stats.chunks_processed = 1
+    result = guarded_json(
+        client,
+        EXTRACTION_SYSTEM,
+        build_extraction_prompt(chunk_text, document_title=document_title),
+        max_retries=cfg.json_max_retries,
+        max_tokens=cfg.max_output_tokens,
+        temperature=cfg.temperature,
+    )
+    return (result.data or []), result, client.name
+
+
+def store_records(
+    conn: sqlite3.Connection,
+    chunk: sqlite3.Row,
+    page_text: str,
+    records: list[dict],
+    extractor_name: str,
+) -> ExtractionStats:
+    """Ground, normalise and persist proposed facts. Runs in the parent only."""
+    stats = ExtractionStats(chunks_seen=1, chunks_processed=1)
+    t0 = time.perf_counter()
     stats.facts_proposed = len(records)
 
     for record in records:
@@ -275,6 +275,71 @@ def extract_from_chunk(
 
     stats.elapsed_s = time.perf_counter() - t0
     return stats
+
+
+def extract_from_chunk(
+    conn: sqlite3.Connection,
+    chunk: sqlite3.Row,
+    page_text: str,
+    client: LLMClient | None,
+    cfg: Config,
+    *,
+    document_title: str | None = None,
+) -> ExtractionStats:
+    """Single-process path: infer, log the JSON outcome, then store."""
+    records, guard, extractor_name = propose_records(
+        chunk["text"], client, cfg, document_title=document_title
+    )
+
+    if guard is not None:
+        _log_repair(conn, chunk["id"], guard)
+        if not guard.ok:
+            stats = ExtractionStats(chunks_seen=1, chunks_failed=1)
+            stats.repair_outcomes[guard.outcome] += 1
+            mark_chunk_done(conn, chunk["id"], "failed", 0)
+            return stats
+
+    stats = store_records(conn, chunk, page_text, records, extractor_name)
+    stats.repair_outcomes[guard.outcome if guard else "ok_first_try"] += 1
+    mark_chunk_done(conn, chunk["id"], "done", stats.facts_stored)
+    return stats
+
+
+def mark_chunk_done(
+    conn: sqlite3.Connection, chunk_id: str, status: str, facts: int
+) -> None:
+    """Record that a chunk has been attempted, so a re-run can resume.
+
+    Resumability matters here because a full-corpus extraction takes ~an hour on
+    CPU; losing all of it to one interruption would be unacceptable.
+    """
+    conn.execute(
+        """INSERT INTO extraction_progress (chunk_id, status, facts, processed_at)
+           VALUES (?,?,?,?)
+           ON CONFLICT(chunk_id) DO UPDATE SET
+             status=excluded.status, facts=excluded.facts, processed_at=excluded.processed_at""",
+        (chunk_id, status, facts, _now()),
+    )
+
+
+def pending_chunks(
+    conn: sqlite3.Connection, cfg: Config, *, document_id: str | None = None
+) -> list[sqlite3.Row]:
+    """Extraction chunks not yet attempted, newest documents last."""
+    sql = """SELECT c.*, p.text AS page_text, d.title AS document_title
+               FROM chunks c
+               JOIN pages p ON p.id = c.page_id
+               JOIN documents d ON d.id = c.document_id
+              WHERE c.role = 'extraction'
+                AND c.numeric_density >= ?
+                AND NOT EXISTS (SELECT 1 FROM extraction_progress ep
+                                 WHERE ep.chunk_id = c.id AND ep.status = 'done')"""
+    params: list = [cfg.min_numeric_density]
+    if document_id:
+        sql += " AND c.document_id = ?"
+        params.append(document_id)
+    sql += " ORDER BY c.document_id, c.ordinal"
+    return conn.execute(sql, params).fetchall()
 
 
 def extract_document(

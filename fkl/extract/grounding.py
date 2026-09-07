@@ -177,8 +177,15 @@ def find_reconstructed_span(
 
     numeric = [t for t in tokens if _NUMERIC_TOKEN_RE.match(t)]
     words = [t.lower() for t in tokens if not _NUMERIC_TOKEN_RE.match(t)]
-    if not numeric and len(words) < 3:
-        return None  # too little to anchor on
+
+    # Numbers are mandatory, not merely preferred. This tier exists for
+    # column-major numeric tables, where the figures are what pin the span down.
+    # Allowing word-only matches made it grab whatever happened to be nearby: on
+    # a prospectus cover page, "registered office" grounded to a 200-character
+    # blob spanning six unrelated headers. For prose facts the model can and
+    # should quote verbatim, so those belong to the stricter tiers above.
+    if not numeric:
+        return None
 
     haystack = source_text.lower()
 

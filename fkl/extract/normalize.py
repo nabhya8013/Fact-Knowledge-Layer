@@ -149,6 +149,48 @@ def detect_ratio_unit(*texts: str) -> str | None:
     return None
 
 
+_ALNUM_MIXED_RE = re.compile(r"\b(?=[A-Za-z0-9-]*[A-Za-z])(?=[A-Za-z0-9-]*\d)[A-Za-z0-9-]{4,}\b")
+_MAX_RESIDUAL_WORDS = 2
+
+
+def is_quantity(value_text: str) -> bool:
+    """Whether a value string is a *quantity* rather than prose or an identifier.
+
+    Without this gate `parse_number` happily reads the first digits out of
+    anything, which produced real corruption on the starter corpus:
+
+        "U63090DL2011PLC221234"            -> 63090.0
+        "N24-N34, S24-S34, Air Cargo ..."  -> 24.0
+        "Plot 5, Sector 44, Gurugram ..."  -> 5.0
+
+    Those fabricated magnitudes would then be compared against genuine figures
+    during linking and invent contradictions out of postcodes. Two signals, both
+    generic:
+
+    * a token mixing letters and digits marks an identifier, not a measurement;
+    * once the number, its scale word and its currency are removed, a real
+      quantity leaves almost nothing behind - an address leaves a sentence.
+    """
+    text = _clean(value_text)
+    if not text:
+        return False
+    if _ALNUM_MIXED_RE.search(text):
+        return False
+
+    residual = text.lower()
+    residual = _NUMBER_RE.sub(" ", residual)
+    for word in sorted(SCALES, key=len, reverse=True):
+        residual = re.sub(rf"(?<![a-z]){re.escape(word)}(?![a-z])", " ", residual)
+    for token in CURRENCIES:
+        residual = residual.replace(token, " ") if not token.isalpha() else re.sub(
+            rf"(?<![a-z]){re.escape(token)}(?![a-z])", " ", residual
+        )
+    for token in RATIO_UNITS:
+        residual = residual.replace(token, " ")
+    residual_words = [w for w in re.findall(r"[a-z]+", residual) if len(w) > 1]
+    return len(residual_words) <= _MAX_RESIDUAL_WORDS
+
+
 def normalize_value(value, unit: str | None = None) -> tuple[float | None, str | None]:
     """Reduce (value, unit) to a magnitude plus a canonical unit.
 
@@ -158,6 +200,10 @@ def normalize_value(value, unit: str | None = None) -> tuple[float | None, str |
     value_text = "" if value is None else str(value)
     unit_text = unit or ""
     combined = f"{value_text} {unit_text}"
+
+    # Identifiers, addresses and prose must not yield a magnitude.
+    if value_text.strip() and not is_quantity(value_text):
+        return (None, _clean(unit_text) or None)
 
     number = parse_number(value_text)
     if number is None:

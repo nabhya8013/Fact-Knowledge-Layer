@@ -164,6 +164,17 @@ CREATE TABLE IF NOT EXISTS jobs (
     finished_at TEXT
 );
 
+-- ------------------------------------------------------ extraction_progress
+-- One row per attempted extraction chunk. A full-corpus run takes ~an hour on
+-- CPU, so an interrupted run must resume rather than start over.
+CREATE TABLE IF NOT EXISTS extraction_progress (
+    chunk_id     TEXT PRIMARY KEY REFERENCES chunks(id) ON DELETE CASCADE,
+    status       TEXT NOT NULL,      -- done | failed
+    facts        INTEGER NOT NULL DEFAULT 0,
+    processed_at TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_progress_status ON extraction_progress(status);
+
 -- --------------------------------------------------------------- repair_log
 -- Powers the "how often did the JSON repair path fire?" metric in DECISIONS.md.
 CREATE TABLE IF NOT EXISTS repair_log (
