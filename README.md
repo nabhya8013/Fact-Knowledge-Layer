@@ -4,17 +4,17 @@ Extracts grounded facts from PDFs, links every fact to its exact evidence
 (page number + verbatim quoted span), and identifies corroborations,
 contradictions and context-reconciled relationships across documents.
 
-> **Status: work in progress — stage 1 of 3 complete.**
+> **Status: work in progress — stages 1–3 implemented, docs and hardening pending.**
 > This README is a placeholder. The full README (Setup and Run Instructions,
 > Video Demo, Approach, Limitations and Next Steps, Additional Notes) ships with
-> stage 3. See **[DECISIONS.md](DECISIONS.md)** for the running build diary,
-> which is current.
+> the 1.0 release. See **[DECISIONS.md](DECISIONS.md)** for the running build diary,
+> which is current through stage 1.
 
 | Stage | Scope | Status |
 |---|---|---|
-| 1 | PDF parsing with page + character-offset grounding, chunking, SQLite schema, incremental ingest, CLI | ✅ done |
-| 2 | LLM backends (llama.cpp / Groq / deterministic), JSON repair, fact extraction, evidence verification, dynamic schema registry | ⏳ next |
-| 3 | Embeddings + vector search, relationship classification, FastAPI, web UI, showcase view | ⏳ |
+| 1 | PDF parsing with page + character-offset grounding, chunking, SQLite schema, incremental ingest, CLI | ✅ done (measured: 6 PDFs, 511 pages, 3,139 chunks, 1.7s) |
+| 2 | LLM backends (llama.cpp / Groq / deterministic), JSON repair, fact extraction, evidence verification, dynamic schema registry | 🔧 implemented (tests pending) |
+| 3 | Embeddings + vector search, relationship classification, FastAPI, web UI, showcase view | 🔧 implemented (tests pending) |
 
 ## Quick start (stage 1)
 
