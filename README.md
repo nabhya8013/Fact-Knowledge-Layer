@@ -19,7 +19,7 @@ fact shape emerges from the documents into a dynamic registry.
 | 3 | Embeddings + vector search, relationship classification, FastAPI, web UI, showcase view | ✅ done |
 
 Measured on the six starter PDFs: 511 pages, 3,139 chunks, ingested in ~1.7 s.
-**140 tests passing.**
+**141 tests passing.**
 
 ---
 
@@ -189,6 +189,65 @@ derived from it.
 
 See **[DECISIONS.md](DECISIONS.md)** for the full build diary — the measurements,
 the dead ends, and the bugs the real corpus exposed.
+
+---
+
+## Scaling and incrementality
+
+The four extension suggestions in the brief are handled by design, not bolted on:
+
+### Large PDFs without a performance hit
+
+- **Table detection is off by default.** Measured on a 100-page annual report:
+  **150.7 s with tables vs 0.3 s without** (~500×), and the detector produces
+  *worse* output than PyMuPDF's linearised page text on borderless statistical
+  tables. Full ingest of all six PDFs went from **>5 min to 1.7 s**.
+- Parsing stores page text once; chunking is O(pages). A cheap numeric-line
+  pre-check gates the expensive table detector when it *is* enabled.
+- Extraction is per page-sized chunk and **resumable** (`extraction_progress`),
+  so a 500-page PDF is never an all-or-nothing operation. `--limit N` bounds a
+  run.
+
+### Many PDFs in one knowledge layer
+
+- One SQLite file holds every document, fact, vector and relationship — no second
+  store, no sync problem, deletes cascade.
+- Candidate generation pairs facts **only across different documents**;
+  same-document pairs (a report repeating its own figures) are excluded before
+  the LLM sees them.
+- `pending_chunks` interleaves documents **round-robin**, so any partial
+  extraction still covers every document and can demonstrate cross-document
+  links. Measured: 6/6 documents within the first 60 chunks, vs 1/6 with
+  document-order processing.
+
+### A schema that evolves as new fact kinds appear
+
+- The local model decodes under a GBNF grammar that fixes only the JSON
+  *envelope* — an array of objects with **arbitrary keys**.
+- `fact_types` is a **registry, not a constraint**: a previously unseen
+  `attribute` becomes a new row; new payload keys are folded into a running
+  `observed_keys` union. **No migration, ever.**
+- `payload_json` is schema-free; the promoted columns exist only for indexing.
+- Visible in the UI (Schema tab) and at `GET /api/fact-types` — 190+ distinct
+  fact types emerged from the six starter PDFs.
+
+### New documents incrementally, without rebuilding
+
+- Document identity is `sha256(bytes)`. Re-ingesting identical bytes is a
+  **no-op** — nothing reparsed, existing facts and relationships untouched.
+- A new document only extracts **its own** chunks (`pending_chunks`), only embeds
+  its own facts (`index_facts` skips facts that already have a vector), and only
+  classifies **new** candidate pairs (`link_facts` `skip_existing`). The upload
+  endpoint scopes the whole extract→link job to the new `document_id`.
+- Content-derived fact ids make re-extraction idempotent.
+- A changed file hashes differently and becomes a new document, so the old
+  version's facts survive and stay comparable against the new ones.
+- Tests: `test_pipeline.py::test_adding_a_document_does_not_reprocess_existing_ones`,
+  `test_link.py::test_link_facts_skips_a_pair_already_classified`.
+
+Honest limit: the incremental diff is at **document** granularity — a 100-page
+PDF changed on one page is reprocessed in full. Page-level hashing would fix it
+(see next steps).
 
 ---
 
