@@ -118,6 +118,37 @@ def build_pair_prompt(a: dict, b: dict) -> str:
     )
 
 
+def _contradiction_blocker(a: dict, b: dict) -> tuple[str, str] | None:
+    """Arithmetic the model must not be allowed to override.
+
+    A genuine contradiction requires that everything except the value match. When
+    the two facts are stated for different periods, or in units that are not
+    directly comparable, the difference is explained by context - it cannot be a
+    contradiction however the model phrases it. Returns (reason_tag, explanation)
+    when a CONTRADICTS verdict should be downgraded, else None.
+    """
+    scope_a = (a.get("time_scope") or "").strip().lower()
+    scope_b = (b.get("time_scope") or "").strip().lower()
+    if scope_a and scope_b and scope_a != scope_b:
+        return (
+            "different_period",
+            f"The two facts cover different periods "
+            f"('{a.get('time_scope')}' versus '{b.get('time_scope')}'), so the "
+            "difference in value is explained by context rather than a conflict.",
+        )
+
+    _, unit_a = normalize_value(a.get("value"), a.get("unit"))
+    _, unit_b = normalize_value(b.get("value"), b.get("unit"))
+    if unit_a and unit_b and unit_a != unit_b:
+        return (
+            "units_differ",
+            f"The two facts are stated in units that are not directly comparable "
+            f"({unit_a} versus {unit_b}); no conversion is applied, so this is not "
+            "a contradiction.",
+        )
+    return None
+
+
 def classify_pair(
     a: dict, b: dict, client: LLMClient | None, cfg: Config
 ) -> tuple[dict, str]:
@@ -154,11 +185,26 @@ def classify_pair(
     except (TypeError, ValueError):
         confidence = 0.6
 
+    reason_tag = str(verdict.get("reason_tag") or "unspecified")[:60]
+    explanation = str(verdict.get("explanation") or "").strip()[:1000]
+
+    # The model reasonably but wrongly calls a period or unit mismatch a
+    # contradiction. The deterministic check can prove it is not one, so it wins.
+    if relation == "CONTRADICTS":
+        blocked = _contradiction_blocker(a, b)
+        if blocked is not None:
+            reason_tag, blocker_note = blocked
+            relation = "CONTEXT_RECONCILED"
+            explanation = (
+                f"{blocker_note} (Model called this CONTRADICTS: "
+                f"{explanation or 'no explanation given'})"
+            )[:1000]
+
     return (
         {
             "relation_type": relation,
-            "reason_tag": str(verdict.get("reason_tag") or "unspecified")[:60],
-            "explanation": str(verdict.get("explanation") or "").strip()[:1000],
+            "reason_tag": reason_tag,
+            "explanation": explanation,
             "confidence": confidence,
         },
         result.outcome,

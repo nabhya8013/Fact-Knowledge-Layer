@@ -144,8 +144,12 @@ _NUMERIC_TOKEN_RE = re.compile(r"^[0-9][0-9,\.]*$")
 
 # A reconstructed span may not sprawl across a whole page; if the tokens are not
 # close together, the "fact" is an assembly of unrelated cells.
-_MAX_RECONSTRUCTED_SPAN = 400
-_MIN_WORD_COVERAGE = 0.6
+_MAX_RECONSTRUCTED_SPAN = 240
+_MIN_WORD_COVERAGE = 0.75
+# A single fact cites one figure or a small handful (a value and its prior-year
+# comparative). A quote carrying many distinct numbers is a chart caption or a
+# table region the model dumped wholesale, not one fact - refuse to ground it.
+_MAX_RECONSTRUCTED_NUMERALS = 4
 
 
 def find_reconstructed_span(
@@ -185,6 +189,13 @@ def find_reconstructed_span(
     # blob spanning six unrelated headers. For prose facts the model can and
     # should quote verbatim, so those belong to the stricter tiers above.
     if not numeric:
+        return None
+
+    # Too many distinct figures means the model quoted a chart caption or a whole
+    # table region, not a single fact. A mangled Q4-deck caption once grounded a
+    # "revenue" fact to the wrong number this way. Reject it - the fact is not
+    # cleanly locatable and a wrong figure is worse than a missing one.
+    if len(set(numeric)) > _MAX_RECONSTRUCTED_NUMERALS:
         return None
 
     haystack = source_text.lower()

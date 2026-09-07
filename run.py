@@ -657,7 +657,7 @@ def cmd_chunks(args) -> int:
 def cmd_reset(args) -> int:
     from fkl.config import CONFIG
 
-    targets = [CONFIG.db_path, CONFIG.chroma_dir]
+    targets = [CONFIG.db_path, CONFIG.data_dir / "embeddings"]
     if args.all:
         targets.append(CONFIG.models_dir)
     for t in targets:

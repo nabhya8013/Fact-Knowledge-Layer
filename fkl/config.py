@@ -162,15 +162,11 @@ class Config:
         return self.data_dir / "models"
 
     @property
-    def chroma_dir(self) -> Path:
-        return self.data_dir / "chroma"
-
-    @property
     def uploads_dir(self) -> Path:
         return self.data_dir / "uploads"
 
     def ensure_dirs(self) -> None:
-        for p in (self.data_dir, self.models_dir, self.chroma_dir, self.uploads_dir):
+        for p in (self.data_dir, self.models_dir, self.uploads_dir):
             p.mkdir(parents=True, exist_ok=True)
 
 

@@ -222,16 +222,43 @@ views.showcase = async () => {
     <div class="card">
       <p class="muted small">Measured from counters the pipeline recorded. Ungrounded facts are
       discarded rather than stored, so these are the visible surface of extraction failure.
-      Narrative analysis is in DECISIONS.md.</p>
+      Narrative analysis, and the fixes we made, are in DECISIONS.md.</p>
       <dl class="kv">
         <dt>Chunks attempted</dt><dd>${num(rep.chunks_attempted)}</dd>
         <dt>Chunks that produced no grounded fact</dt><dd>${num(rep.chunks_yielding_no_grounded_fact)}</dd>
         <dt>Chunks abandoned (unrecoverable JSON)</dt><dd>${num(rep.chunks_failed)}</dd>
-        <dt>JSON repair rate</dt><dd>${(rep.json_repair_rate * 100).toFixed(1)}%</dd>
+        <dt>JSON re-prompt/repair rate</dt><dd>${(rep.json_repair_rate * 100).toFixed(1)}% of chunks</dd>
+        <dt>JSON hard-failure rate</dt><dd>${((rep.json_failure_rate ?? 0) * 100).toFixed(1)}% of chunks</dd>
         <dt>JSON outcomes</dt><dd class="mono">${esc(JSON.stringify(rep.json_outcomes))}</dd>
         <dt>Evidence match modes</dt><dd class="mono">${esc(JSON.stringify(rep.evidence_match_modes))}</dd>
-      </dl>
-    </div>`;
+      </dl>`;
+
+  const gf = rep.grounding_failures || [];
+  if (gf.length) {
+    html += `<p class="small" style="margin:14px 0 4px"><b>Chunks where every proposed quote failed to ground</b>
+      — the model wrote text that is not in the document, so no fact was stored:</p>`;
+    html += gf.map(g => `<div class="small muted mono">chunk ${esc(g.chunk_id)} · page ${esc(g.page_label ?? "?")}</div>
+      <blockquote>${esc(g.text)}</blockquote>`).join("");
+  }
+
+  const rs = rep.reconstructed_span_examples || [];
+  if (rs.length) {
+    html += `<p class="small" style="margin:14px 0 4px"><b>Noisiest grounding tier: <span class="mono">reconstructed_span</span></b>
+      — facts assembled from column-major table text. The stored evidence is real page text, but the span can be loose:</p>`;
+    html += rs.map(r => `<div class="small"><span class="val">${esc(r.canonical_text)}</span>
+      <span class="muted mono"> — ${esc(r.document)} p.${esc(r.page_label ?? "?")}</span></div>
+      <blockquote>${esc(r.stored_span)}</blockquote>`).join("");
+  }
+
+  const smp = rep.recent_repair_samples || [];
+  if (smp.length) {
+    html += `<p class="small" style="margin:14px 0 4px"><b>Recent JSON repair / failure samples</b>
+      — the model's raw output when the parser could not read it first time:</p>`;
+    html += smp.map(s => `<div class="small muted mono">chunk ${esc(s.chunk_id)} · ${esc(s.outcome)} · ${num(s.attempts)} attempt(s)${s.error ? " · " + esc(s.error) : ""}</div>
+      <blockquote>${esc(s.raw_output || "(not captured)")}</blockquote>`).join("");
+  }
+
+  html += `</div>`;
   return html;
 };
 

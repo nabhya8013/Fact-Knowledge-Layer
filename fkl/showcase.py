@@ -111,20 +111,25 @@ def _relationship_example(
 
 def failure_report(conn: sqlite3.Connection, *, sample_size: int = 5) -> dict[str, Any]:
     """The measured failure surface, from counters the pipeline actually recorded."""
+    # `repair_log` holds one row per chunk whose JSON needed a re-prompt, a
+    # mechanical repair, or failed outright - a clean first-try parse is *not*
+    # logged. So the denominator for a repair rate is the number of chunks
+    # attempted (each made at least one JSON call), not the size of repair_log.
     repair = dict(
         conn.execute("SELECT outcome, COUNT(*) FROM repair_log GROUP BY outcome").fetchall()
     )
-    total_json = sum(repair.values())
-    repaired = total_json - repair.get("ok_first_try", 0)
-
-    match_modes = dict(
-        conn.execute("SELECT match_mode, COUNT(*) FROM evidence GROUP BY match_mode").fetchall()
-    )
+    repaired = repair.get("ok_after_reprompt", 0) + repair.get("ok_after_repair", 0)
+    json_failed = repair.get("failed", 0)
 
     chunks_attempted = conn.execute("SELECT COUNT(*) FROM extraction_progress").fetchone()[0]
     chunks_failed = conn.execute(
         "SELECT COUNT(*) FROM extraction_progress WHERE status = 'failed'"
     ).fetchone()[0]
+    denom = chunks_attempted or 1
+
+    match_modes = dict(
+        conn.execute("SELECT match_mode, COUNT(*) FROM evidence GROUP BY match_mode").fetchall()
+    )
 
     # Chunks that ran cleanly but yielded nothing: usually every proposed fact
     # failed to ground, which is the interesting case.
@@ -143,15 +148,45 @@ def failure_report(conn: sqlite3.Connection, *, sample_size: int = 5) -> dict[st
         ).fetchall()
     ]
 
+    # A concrete look at the two real failure modes, not just their counts.
+    grounding_failures = [
+        {"chunk_id": r["chunk_id"], "page_label": r["printed_page_label"],
+         "text": (r["text"] or "")[:500]}
+        for r in conn.execute(
+            """SELECT ep.chunk_id, c.printed_page_label, c.text
+                 FROM extraction_progress ep JOIN chunks c ON c.id = ep.chunk_id
+                WHERE ep.status = 'done' AND ep.facts = 0
+                ORDER BY ep.processed_at DESC LIMIT ?""",
+            (sample_size,),
+        ).fetchall()
+    ]
+    reconstructed_span_examples = [
+        {"fact_id": r["fact_id"], "canonical_text": r["canonical_text"],
+         "document": r["filename"], "page_label": r["printed_page_label"],
+         "stored_span": (r["quote"] or "")[:400]}
+        for r in conn.execute(
+            """SELECT e.fact_id, e.quote, e.printed_page_label, f.canonical_text, d.filename
+                 FROM evidence e
+                 JOIN facts f ON f.id = e.fact_id
+                 JOIN documents d ON d.id = e.document_id
+                WHERE e.match_mode = 'reconstructed_span'
+                ORDER BY length(e.quote) DESC LIMIT ?""",
+            (sample_size,),
+        ).fetchall()
+    ]
+
     return {
-        "json_calls_logged": total_json,
-        "json_repair_rate": (repaired / total_json) if total_json else 0.0,
+        "json_calls_needing_repair": repaired + json_failed,
+        "json_repair_rate": repaired / denom,
+        "json_failure_rate": json_failed / denom,
         "json_outcomes": repair,
         "evidence_match_modes": match_modes,
         "chunks_attempted": chunks_attempted,
         "chunks_failed": chunks_failed,
         "chunks_yielding_no_grounded_fact": barren,
         "recent_repair_samples": samples,
+        "grounding_failures": grounding_failures,
+        "reconstructed_span_examples": reconstructed_span_examples,
         "note": (
             "Ungrounded facts are discarded rather than stored, so these counters "
             "are the visible surface of extraction failure. See DECISIONS.md for "

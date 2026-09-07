@@ -4,8 +4,10 @@ A running log of real decisions, measurements and mistakes, written as they
 happened rather than reconstructed afterwards. Numbers in this file are measured
 on the actual starter dataset unless explicitly labelled as an estimate.
 
-**Machine used for all timings:** Linux, 20 CPU cores, 15 GiB RAM, no GPU,
-Python 3.11.16. Times will differ on a smaller laptop; relative costs will not.
+**Machine used for stage-1 timings:** Linux, 20 CPU cores, 15 GiB RAM, no GPU,
+Python 3.11.16. Stage 2/3 extraction timings are given for both the CPU path and
+a single RTX 4060 (used for development speed; the shipped default is still CPU).
+Times will differ on a smaller laptop; relative costs will not.
 
 ---
 
@@ -238,7 +240,7 @@ listed in next steps.
 
 ```
 6 PDFs | 511 pages | 722 extraction + 2,417 retrieval chunks | 1.7 s total
-30 tests passing
+30 tests passing at this point (140 across all three stages)
 ```
 
 ### A finding that shapes stage 2
@@ -266,8 +268,264 @@ is made against measurements rather than guesses.
 
 ## Stage 2 — Fact extraction
 
-_(to be written during stage 2)_
+### Model choice: Qwen2.5-1.5B-Instruct Q4_K_M
+
+Tried three local models against the grounding check (does the quote the model
+returns actually occur in the text it was shown?):
+
+| Model | Size | Quotes that ground | Speed on a dense chunk |
+|---|---|---|---|
+| Qwen2.5-0.5B-Q4 | ~0.4 GB | **0%** | ~6 s |
+| Qwen2.5-1.5B-Q4 | ~1.0 GB | ~80% | ~25 s |
+| Phi-3-mini-4k-Q4 | ~2.3 GB | ~80% | ~20 s |
+
+The 0.5B model is unusable here for a specific reason: it parrots the few-shot
+example instead of reading the document, so *every* quote it produced was about
+"Northwind Freight Ltd" and grounded to nothing. That 0% is actually the
+strongest early evidence that the grounding check does real work — it caught
+100% of those hallucinations.
+
+Between 1.5B and Phi-3-mini the deciding factors were size (half the download and
+half the RAM floor, which is felt immediately on a cold CPU clone) and that
+Qwen follows "return only JSON, no prose" markedly better. Phi-3 tends to
+prepend a sentence of explanation that then has to be stripped. `0.5B` stays
+wired in as `fallback_model_file`, used automatically when free RAM is below
+`min_free_ram_gb` — a bad small model still beats an `OutOfMemory` crash.
+
+### The grammar constrains the envelope, not the keys
+
+The local backend decodes under a GBNF grammar (`JSON_ARRAY_GRAMMAR` in
+`local_llama.py`). The grammar describes *an array of objects with arbitrary
+string keys* and nothing more. Pinning the key set would be the single biggest
+thing that could defeat the brief's "schema emerges from the documents"
+requirement, so structure is enforced and vocabulary is left completely free.
+
+Measured cost of the grammar: 6.15 s/chunk with it, 6.74 s without — it is free,
+and it removes an entire class of "model emitted almost-JSON" failure before it
+can happen.
+
+### JSON recovery, and reporting how often it fires
+
+Even under a grammar a small quantised model truncates output at the token limit
+mid-string. So `json_guard.py` applies, in order: parse as-is (after stripping
+markdown fences, which the model adds despite the grammar — it emits them as
+string *content*); a corrective re-prompt that shows the model its own output
+and the parser error; then `json-repair` for mechanical damage (trailing commas,
+unterminated strings); then give up and count the chunk as failed.
+
+Every outcome is written to `repair_log`, so the repair rate in the failure
+report is measured, not estimated. **A bug found here and fixed:** a clean
+first-try parse is deliberately *not* logged (it would dominate the table and
+cost a write per chunk), but `failure_report` was computing
+`repair_rate = repaired / len(repair_log)` — which is `repaired / repaired`,
+structurally always `1.0`. It now divides by the number of chunks actually
+attempted (from `extraction_progress`). This is itself a small reasoning failure
+worth recording: a metric that looked plausible on the dashboard was meaningless.
+
+### Grounding: four tiers, and why the fourth exists
+
+`grounding.py` matches a model's quote back to the source in tiers, each
+returning offsets into the *original* page text:
+
+1. `exact` — a genuine substring.
+2. `normalised_whitespace` — forgives PyMuPDF's mid-sentence hard wraps, which a
+   model asked to "copy verbatim" renders as spaces. Without this tier almost
+   every true quote is rejected.
+3. `normalised_chars` — forgives curly quotes, en/em dashes, case.
+4. `reconstructed_span` — for column-major table text. PyMuPDF emits a table's
+   row label, its value and the column's unit header in three non-contiguous
+   places, so the model reasonably writes "Total equity 59,798.47 INR million" —
+   every piece of which is on the page, nowhere together. This tier finds the
+   smallest window of *real* source text containing the quote's anchor tokens
+   and stores that window. The model's reconstruction is never stored as if it
+   were a quote.
+
+Tier 4 measured on the six most numeric chunks in the corpus: grounding went
+from 26% to 89%, with hallucinated figures still rejected (verified by test).
+Guard rails on tier 4 are covered under Case 4 below — an early version was too
+permissive.
+
+A quote matching no tier is ungrounded and its fact is **discarded, not stored**.
+That is the load-bearing rule of the whole system.
+
+### Two bugs the real corpus exposed in value normalisation
+
+- `parse_number`'s separator-grouped regex alternative used `*` where it needed
+  `+`, so it matched just the leading 1–3 digits and, because alternation is
+  ordered, won before the plain-number branch — silently turning "8142" into 814
+  and "2024" into 202. Every 4+ digit unseparated number in the corpus would
+  have been corrupted.
+- `parse_number` also read digits out of anything: the CIN
+  "U63090DL2011PLC221234" became 63090, an address became 24, "Plot 5, Sector
+  44…" became 5. Those fabricated magnitudes would have been compared against
+  real figures and invented contradictions out of postcodes. `is_quantity` now
+  gates it — a token mixing letters and digits is an identifier, and a real
+  quantity leaves almost nothing behind once its number, scale word and currency
+  are stripped.
+
+### Parallelism: processes, and one worker on a GPU
+
+A `Llama` instance is not safe to call concurrently and llama.cpp releases the
+GIL during inference, so threads buy nothing. Separate processes each holding
+their own model do scale, bounded by free RAM (~1.8 GB resident per worker) as
+well as cores. Fork is unsafe once a model or GPU context is loaded, so the pool
+uses `spawn`.
+
+`n_threads` is capped at 6, not `os.cpu_count()`: measured, 20 threads ran ~4×
+slower than 6 on this model — memory-bandwidth thrashing. "Use every core" was an
+active pessimisation.
+
+On a GPU the pool drops to **one** worker: several processes on one device just
+serialise on it and add VRAM pressure. Measured: GPU 10.4 s/chunk vs CPU
+22.5 s/chunk on identical work. A full-corpus extraction is ~117 min on one GPU
+worker, or ~63 min on CPU at 4 workers.
+
+### Resumability
+
+`extraction_progress` holds one row per attempted chunk. `pending_chunks`
+selects those not yet `done`, so a re-run continues where an interrupt stopped —
+verified in practice by killing a run mid-corpus and confirming it picked up the
+remainder exactly once. Fact ids are content-derived, so re-extracting a chunk
+cannot duplicate facts. `--redo` clears progress and starts over deliberately.
+
+---
 
 ## Stage 3 — Linking, API, UI
 
-_(to be written during stage 3)_
+### Embed the normalised fact, not the sentence
+
+Two documents stating the same fact rarely share wording:
+
+    "revenue from contract with customers was Rs 8,142 crore in FY24"
+    "Revenue        81,420      (INR million)"
+
+Embedding the raw text puts those far apart. What gets embedded is
+`canonical_text(payload)` — `"Delhivery - revenue: 8142 INR crore [FY24]"` —
+built from the fact's fields, so the two land next to each other. Embedding facts
+rather than passages is the whole point.
+
+`fastembed`/ONNX rather than `sentence-transformers`, to avoid a 1–2 GB `torch`
+download for the same `bge-small-en-v1.5` model.
+
+### A numpy index in SQLite, not Chroma
+
+The brief allowed either. At this scale — a few thousand facts × 384 dims is a
+~5 MB matrix — a brute-force dot product is single-digit milliseconds, exact
+rather than approximate, and genuinely faster than building an ANN index.
+Storing the vectors in the existing SQLite file means there is no second store to
+fall out of sync, no separate persistence directory, and deleting a document
+still cascades its vectors away for free. `chromadb` was therefore removed from
+`requirements.txt` — it was pinned but never imported, and it contradicted the
+"keep the install small" rationale that drove the `fastembed` choice.
+
+### Similarity threshold: 0.62 → 0.82
+
+The first threshold was a guess. Calibrated against real BGE embeddings of corpus
+facts, BGE turned out to have a high similarity floor: genuinely unrelated facts
+(a revenue figure vs a GDP-growth figure) still score ~0.63, so 0.62 would have
+admitted essentially every pair. The same fact expressed in crore vs million
+scores ~0.97. 0.82 sits in the gap.
+
+### Two-step classification
+
+A deterministic pass runs first and settles what arithmetic can decide: do the
+canonical keys match, are the units comparable, do the magnitudes agree, do the
+periods differ. That verdict is handed to the LLM as a *hint*, not used directly
+— because arithmetic cannot tell that "revenue from operations" and "revenue
+from contract with customers" are the same property, while the model cannot
+reliably tell that 8,142 crore equals 81.42 billion. Each covers the other's
+blind spot, and the deterministic verdict is also the fallback when no model is
+loaded.
+
+Relationships are stored as first-class rows (`relationships` table) — both fact
+ids, type, machine-readable `reason_tag`, natural-language `explanation`,
+confidence, similarity — queryable by type, by reason, or by either fact. A
+graph rendering alone was explicitly called out as insufficient.
+
+### Two concurrency bugs found by running commands during a live extraction
+
+- `connect()` executed the full schema script on every open, taking a write lock
+  each time. During a long extraction that locked out every read-only CLI command
+  and would have locked out the web UI. It now runs the schema only when the
+  stored `schema_version` differs, so WAL's many-readers-one-writer actually
+  applies.
+- Linking held a single transaction open across ten classified chunks — roughly
+  two minutes at CPU inference speed, far past the busy timeout — so a concurrent
+  reader hit "database is locked". Commits are now per pair; with WAL and
+  `synchronous=NORMAL` that costs nothing next to inference.
+
+### Chunk ordering so a partial run still demonstrates links
+
+`pending_chunks` originally ordered by document. A partial run — and on CPU a
+full run is ~an hour, so partial runs are the common case — then produced facts
+from only the first document or two, and therefore **zero** cross-document
+relationships, which are the entire point. Chunks are now interleaved
+round-robin: the first chunk of every document, then the second of every
+document, and so on. Measured: 6 of 6 documents covered within the first 60
+chunks, against 1 before.
+
+### API: a connection per request
+
+FastAPI runs sync endpoints in a threadpool and SQLite connections are not
+shareable across threads, so a module-level connection would be a latent
+corruption bug, not an optimisation. Every request opens and closes its own
+connection; opening one is microseconds and WAL means readers never block on the
+background writer. Long operations (upload → extract → link) are dispatched to a
+worker thread and tracked in a `jobs` table the UI polls.
+
+---
+
+## Case 4 — an extraction-and-reasoning failure we found, and how we handled it
+
+**What happened.** On a partial extraction run, the showcase's single
+`CONTRADICTS` example was wrong twice over.
+
+The Q4 FY24 earnings deck has a chart captioned, in PyMuPDF's linearised output:
+
+    Revenue from services* (INR million)
+    72,236  FY23  70,536  FY22  81,415  FY24  27,748
+
+The model was asked for a `revenue` fact and quoted the whole caption, reporting
+the value as **27,748** — which is not Delhivery's FY24 revenue from services
+(that is 81,415; 27,748 appears to be a quarter figure). This grounded through
+the `reconstructed_span` tier because every numeral in the quote *was* present
+on the page, within the (then 400-character) window.
+
+The linker then paired that fact with a `revenue` fact from the annual report
+and the model classified it `CONTRADICTS` with reason "different_value" — but the
+two facts were for **different periods** (FY24 vs FY21). A period mismatch is
+`CONTEXT_RECONCILED` by definition; it cannot be a contradiction.
+
+**How we handled it.**
+
+1. `find_reconstructed_span` guard rails tightened: it now refuses a quote
+   carrying more than four distinct numerals (that is a chart region, not one
+   fact), requires 75% word coverage (was 60%), and caps the window at 240
+   characters (was 400). The caption above no longer grounds, so the bad fact is
+   never stored — a missing fact is better than a wrong number.
+2. `classify_pair` gained a deterministic veto: if the model returns
+   `CONTRADICTS` but the `time_scope` or the normalised unit of the two facts
+   differ, the verdict is downgraded to `CONTEXT_RECONCILED`, keeping the model's
+   explanation but correcting the label. A contradiction requires everything
+   except the value to match, and the rule can prove it does not.
+3. The `json_repair_rate` metric bug described under Stage 2 — a reasoning
+   failure in our own reporting rather than in the pipeline — was fixed at the
+   same time.
+
+Both fixes have regression tests (`tests/test_extract.py`,
+`tests/test_link.py`), and the failure report now surfaces concrete
+`grounding_failures` and `reconstructed_span_examples` in the UI so a reviewer
+can see the noisiest tier at work rather than just its count.
+
+**How we would improve it further.**
+
+- Ground table facts against `--tables` structured cells rather than linearised
+  page text. The linearised form is cheap and faithful for prose, but for a
+  borderline chart it discards exactly the row/column structure that says which
+  number is "the" value.
+- A numeric-plausibility check: when a new fact shares a `canonical_key` with
+  facts already in the store, flag it low-confidence if its magnitude is a large
+  outlier against them. The corpus itself becomes a sanity check.
+- The 1.5B model is the real ceiling on extraction quality. The Groq backend
+  (`llama-3.3-70b-versatile`, enabled with `GROQ_API_KEY`) already exists as the
+  higher-quality path when a reviewer wants it.

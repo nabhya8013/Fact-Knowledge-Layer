@@ -15,7 +15,7 @@ discarded rather than kept, so an invented number never reaches the store.
 | 3 | Embeddings + vector search, relationship classification, FastAPI, web UI, showcase view | ✅ done |
 
 Measured on the six starter PDFs: 511 pages, 3,139 chunks, ingested in ~1.7 s.
-**122 tests passing.**
+**140 tests passing.**
 
 ## Setup and run
 

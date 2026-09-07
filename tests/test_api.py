@@ -132,10 +132,11 @@ def store(tmp_path, monkeypatch):
         """INSERT INTO extraction_progress (chunk_id, status, facts, processed_at)
            VALUES ('doc_aaa:e0','done',3,'2026'), ('doc_bbb:e0','done',2,'2026')"""
     )
+    # Only chunks whose JSON needed help are logged; a clean first-try parse is
+    # not. So one of the two attempted chunks (doc_bbb) needed a re-prompt.
     conn.execute(
         """INSERT INTO repair_log (chunk_id, stage, attempts, outcome, created_at)
-           VALUES ('doc_aaa:e0','extraction',1,'ok_first_try','2026'),
-                  ('doc_bbb:e0','extraction',2,'ok_after_reprompt','2026')"""
+           VALUES ('doc_bbb:e0','extraction',2,'ok_after_reprompt','2026')"""
     )
     conn.commit()
     yield conn, cfg
@@ -193,10 +194,30 @@ def test_failure_report_is_computed_from_real_counters(store):
     conn, _ = store
     report = failure_report(conn)
     assert report["chunks_attempted"] == 2
-    assert report["json_calls_logged"] == 2
-    # One of two calls needed a re-prompt.
+    assert report["json_calls_needing_repair"] == 1
+    # One of two attempted chunks needed a re-prompt; none failed outright.
     assert report["json_repair_rate"] == pytest.approx(0.5)
+    assert report["json_failure_rate"] == pytest.approx(0.0)
     assert report["evidence_match_modes"] == {"exact": 5}
+
+
+def test_failure_report_repair_rate_is_not_trivially_one(store):
+    """Regression: the rate divided repaired calls by themselves and was always 1.0."""
+    conn, _ = store
+    # A second clean chunk on doc_aaa: attempted, never logged to repair_log.
+    conn.execute(
+        """INSERT INTO chunks (id, document_id, page_id, pdf_page_index, printed_page_label,
+                               role, kind, ordinal, char_start, char_end, text,
+                               token_estimate, numeric_density)
+           VALUES ('doc_aaa:e1','doc_aaa','doc_aaa:p0',0,'12','extraction','prose',
+                   1,0,10,'more text',10,0.1)"""
+    )
+    conn.execute(
+        "INSERT INTO extraction_progress (chunk_id, status, facts, processed_at) "
+        "VALUES ('doc_aaa:e1','done',1,'2026')"
+    )
+    conn.commit()
+    assert failure_report(conn)["json_repair_rate"] == pytest.approx(1 / 3)
 
 
 # --------------------------------------------------------------------------- #

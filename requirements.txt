@@ -14,7 +14,9 @@ pymupdf==1.26.3
 # (SQLite itself is in the Python standard library - no server, no setup)
 
 # --- vector search ---
-chromadb==1.5.9
+# No dependency: fact vectors are a small float32 matrix stored in the same
+# SQLite file, searched with a brute-force numpy dot product. Exact, one store,
+# deletes cascade for free. See fkl/link/vector_index.py and DECISIONS.md.
 
 # --- embeddings: ONNX runtime, NOT torch (keeps the install small and CPU-fast) ---
 fastembed==0.8.0

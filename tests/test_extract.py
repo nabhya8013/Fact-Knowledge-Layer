@@ -122,6 +122,33 @@ def test_reconstructed_span_is_bounded():
     assert find_reconstructed_span(far, "Total equity 59,798.47 Borrowings 1,005.28") is None
 
 
+# A real chart caption from a Q4 deck: a metric name followed by a whole series
+# of year figures. The model quoted the lot and picked one number as "the" value,
+# which was wrong. A quote carrying this many distinct figures is not one fact.
+CHART_CAPTION = (
+    "24\nRevenue from services* (INR million)\n"
+    "72,236\nFY23\n70,536\nFY22\n81,415\nFY24\n27,748\n"
+    "Profit after tax (INR million)\n(2,689)\n(4,157)\n(10,808)\n(10,078)\n(2,492)\n"
+)
+
+
+def test_reconstructed_span_rejects_chart_caption_blob():
+    """Many distinct numbers in one quote => a chart region, not a fact."""
+    from fkl.extract.grounding import find_reconstructed_span
+
+    quote = "Revenue from services 72,236 70,536 81,415 27,748 INR million FY24"
+    assert find_reconstructed_span(CHART_CAPTION, quote) is None
+
+
+def test_reconstructed_span_accepts_a_value_and_its_comparative():
+    """The legitimate multi-number case: a figure and its prior-year number."""
+    from fkl.extract.grounding import find_reconstructed_span
+
+    m = find_reconstructed_span(TABLE_TEXT, "Total equity 59,798.47 29,148.37 INR million")
+    assert m is not None and m.match_mode == "reconstructed_span"
+    assert m.text == TABLE_TEXT[m.start : m.end]
+
+
 def test_locate_in_page_translates_chunk_offsets_to_page_offsets():
     page = "HEADER\n" + WRAPPED
     chunk_start = len("HEADER\n")
