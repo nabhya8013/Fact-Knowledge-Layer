@@ -1,0 +1,36 @@
+# Fact Knowledge Layer - pinned dependencies
+#
+# NOTE: the extra index below serves PRE-BUILT CPU wheels for llama-cpp-python.
+# Without it, pip would try to compile llama.cpp from source (needs cmake + a C++
+# toolchain). With it, install is a plain wheel download - no compiler required.
+# The wheels are tagged `py3-none-<platform>` because llama-cpp-python binds via
+# ctypes rather than the CPython C-API, so a single wheel covers Python 3.10-3.14.
+--extra-index-url https://abetlen.github.io/llama-cpp-python/whl/cpu
+
+# --- PDF parsing (page text + character offsets + table detection) ---
+pymupdf==1.26.3
+
+# --- structured storage ---
+# (SQLite itself is in the Python standard library - no server, no setup)
+
+# --- vector search ---
+chromadb==1.5.9
+
+# --- embeddings: ONNX runtime, NOT torch (keeps the install small and CPU-fast) ---
+fastembed==0.8.0
+
+# --- local LLM backend (default; no account, no API key, no background service) ---
+llama-cpp-python==0.3.35
+huggingface-hub==0.34.4
+
+# --- malformed-JSON recovery for small-model output ---
+json-repair==0.63.4
+
+# --- API + UI ---
+fastapi==0.141.1
+uvicorn==0.52.4
+python-multipart==0.0.32
+pydantic==2.13.5
+
+# --- OPTIONAL cloud backend: only used when GROQ_API_KEY is set ---
+groq==1.7.0
