@@ -20,7 +20,7 @@ from contextlib import contextmanager
 from pathlib import Path
 from typing import Any, Iterator
 
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
 
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS meta (
@@ -164,6 +164,18 @@ CREATE TABLE IF NOT EXISTS jobs (
     finished_at TEXT
 );
 
+-- ---------------------------------------------------------- fact_embeddings
+-- Vectors live in the same SQLite file as everything else rather than in a
+-- separate vector store. At this corpus size (thousands of facts) a brute-force
+-- numpy dot product is instantaneous, and keeping one file means there is no
+-- second index to fall out of sync and deletes cascade correctly for free.
+CREATE TABLE IF NOT EXISTS fact_embeddings (
+    fact_id  TEXT PRIMARY KEY REFERENCES facts(id) ON DELETE CASCADE,
+    dim      INTEGER NOT NULL,
+    model    TEXT NOT NULL,
+    vector   BLOB NOT NULL      -- float32, L2-normalised
+);
+
 -- ------------------------------------------------------ extraction_progress
 -- One row per attempted extraction chunk. A full-corpus run takes ~an hour on
 -- CPU, so an interrupted run must resume rather than start over.
@@ -192,21 +204,45 @@ CREATE INDEX IF NOT EXISTS idx_repair_outcome ON repair_log(outcome);
 
 
 def connect(db_path: Path) -> sqlite3.Connection:
-    """Open (and if necessary initialise) the database."""
+    """Open (and if necessary initialise) the database.
+
+    The schema script is only executed when the database is new or out of date.
+    Running it unconditionally takes a write lock on every open, which meant a
+    long extraction run locked out every read-only command - and would have
+    locked out the web UI too. WAL already allows many readers alongside one
+    writer; this makes readers actually take advantage of that.
+    """
     db_path.parent.mkdir(parents=True, exist_ok=True)
     conn = sqlite3.connect(str(db_path), timeout=30.0)
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA journal_mode=WAL")
     conn.execute("PRAGMA foreign_keys=ON")
     conn.execute("PRAGMA synchronous=NORMAL")
-    conn.executescript(SCHEMA)
-    conn.execute(
-        "INSERT INTO meta(key, value) VALUES('schema_version', ?) "
-        "ON CONFLICT(key) DO UPDATE SET value=excluded.value",
-        (str(SCHEMA_VERSION),),
-    )
-    conn.commit()
+    conn.execute("PRAGMA busy_timeout=30000")
+
+    if _schema_version(conn) != SCHEMA_VERSION:
+        conn.executescript(SCHEMA)
+        conn.execute(
+            "INSERT INTO meta(key, value) VALUES('schema_version', ?) "
+            "ON CONFLICT(key) DO UPDATE SET value=excluded.value",
+            (str(SCHEMA_VERSION),),
+        )
+        conn.commit()
     return conn
+
+
+def _schema_version(conn: sqlite3.Connection) -> int | None:
+    """Current schema version, or None if the database is empty/uninitialised."""
+    try:
+        row = conn.execute("SELECT value FROM meta WHERE key = 'schema_version'").fetchone()
+    except sqlite3.DatabaseError:
+        return None
+    if row is None:
+        return None
+    try:
+        return int(row[0])
+    except (TypeError, ValueError):
+        return None
 
 
 @contextmanager

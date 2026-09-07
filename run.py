@@ -364,6 +364,142 @@ def cmd_schema(args) -> int:
     return 0
 
 
+def cmd_link(args) -> int:
+    preflight()
+    import time
+
+    from fkl.config import CONFIG
+    from fkl.db import connect
+    from fkl.link.relate import link_facts
+    from fkl.link.vector_index import VectorIndex, index_facts
+    from fkl.llm.factory import build_client, describe_backend
+
+    CONFIG.ensure_dirs()
+    conn = connect(CONFIG.db_path)
+    try:
+        n_facts = conn.execute("SELECT COUNT(*) FROM facts").fetchone()[0]
+        if n_facts == 0:
+            print("No facts yet. Run `python run.py extract` first.")
+            return 1
+
+        print(_hr("="))
+        print("CROSS-DOCUMENT LINKING")
+        print(_hr("="))
+        print(f"backend   : {describe_backend(CONFIG)}")
+        print(f"embedding : {CONFIG.embedding_model}")
+        print(f"threshold : {args.threshold or CONFIG.similarity_threshold}")
+        print(_hr())
+
+        print("embedding facts...", end=" ", flush=True)
+        t0 = time.perf_counter()
+        embedded = index_facts(conn, CONFIG)
+        print(f"{embedded:,} newly embedded in {time.perf_counter()-t0:.1f}s")
+
+        index = VectorIndex.load(conn)
+        pairs = index.cross_document_pairs(
+            top_k=args.top_k or CONFIG.candidate_top_k,
+            threshold=args.threshold or CONFIG.similarity_threshold,
+        )
+        print(f"index holds {len(index):,} vectors -> {len(pairs):,} cross-document candidate pairs")
+        if args.dry_run:
+            for c in pairs[:20]:
+                print(f"  {c.similarity:.3f}  {c.fact_a_id}  <->  {c.fact_b_id}")
+            return 0
+        if not pairs:
+            print("\nNo candidates above the threshold. Try --threshold lower.")
+            return 0
+        print(_hr())
+
+        client = build_client(CONFIG, quiet=False)
+        start = time.perf_counter()
+        last = [0.0]
+
+        def on_progress(done, total, running):
+            now = time.perf_counter()
+            if now - last[0] < 1.0 and done != total:
+                return
+            last[0] = now
+            elapsed = now - start
+            rate = done / elapsed if elapsed else 0
+            sys.stdout.write(
+                f"\r  {_progress_bar(done, total)}  {running.stored:,} stored  "
+                f"~{((total-done)/rate/60) if rate else 0:.1f}m left   "
+            )
+            sys.stdout.flush()
+
+        try:
+            stats = link_facts(
+                conn, CONFIG, client,
+                threshold=args.threshold, top_k=args.top_k, limit=args.limit,
+                on_progress=on_progress,
+            )
+        finally:
+            if client:
+                client.close()
+
+        print("\n" + _hr())
+        print(
+            f"candidates : {stats.candidates:,}\n"
+            f"classified : {stats.classified:,}  (skipped {stats.skipped_existing:,} already linked)\n"
+            f"stored     : {stats.stored:,}\n"
+            f"elapsed    : {stats.elapsed_s/60:.1f} min"
+        )
+        print("\nrelation types:")
+        for name, count in stats.by_type.most_common():
+            print(f"    {name:22s} {count:,}")
+        print("top reasons:")
+        for name, count in stats.by_reason.most_common(8):
+            print(f"    {name:22s} {count:,}")
+    finally:
+        conn.close()
+    return 0
+
+
+def cmd_relations(args) -> int:
+    preflight()
+    from fkl.config import CONFIG
+    from fkl.db import connect
+    from fkl.link.relate import load_fact_view
+
+    conn = connect(CONFIG.db_path)
+    try:
+        sql = "SELECT * FROM relationships WHERE 1=1"
+        params: list = []
+        if args.type:
+            sql += " AND relation_type = ?"
+            params.append(args.type.upper())
+        if not args.include_unrelated and not args.type:
+            sql += " AND relation_type != 'UNRELATED'"
+        sql += " ORDER BY confidence DESC, similarity_score DESC LIMIT ?"
+        params.append(args.limit)
+
+        rows = conn.execute(sql, params).fetchall()
+        if not rows:
+            print("No relationships. Run `python run.py link` first.")
+            return 0
+        for r in rows:
+            a = load_fact_view(conn, r["fact_a_id"])
+            b = load_fact_view(conn, r["fact_b_id"])
+            if not a or not b:
+                continue
+            print(_hr("="))
+            print(
+                f"{r['relation_type']}  ({r['reason_tag']})  "
+                f"confidence={r['confidence']:.2f}  similarity={r['similarity_score']:.3f}"
+            )
+            print(f"  -> {r['explanation']}")
+            for label, f in (("A", a), ("B", b)):
+                print(
+                    f"  [{label}] {f['subject']} | {f['attribute']} = "
+                    f"{f['value']} {f['unit'] or ''} [{f['time_scope']}]"
+                )
+                print(f"      {f['filename']} p.{f['page']}")
+                print(f"      \"{(f['source_quote'] or '')[:150]}\"")
+    finally:
+        conn.close()
+    return 0
+
+
 def cmd_status(args) -> int:
     preflight()
     from fkl.config import CONFIG
@@ -600,6 +736,19 @@ def build_parser() -> argparse.ArgumentParser:
     fa.add_argument("--numeric-only", action="store_true")
     fa.add_argument("--limit", type=int, default=15)
     fa.set_defaults(func=cmd_facts)
+
+    lk = sub.add_parser("link", help="embed facts and classify cross-document relationships")
+    lk.add_argument("--threshold", type=float, default=None, help="cosine similarity cutoff")
+    lk.add_argument("--top-k", type=int, default=None, help="neighbours considered per fact")
+    lk.add_argument("--limit", type=int, default=None, help="stop after N pairs")
+    lk.add_argument("--dry-run", action="store_true", help="show candidate pairs, do not classify")
+    lk.set_defaults(func=cmd_link)
+
+    rl = sub.add_parser("relations", help="browse classified relationships with evidence")
+    rl.add_argument("--type", help="CORROBORATES | CONTRADICTS | CONTEXT_RECONCILED | UNRELATED")
+    rl.add_argument("--include-unrelated", action="store_true")
+    rl.add_argument("--limit", type=int, default=10)
+    rl.set_defaults(func=cmd_relations)
 
     sc = sub.add_parser("schema", help="show the dynamic fact-type registry")
     sc.add_argument("--limit", type=int, default=30)

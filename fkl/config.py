@@ -144,7 +144,7 @@ class Config:
         default_factory=lambda: _env_str("FKL_EMBEDDING_MODEL", "BAAI/bge-small-en-v1.5")
     )
     similarity_threshold: float = field(
-        default_factory=lambda: _env_float("FKL_SIMILARITY_THRESHOLD", 0.62)
+        default_factory=lambda: _env_float("FKL_SIMILARITY_THRESHOLD", 0.82)
     )
     candidate_top_k: int = field(default_factory=lambda: _env_int("FKL_CANDIDATE_TOP_K", 6))
 
