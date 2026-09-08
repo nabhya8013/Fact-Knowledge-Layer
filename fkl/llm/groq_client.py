@@ -36,8 +36,10 @@ def groq_available() -> bool:
 
 class GroqClient(LLMClient):
     name = "groq"
-    # Groq supports response_format json_object, which constrains structure the
-    # same way the local GBNF grammar does.
+    # Groq's response_format=json_object only accepts a top-level OBJECT and
+    # rejects the JSON *array* every prompt here asks for, so we do not use it.
+    # json_mode is still honoured as a prompt nudge; json_guard does the parsing
+    # and repair, exactly as it does for any non-grammar backend.
     supports_json_mode = True
 
     def __init__(self, cfg: Config):
@@ -62,12 +64,8 @@ class GroqClient(LLMClient):
         max_tokens: int = 768,
         temperature: float = 0.0,
     ) -> LLMResponse:
-        # Groq's JSON mode requires the word "json" to appear in the prompt.
-        kwargs = {}
-        if json_mode:
-            kwargs["response_format"] = {"type": "json_object"}
-            if "json" not in (system + user).lower():
-                user = f"{user}\n\nRespond with json."
+        if json_mode and "json" not in (system + user).lower():
+            user = f"{user}\n\nRespond with a JSON array only."
 
         t0 = time.perf_counter()
         completion = self._client.chat.completions.create(
@@ -78,7 +76,6 @@ class GroqClient(LLMClient):
             ],
             max_tokens=max_tokens,
             temperature=temperature,
-            **kwargs,
         )
         elapsed = time.perf_counter() - t0
         usage = completion.usage

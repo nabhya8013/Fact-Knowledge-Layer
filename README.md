@@ -15,7 +15,7 @@ fact shape emerges from the documents into a dynamic registry.
 | Stage | Scope | Status |
 |---|---|---|
 | 1 | PDF parsing with page + character-offset grounding, chunking, SQLite schema, incremental ingest, CLI | ✅ done |
-| 2 | LLM backends (llama.cpp / Groq / deterministic), JSON repair, fact extraction, evidence verification, dynamic schema registry | ✅ done |
+| 2 | LLM backends (llama.cpp / Gemini / Groq / deterministic), JSON repair, fact extraction, evidence verification, dynamic schema registry | ✅ done |
 | 3 | Embeddings + vector search, relationship classification, FastAPI, web UI, showcase view | ✅ done |
 
 Measured on the six starter PDFs: 511 pages, 3,139 chunks, ingested in ~1.7 s.
@@ -53,14 +53,24 @@ python run.py --no-extract      # ingest and serve immediately, extract later
 
 Requires Python 3.10+ (tested through 3.13; 3.14 also works).
 
-### Going faster: Groq or a GPU
+### Going faster: a cloud model or a GPU
 
-Both are optional — the local CPU path is the default and needs nothing.
+All optional — the local CPU path is the default and needs nothing.
 
-- **Groq (free, no card, ~100× faster than local CPU).** Two minutes to set up:
-  `./scripts/setup-groq.sh` walks you through getting a key from
-  <https://console.groq.com> and writes `.env`. Then `python run.py extract`
-  runs the whole corpus in seconds. See `env.example` for the manual steps.
+- **Gemini — free key, no credit card** (Google AI Studio). ~100× faster than
+  local CPU. `./scripts/setup-gemini.sh` walks you through
+  <https://aistudio.google.com/apikey> and writes `.env`; then
+  `python run.py extract` runs the whole corpus in a couple of minutes. Default
+  model `gemini-2.0-flash`.
+- **Groq** — `./scripts/setup-groq.sh`, key from <https://console.groq.com>.
+  Very fast per call, but the free tier's **output-tokens-per-minute cap is low**
+  (~1k), so a full-corpus run gets rate-limited into a crawl — fine for
+  incremental uploads, less so for a cold start. Default model
+  `qwen/qwen3.8-27b` (Groq rotates its catalogue; set `FKL_GROQ_MODEL` to any
+  current chat model if that one is gone —
+  `python -c "from groq import Groq; print([m.id for m in Groq().models.list().data])"`).
+- Either way: `env.example` has the manual steps, and a real environment
+  variable overrides the `.env` file.
 - **Local GPU.** GPU offload turns on automatically **iff** the installed
   `llama-cpp-python` has a CUDA/Metal backend. The wheel in `requirements.txt`
   is CPU-only (see [Additional notes](#additional-notes) for why a prebuilt GPU
@@ -165,10 +175,12 @@ derived from it.
   arbitrary keys. New attributes become new `fact_types` rows; new payload keys
   are absorbed into a running union. No migrations, no fixed enum.
 
-- **Three interchangeable backends** behind one interface: local `llama.cpp` +
-  GGUF (default, offline after first run), Groq (optional, only when
-  `GROQ_API_KEY` is set), and a deterministic pattern extractor that is the floor
-  the system never falls through. Facts are tagged with which produced them.
+- **Interchangeable backends** behind one interface: local `llama.cpp` + GGUF
+  (default, offline after first run), Gemini or Groq (optional, each active only
+  when its API key is present), and a deterministic pattern extractor that is
+  the floor the system never falls through. Facts are tagged with which produced
+  them. Only the local backend constrains generation with a GBNF grammar; the
+  cloud backends rely on the prompt plus `json_guard`'s parse/repair path.
 
 - **Malformed JSON is expected, not exceptional.** Parse → `json-repair` →
   corrective re-prompt → give up, with every outcome written to `repair_log` so
@@ -203,8 +215,8 @@ derived from it.
 
 - **Extraction / relationship classification:** `Qwen2.5-1.5B-Instruct` (Q4_K_M
   GGUF) run locally via `llama-cpp-python`, decoding under a GBNF JSON grammar.
-  `Qwen2.5-0.5B` is the low-RAM fallback. Optional Groq
-  (`llama-3.3-70b-versatile`) as a higher-quality drop-in.
+  `Qwen2.5-0.5B` is the low-RAM fallback. Optional cloud drop-ins: Gemini
+  (`gemini-2.0-flash`) or Groq (`qwen/qwen3.8-27b`).
 - **Embeddings:** `BAAI/bge-small-en-v1.5` via `fastembed` (ONNX runtime, no
   `torch`).
 - **JSON recovery:** `json-repair`.
@@ -324,7 +336,7 @@ PDF changed on one page is reprocessed in full. Page-level hashing would fix it
   `llama-cpp-python` are compiled with AVX-512, which SIGILLs on any CPU without
   it (e.g. an Intel 13th-gen laptop part). A GPU build therefore has to come
   from source with `-DGGML_NATIVE=OFF -DGGML_AVX512=OFF` — see
-  [Going faster](#going-faster-groq-or-a-gpu). Once a CUDA/Metal backend is
+  [Going faster](#going-faster-a-cloud-model-or-a-gpu). Once a CUDA/Metal backend is
   installed, offload is automatic; a normal clone gets the CPU wheel and nothing
   changes.
 - `DECISIONS.md` is a running build diary written as the work happened —

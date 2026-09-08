@@ -126,7 +126,8 @@ class Config:
 
     # ------------------------------------------------------------------- llm
     # local  -> llama-cpp-python + a quantised GGUF, downloaded on first run
-    # groq   -> Groq free API, only when GROQ_API_KEY is present
+    # gemini -> Google AI Studio free API, only when GEMINI_API_KEY is present
+    # groq   -> Groq API, only when GROQ_API_KEY is present
     # none   -> deterministic (non-LLM) extractor; guarantees the pipeline runs
     llm_backend: str = field(default_factory=lambda: _env_str("LLM_BACKEND", "local"))
     local_model_repo: str = field(
@@ -164,7 +165,10 @@ class Config:
     temperature: float = field(default_factory=lambda: _env_float("FKL_TEMPERATURE", 0.0))
 
     groq_model: str = field(
-        default_factory=lambda: _env_str("FKL_GROQ_MODEL", "llama-3.3-70b-versatile")
+        default_factory=lambda: _env_str("FKL_GROQ_MODEL", "qwen/qwen3.8-27b")
+    )
+    gemini_model: str = field(
+        default_factory=lambda: _env_str("FKL_GEMINI_MODEL", "gemini-2.0-flash")
     )
 
     # How many corrective re-prompts before falling through to json-repair.

@@ -2,9 +2,9 @@
 
 Resolution order, and the reasoning behind it:
 
-* `LLM_BACKEND=groq` - explicit opt-in. Errors loudly if no key is present,
-  rather than silently falling back, because a user who asked for Groq wants to
-  know it did not happen.
+* `LLM_BACKEND=gemini` / `LLM_BACKEND=groq` - explicit opt-in to a cloud
+  backend. Errors loudly if no key is present, rather than silently falling
+  back, because a user who asked for it wants to know it did not happen.
 * `LLM_BACKEND=none` - explicit opt-out of any model. Deterministic extraction.
 * `LLM_BACKEND=local` (default) - llama.cpp with a downloaded GGUF. If the model
   cannot be loaded at all, degrade to deterministic extraction with a clear
@@ -27,6 +27,14 @@ class BackendUnavailable(RuntimeError):
 def describe_backend(cfg: Config) -> str:
     """One-line summary of what will run, for the CLI banner."""
     backend = (cfg.llm_backend or "local").lower()
+    if backend == "gemini":
+        from .gemini_client import gemini_available
+
+        return (
+            f"gemini ({cfg.gemini_model})"
+            if gemini_available()
+            else "gemini (NO API KEY - will fail)"
+        )
     if backend == "groq":
         from .groq_client import groq_available
 
@@ -43,6 +51,11 @@ def build_client(cfg: Config, *, quiet: bool = True) -> LLMClient | None:
     if backend == "none":
         return None
 
+    if backend == "gemini":
+        from .gemini_client import GeminiClient
+
+        return GeminiClient(cfg)  # raises if the key is missing - intentional
+
     if backend == "groq":
         from .groq_client import GroqClient
 
@@ -50,7 +63,7 @@ def build_client(cfg: Config, *, quiet: bool = True) -> LLMClient | None:
 
     if backend != "local":
         raise BackendUnavailable(
-            f"Unknown LLM_BACKEND={cfg.llm_backend!r}. Use one of: local, groq, none."
+            f"Unknown LLM_BACKEND={cfg.llm_backend!r}. Use one of: local, gemini, groq, none."
         )
 
     # Default local path. A GROQ_API_KEY does NOT silently hijack the default;
