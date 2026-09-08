@@ -144,7 +144,7 @@ def run_extraction(
     document_id: str | None = None,
     workers: int | None = None,
     on_progress=None,
-    commit_every: int = 1,
+    commit_every: int = 10,  # batch SQLite commits: fewer fsyncs; a kill re-does <10 idempotent chunks
     limit: int | None = None,
 ) -> ExtractionStats:
     """Extract facts for every pending chunk. Safe to re-run; resumes."""

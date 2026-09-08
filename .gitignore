@@ -16,3 +16,8 @@ venv/
 
 # Local secrets (GROQ_API_KEY etc.) - never committed
 .env
+
+# Local-only: demo recording harness, editor plan files
+demo/
+demo.sh
+.kilo/

@@ -44,7 +44,7 @@ Then open:
 
 Every stage is resumable and skips work already done, so re-running is cheap and
 Ctrl-C is safe. Extraction is the slow part — roughly an hour on CPU for the full
-corpus, ~2 hours on one GPU at higher quality. For a fast look:
+corpus. For a fast look:
 
 ```bash
 python run.py --limit 60        # ingest, extract ~60 chunks, link, serve (~15 min CPU)
@@ -52,6 +52,28 @@ python run.py --no-extract      # ingest and serve immediately, extract later
 ```
 
 Requires Python 3.10+ (tested through 3.13; 3.14 also works).
+
+### Going faster: Groq or a GPU
+
+Both are optional — the local CPU path is the default and needs nothing.
+
+- **Groq (free, no card, ~100× faster than local CPU).** Two minutes to set up:
+  `./scripts/setup-groq.sh` walks you through getting a key from
+  <https://console.groq.com> and writes `.env`. Then `python run.py extract`
+  runs the whole corpus in seconds. See `env.example` for the manual steps.
+- **Local GPU.** GPU offload turns on automatically **iff** the installed
+  `llama-cpp-python` has a CUDA/Metal backend. The wheel in `requirements.txt`
+  is CPU-only (see [Additional notes](#additional-notes) for why a prebuilt GPU
+  wheel is not safe to ship), so a GPU needs a one-time source build:
+
+  ```bash
+  CMAKE_ARGS="-DGGML_CUDA=on -DGGML_NATIVE=OFF -DGGML_AVX512=OFF" \
+    pip install --force-reinstall --no-binary :all: llama-cpp-python==0.3.35
+  ```
+
+  Needs `cmake` + CUDA toolkit + a host compiler CUDA accepts. Verify with
+  `python run.py status` (the backend line notes GPU offload). Force CPU on a
+  GPU box with `FKL_N_GPU_LAYERS=0`.
 
 ### Uploading your own PDFs
 
@@ -148,9 +170,13 @@ derived from it.
   `GROQ_API_KEY` is set), and a deterministic pattern extractor that is the floor
   the system never falls through. Facts are tagged with which produced them.
 
-- **Malformed JSON is expected, not exceptional.** Parse → corrective re-prompt →
-  `json-repair` → give up, with every outcome written to `repair_log` so the
-  repair rate is reported from data, not estimated.
+- **Malformed JSON is expected, not exceptional.** Parse → `json-repair` →
+  corrective re-prompt → give up, with every outcome written to `repair_log` so
+  the repair rate is reported from data, not estimated. Under the GBNF grammar
+  the first reply is always syntactically valid JSON, so a parse failure means
+  the array truncated at the token ceiling — `json-repair` closes it and keeps
+  every fact already emitted, which is far cheaper than a second full
+  generation. The re-prompt is the fallback for the rare case repair can't fix.
 
 - **Linking embeds the *normalised fact*, not the sentence** — two documents
   stating the same thing rarely share wording. A brute-force numpy dot product
@@ -206,7 +232,13 @@ The four extension suggestions in the brief are handled by design, not bolted on
   pre-check gates the expensive table detector when it *is* enabled.
 - Extraction is per page-sized chunk and **resumable** (`extraction_progress`),
   so a 500-page PDF is never an all-or-nothing operation. `--limit N` bounds a
-  run.
+  run; commits are batched (a kill re-does at most a handful of idempotent
+  chunks, never corrupts — WAL + `synchronous=NORMAL`).
+- On the model call itself: the fixed part of the extraction prompt is a stable
+  prefix so its KV is reused, flash attention is on for any GPU/Metal build, and
+  a truncated JSON array is recovered by `json-repair` rather than a second
+  generation. The lever that actually collapses wall-clock time on a big job,
+  though, is switching the backend to Groq (`./scripts/setup-groq.sh`).
 
 ### Many PDFs in one knowledge layer
 
@@ -276,18 +308,24 @@ PDF changed on one page is reprocessed in full. Page-level hashing would fix it
 
 ## Additional notes
 
-- **Credentials:** none are required or committed. `.env` is git-ignored; the
-  Groq key is read only from the environment. The default path is fully local and
-  offline after the model download.
+- **Credentials:** none are required or committed. `.env` is git-ignored and
+  loaded automatically if present (`fkl/config.py`); copy `env.example` or run
+  `./scripts/setup-groq.sh`. A real environment variable always wins over the
+  file. The default path is fully local and offline after the model download.
 - **Evaluating without a paid service:** the local backend is the default, so no
   account is needed. `python run.py --limit N` produces a full showcase quickly;
   `sample-output/` contains a captured `/api/showcase` response and
   `/api/failures` response from a full run for reference.
-- `requirements.txt` opens with an `--extra-index-url` line serving **prebuilt**
-  CPU wheels for `llama-cpp-python`. Without it, pip compiles llama.cpp from
+- `requirements.txt` opens with an `--extra-index-url` line serving **prebuilt
+  CPU** wheels for `llama-cpp-python`. Without it, pip compiles llama.cpp from
   source (needs `cmake` + a C++ toolchain). With it, install is a plain wheel
   download.
-- GPU offload is automatic when a CUDA/Metal build of `llama-cpp-python` is
-  installed; a normal clone gets the CPU wheel and nothing changes.
+- **Why no prebuilt GPU wheel is shipped:** the public CUDA wheels for
+  `llama-cpp-python` are compiled with AVX-512, which SIGILLs on any CPU without
+  it (e.g. an Intel 13th-gen laptop part). A GPU build therefore has to come
+  from source with `-DGGML_NATIVE=OFF -DGGML_AVX512=OFF` — see
+  [Going faster](#going-faster-groq-or-a-gpu). Once a CUDA/Metal backend is
+  installed, offload is automatic; a normal clone gets the CPU wheel and nothing
+  changes.
 - `DECISIONS.md` is a running build diary written as the work happened —
   measurements, wrong turns, and the corpus-found bugs — not a reconstruction.

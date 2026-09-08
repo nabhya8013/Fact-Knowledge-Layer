@@ -362,7 +362,7 @@ def extract_document(
     cfg: Config,
     *,
     on_progress=None,
-    commit_every: int = 1,
+    commit_every: int = 10,  # batch SQLite commits: fewer fsyncs; a kill re-does <10 idempotent chunks
 ) -> ExtractionStats:
     """Extract facts for every eligible extraction chunk of one document."""
     doc = conn.execute("SELECT * FROM documents WHERE id = ?", (document_id,)).fetchone()

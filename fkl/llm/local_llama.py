@@ -192,7 +192,12 @@ class LocalLlamaClient(LLMClient):
             n_ctx=cfg.n_ctx,
             n_threads=self.n_threads,
             n_gpu_layers=self.n_gpu_layers,
-            n_batch=512,
+            # Larger batch evaluates the (fixed, ~1.5k-token) extraction prompt in
+            # one pass. flash attention is a free speed/VRAM win on any CUDA or
+            # Metal build and changes nothing about the output; it is silently
+            # ignored by a CPU-only build.
+            n_batch=2048,
+            flash_attn=True,
             verbose=False,
         )
         self._grammar = LlamaGrammar.from_string(JSON_ARRAY_GRAMMAR, verbose=False)

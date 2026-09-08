@@ -15,6 +15,33 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
 
+def _load_dotenv() -> None:
+    """Load PROJECT_ROOT/.env into os.environ if present, without a hard dep.
+
+    Only fills keys that are not already set, so a real environment variable
+    always wins over the file. Lines are `KEY=VALUE`; `#` comments and blanks
+    are ignored; surrounding quotes on the value are stripped. The whole thing
+    is a no-op when there is no .env (the default for a fresh clone).
+    """
+    path = PROJECT_ROOT / ".env"
+    try:
+        text = path.read_text()
+    except OSError:
+        return
+    for line in text.splitlines():
+        line = line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, _, value = line.partition("=")
+        key = key.strip()
+        value = value.strip().strip('"').strip("'")
+        if key and key not in os.environ:
+            os.environ[key] = value
+
+
+_load_dotenv()
+
+
 def _env_str(key: str, default: str) -> str:
     return os.environ.get(key, default)
 
@@ -129,7 +156,11 @@ class Config:
     # normal clone; installing a CUDA/Metal wheel turns it on with no code
     # change. Set FKL_N_GPU_LAYERS=0 to force CPU even on a GPU machine.
     n_gpu_layers: int = field(default_factory=lambda: _env_int("FKL_N_GPU_LAYERS", -1))
-    max_output_tokens: int = field(default_factory=lambda: _env_int("FKL_MAX_OUTPUT_TOKENS", 768))
+    # Headroom over a typical multi-fact page without over-generating on the
+    # dense ones. A rare truncation past this is closed cheaply by json-repair
+    # (see json_guard), not a second inference call, so the ceiling trades a
+    # little tail recall for shorter generations - it does not need to be large.
+    max_output_tokens: int = field(default_factory=lambda: _env_int("FKL_MAX_OUTPUT_TOKENS", 1024))
     temperature: float = field(default_factory=lambda: _env_float("FKL_TEMPERATURE", 0.0))
 
     groq_model: str = field(

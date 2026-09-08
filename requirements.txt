@@ -5,6 +5,11 @@
 # toolchain). With it, install is a plain wheel download - no compiler required.
 # The wheels are tagged `py3-none-<platform>` because llama-cpp-python binds via
 # ctypes rather than the CPython C-API, so a single wheel covers Python 3.10-3.14.
+#
+# GPU: this is intentionally the CPU wheel. The public *CUDA* wheels are built
+# with AVX-512 and crash (SIGILL) on CPUs without it. For GPU offload, build from
+# source instead - see "Going faster: Groq or a GPU" in the README. The easier
+# speed-up is the Groq backend (./scripts/setup-groq.sh), which needs no rebuild.
 --extra-index-url https://abetlen.github.io/llama-cpp-python/whl/cpu
 
 # --- PDF parsing (page text + character offsets + table detection) ---

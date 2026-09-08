@@ -143,7 +143,20 @@ def guarded_json(
             log(result)
         return result
 
-    # Tier 2: show the model its own broken output and ask again.
+    # Tier 2: mechanical repair BEFORE spending another inference call. Under the
+    # GBNF grammar the first reply is always syntactically valid JSON, so a parse
+    # failure here means truncation at max_tokens - json-repair closes the open
+    # array and drops the single half-written trailing object, keeping every
+    # fact already emitted. A corrective re-prompt would cost a second full
+    # generation to recover the same records.
+    data, repair_error = _try_repair(raw)
+    if data is not None:
+        result = GuardResult(data, OUTCOME_AFTER_REPAIR, attempts, error, raw)
+        if log:
+            log(result)
+        return result
+
+    # Tier 3: show the model its own broken output and ask again.
     for _ in range(max_retries):
         retry = client.complete(
             system,
@@ -161,7 +174,7 @@ def guarded_json(
                 log(result)
             return result
 
-    # Tier 3: mechanical repair.
+    # Last chance: repair whatever the final re-prompt returned.
     data, repair_error = _try_repair(raw)
     if data is not None:
         result = GuardResult(data, OUTCOME_AFTER_REPAIR, attempts, error, raw)
