@@ -131,7 +131,7 @@ the real page text.
 
 ## Video demo
 
-**▶ [Demo video (≤3 min)](REPLACE_WITH_LINK)**
+**▶ [Demo video (≤3 min)](https://drive.google.com/file/d/1WVrd95p6_gP8zcx8xNi31ctoExC6DDSb/view?usp=sharing)**
 
 Shows a PDF being uploaded and processed, then walks the four required cases in
 the Showcase tab — the evidence quotes from each document, the system's
