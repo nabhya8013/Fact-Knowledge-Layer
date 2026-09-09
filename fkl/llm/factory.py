@@ -5,6 +5,9 @@ Resolution order, and the reasoning behind it:
 * `LLM_BACKEND=gemini` / `LLM_BACKEND=groq` - explicit opt-in to a cloud
   backend. Errors loudly if no key is present, rather than silently falling
   back, because a user who asked for it wants to know it did not happen.
+* `LLM_BACKEND=groq+gemini` (any `+`-joined list of cloud backends) - use the
+  first one until its free quota is spent (HTTP 429 / auth error), then fall
+  through to the next for the rest of the run. See fallback_client.py.
 * `LLM_BACKEND=none` - explicit opt-out of any model. Deterministic extraction.
 * `LLM_BACKEND=local` (default) - llama.cpp with a downloaded GGUF. If the model
   cannot be loaded at all, degrade to deterministic extraction with a clear
@@ -24,9 +27,43 @@ class BackendUnavailable(RuntimeError):
     pass
 
 
+_CLOUD_BACKENDS = ("groq", "gemini")
+
+
+def _chain(backend: str) -> list[str]:
+    """Parse `groq+gemini` into `['groq', 'gemini']`; [] if not a cloud chain."""
+    parts = [p.strip() for p in backend.split("+") if p.strip()]
+    if len(parts) < 2 or any(p not in _CLOUD_BACKENDS for p in parts):
+        return []
+    return parts
+
+
+def _one_cloud_client(name: str, cfg: Config) -> LLMClient:
+    if name == "gemini":
+        from .gemini_client import GeminiClient
+
+        return GeminiClient(cfg)
+    from .groq_client import GroqClient
+
+    return GroqClient(cfg)
+
+
+def _cloud_desc(name: str, cfg: Config) -> str:
+    if name == "gemini":
+        from .gemini_client import gemini_available
+
+        return f"gemini ({cfg.gemini_model})" if gemini_available() else "gemini (NO API KEY)"
+    from .groq_client import groq_available
+
+    return f"groq ({cfg.groq_model})" if groq_available() else "groq (NO API KEY)"
+
+
 def describe_backend(cfg: Config) -> str:
     """One-line summary of what will run, for the CLI banner."""
     backend = (cfg.llm_backend or "local").lower()
+    chain = _chain(backend)
+    if chain:
+        return " then ".join(_cloud_desc(p, cfg) for p in chain)
     if backend == "gemini":
         from .gemini_client import gemini_available
 
@@ -51,6 +88,14 @@ def build_client(cfg: Config, *, quiet: bool = True) -> LLMClient | None:
     if backend == "none":
         return None
 
+    chain = _chain(backend)
+    if chain:
+        from .fallback_client import FallbackClient
+
+        # Each constructor raises if its key is missing - intentional, same as
+        # the single-backend paths below.
+        return FallbackClient([_one_cloud_client(p, cfg) for p in chain], quiet=quiet)
+
     if backend == "gemini":
         from .gemini_client import GeminiClient
 
@@ -63,7 +108,8 @@ def build_client(cfg: Config, *, quiet: bool = True) -> LLMClient | None:
 
     if backend != "local":
         raise BackendUnavailable(
-            f"Unknown LLM_BACKEND={cfg.llm_backend!r}. Use one of: local, gemini, groq, none."
+            f"Unknown LLM_BACKEND={cfg.llm_backend!r}. Use one of: local, gemini, "
+            f"groq, none, or a chain like groq+gemini."
         )
 
     # Default local path. A GROQ_API_KEY does NOT silently hijack the default;

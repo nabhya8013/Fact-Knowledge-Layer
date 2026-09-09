@@ -226,3 +226,90 @@ def test_describe_backend_is_honest_about_a_missing_key(monkeypatch):
     monkeypatch.delenv("GROQ_API_KEY", raising=False)
     cfg = dataclasses.replace(CONFIG, llm_backend="groq")
     assert "NO API KEY" in describe_backend(cfg)
+
+
+# --------------------------------------------------------------------------- #
+# Cloud fallback chain (LLM_BACKEND=groq+gemini)
+# --------------------------------------------------------------------------- #
+
+
+class _RateLimited(Exception):
+    status_code = 429
+
+
+class _BoomClient(LLMClient):
+    """Raises a given exception on the first N calls, then answers."""
+
+    def __init__(self, name, exc, fail_times):
+        self.name = name
+        self.model_name = name
+        self.supports_json_mode = True
+        self._exc = exc
+        self._fail_times = fail_times
+        self.calls = 0
+
+    def complete(self, system, user, *, json_mode=False, max_tokens=768, temperature=0.0):
+        self.calls += 1
+        if self.calls <= self._fail_times:
+            raise self._exc
+        return LLMResponse(text="[]", model=self.model_name)
+
+
+def test_fallback_switches_backend_once_the_first_is_exhausted():
+    from fkl.llm.fallback_client import FallbackClient
+
+    groq = _BoomClient("groq", _RateLimited(), fail_times=99)
+    gemini = _BoomClient("gemini", _RateLimited(), fail_times=0)
+    client = FallbackClient([groq, gemini])
+
+    assert client.complete("s", "u").text == "[]"
+    assert client.active is gemini
+    # Groq is not retried on subsequent calls.
+    client.complete("s", "u")
+    assert groq.calls == 1 and gemini.calls == 2
+
+
+def test_fallback_does_not_mask_a_non_quota_error():
+    from fkl.llm.fallback_client import FallbackClient
+
+    groq = _BoomClient("groq", ValueError("transient"), fail_times=1)
+    gemini = _BoomClient("gemini", _RateLimited(), fail_times=0)
+    client = FallbackClient([groq, gemini])
+
+    with pytest.raises(ValueError):
+        client.complete("s", "u")
+    assert client.active is groq and gemini.calls == 0
+
+
+def test_demo_force_groq_exhaust_raises_a_429_after_n_calls(monkeypatch):
+    from fkl.llm.fallback_client import _is_exhaustion
+    from fkl.llm.groq_client import GroqClient
+
+    monkeypatch.setenv("GROQ_API_KEY", "gsk_test")
+    monkeypatch.setenv("FKL_DEMO_FORCE_GROQ_EXHAUST", "2")
+
+    client = GroqClient.__new__(GroqClient)
+    client.model_name = "m"
+    client._demo_ok_left = 2
+    client._client = None  # never reached: real calls happen only while _demo_ok_left > 0
+
+    # First two calls fall through to the real path (None client -> AttributeError),
+    # proving the demo guard did not fire; the third raises the synthetic 429.
+    for _ in range(2):
+        with pytest.raises(Exception) as ei:
+            client.complete("s", "u")
+        assert not _is_exhaustion(ei.value)
+    with pytest.raises(Exception) as ei:
+        client.complete("s", "u")
+    assert _is_exhaustion(ei.value)
+
+
+def test_chain_backend_builds_a_fallback_client(monkeypatch):
+    from fkl.llm.factory import build_client
+    from fkl.llm.fallback_client import FallbackClient
+
+    monkeypatch.setenv("GROQ_API_KEY", "gsk_test")
+    monkeypatch.setenv("GEMINI_API_KEY", "test")
+    cfg = dataclasses.replace(CONFIG, llm_backend="groq+gemini")
+    client = build_client(cfg)
+    assert isinstance(client, FallbackClient)

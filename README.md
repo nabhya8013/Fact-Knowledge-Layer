@@ -69,6 +69,9 @@ All optional — the local CPU path is the default and needs nothing.
   `qwen/qwen3.8-27b` (Groq rotates its catalogue; set `FKL_GROQ_MODEL` to any
   current chat model if that one is gone —
   `python -c "from groq import Groq; print([m.id for m in Groq().models.list().data])"`).
+- **Groq then Gemini** — set `LLM_BACKEND=groq+gemini` with both keys in `.env`.
+  Spends the Groq free quota first; when it hits a 429 / auth error the run
+  switches to Gemini for the rest of the pass, once, without restarting.
 - Either way: `env.example` has the manual steps, and a real environment
   variable overrides the `.env` file.
 - **Local GPU.** GPU offload turns on automatically **iff** the installed

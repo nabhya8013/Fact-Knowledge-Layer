@@ -128,6 +128,8 @@ class Config:
     # local  -> llama-cpp-python + a quantised GGUF, downloaded on first run
     # gemini -> Google AI Studio free API, only when GEMINI_API_KEY is present
     # groq   -> Groq API, only when GROQ_API_KEY is present
+    # groq+gemini -> use Groq until its free quota is spent, then Gemini
+    #               (any +-joined chain of cloud backends works)
     # none   -> deterministic (non-LLM) extractor; guarantees the pipeline runs
     llm_backend: str = field(default_factory=lambda: _env_str("LLM_BACKEND", "local"))
     local_model_repo: str = field(

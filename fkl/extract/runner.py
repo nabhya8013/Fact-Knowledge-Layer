@@ -63,9 +63,10 @@ def resolve_workers(cfg: Config, requested: int | None = None) -> int:
         return requested
 
     backend = (cfg.llm_backend or "local").lower()
-    if backend == "groq":
+    if backend == "groq" or "gemini" in backend or "+" in backend:
         # Network-bound, not CPU-bound; a few concurrent requests are fine but
-        # the free tier is rate limited, so stay modest.
+        # the free tiers are rate limited, so stay modest. Covers a cloud
+        # fallback chain such as `groq+gemini` too.
         return 2
     if backend == "none":
         return 1  # deterministic extraction is already fast
@@ -179,13 +180,21 @@ def run_extraction(
         stats.merge(chunk_stats)
         mark_chunk_done(conn, chunk_id, "done", chunk_stats.facts_stored)
 
+    # When a progress callback is supplied it usually writes to the same SQLite
+    # file (the API's `jobs` row). SQLite allows only one writer, so the batched
+    # write transaction here must be flushed *before* each callback, otherwise a
+    # slow backend (a remote Gemini call can be 5-15s/chunk) keeps the write lock
+    # for longer than the caller's busy_timeout and the callback fails with
+    # "database is locked". With no callback, keep batching to cut fsyncs.
+    flush_every = 1 if on_progress else commit_every
+
     if n_workers == 1:
         # No process pool: simpler, and avoids paying model-load cost twice.
         _init_worker(cfg)
         try:
             for index, job in enumerate(jobs, 1):
                 handle(_run_one(job))
-                if index % commit_every == 0:
+                if index % flush_every == 0:
                     conn.commit()
                 if on_progress:
                     on_progress(index, len(jobs), stats)
@@ -202,7 +211,7 @@ def run_extraction(
                 pool.imap_unordered(_run_one, jobs, chunksize=1), 1
             ):
                 handle(payload)
-                if index % commit_every == 0:
+                if index % flush_every == 0:
                     conn.commit()
                 if on_progress:
                     on_progress(index, len(jobs), stats)
@@ -234,6 +243,9 @@ def default_seconds_per_chunk(cfg: Config) -> float:
     backend = (cfg.llm_backend or "local").lower()
     if backend in ("none", "groq"):
         return SECONDS_PER_CHUNK[backend]
+    if "gemini" in backend or "+" in backend:
+        # Cloud backend or fallback chain; same order of magnitude as groq.
+        return SECONDS_PER_CHUNK["groq"]
     from ..llm.local_llama import resolve_gpu_layers
 
     return SECONDS_PER_CHUNK["local-gpu" if resolve_gpu_layers(cfg) else "local-cpu"]

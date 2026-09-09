@@ -19,6 +19,13 @@ from ..config import Config
 from .base import LLMClient, LLMResponse
 
 
+class _DemoQuotaExhausted(RuntimeError):
+    """Raised only by the FKL_DEMO_FORCE_GROQ_EXHAUST demo aid. Looks like a 429
+    to FallbackClient so the fallback path can be shown on demand."""
+
+    status_code = 429
+
+
 def groq_api_key() -> str | None:
     key = os.environ.get("GROQ_API_KEY", "").strip()
     return key or None
@@ -54,6 +61,14 @@ class GroqClient(LLMClient):
         self._client = Groq(api_key=key)
         self.model_name = cfg.groq_model
         self._cfg = cfg
+        # Demo aid: FKL_DEMO_FORCE_GROQ_EXHAUST=N answers the first N calls
+        # normally, then raises a synthetic HTTP 429 on every call after that, so
+        # `LLM_BACKEND=groq+gemini` can be shown falling through to Gemini without
+        # waiting to burn the real free quota. Unset in normal use.
+        self._demo_ok_left = -1
+        raw = os.environ.get("FKL_DEMO_FORCE_GROQ_EXHAUST", "").strip()
+        if raw.isdigit():
+            self._demo_ok_left = int(raw)
 
     def complete(
         self,
@@ -64,6 +79,13 @@ class GroqClient(LLMClient):
         max_tokens: int = 768,
         temperature: float = 0.0,
     ) -> LLMResponse:
+        if self._demo_ok_left >= 0:
+            if self._demo_ok_left == 0:
+                raise _DemoQuotaExhausted(
+                    "FKL_DEMO_FORCE_GROQ_EXHAUST: simulated Groq free-tier quota exhausted (HTTP 429)"
+                )
+            self._demo_ok_left -= 1
+
         if json_mode and "json" not in (system + user).lower():
             user = f"{user}\n\nRespond with a JSON array only."
 
